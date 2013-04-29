@@ -47,8 +47,6 @@
 #include "G4VisAttributes.hh"
 #include "G4Colour.hh"
 
-#include "XLatticeManager3.hh"
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::DetectorConstruction()
@@ -114,18 +112,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 				    LogicalWorld,           //pointer to mother volume
 				    false,                  //no boolean operation
 				    0);                     //copy number
-
-  //----------------------------------------
-  // Obtain pointer to lattice manager
-  //----------------------------------------
-  XLogicalLattice* logicalLattice = new XLogicalLattice();
-  XPhysicalLattice* physicalLattice = new XPhysicalLattice(PhysicalTarget, logicalLattice);
-  XLatticeManager3* myLatticeManager = XLatticeManager3::GetXLatticeManager();
-
-  GeLogical->SetScatteringConstant(3.67e-41*s*s*s);
-  myLatticeManager->RegisterLattice(physicalLattice);
-
-
 
   return PhysicalWorld;
 }
