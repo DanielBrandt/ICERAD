@@ -46,11 +46,18 @@ private:
     G4int fLatticeAtomNumber;
     
 public:    
+    void InitializeXLogicalAtomicLattice();
+
+    // Set methods
     void AddAtom(G4ThreeVector);
     void DeleteAtom(G4ThreeVector);
     
-    void InitializeXLogicalAtomicLattice();
 
+    // Calculation methods
+    // ints == Miller indexes
+    G4complex EvaluateStructureFactor(G4int,G4int,G4int);
+
+    // Definition methods
     XLogicalAtomicLattice();
     ~XLogicalAtomicLattice();
 };

@@ -33,27 +33,31 @@
 #include <fstream>
 #include <string>
 #include "G4ThreeVector.hh"
-#include "XLogicalAtomicLattice.hh"
-#include "G4Material.hh"
+#include "XLogicalBase.hh"
 
-#define MAXATOMNUMBER 32
+#define MAXBASENUMBER 32
 
 using namespace std;
 
 class XUnitCell{
 
 private:
+    XLogicalBase *fBase[MAXBASENUMBER];
     G4ThreeVector fSize;
     G4ThreeVector fAngle;
     
     void InitializeXUnitCell();
-
 public:
+    // Retrieval methods
     G4ThreeVector& GetSize();
     G4ThreeVector& GetAngle();
+
+    // Set methods
+    XLogicalBase& GetBase(G4int i);
+    void SetBase(G4int i);
     
-    void AddBasis();
-    void DeleteBasis();
+    void AddBase(XLogicalBase*);
+
     XUnitCell();
     ~XUnitCell();
 };

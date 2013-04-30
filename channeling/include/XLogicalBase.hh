@@ -41,18 +41,20 @@ using namespace std;
 class XLogicalBase{
 
 private:
-    XLogicalAtomicLattice* fXLogicalAtomicLattice;
+    XLogicalAtomicLattice* fLattice;
     G4Material* fMaterial;
     
-    void InitializeXLogicalBase();
-
 public:
+    // Retrieval methods
     XLogicalAtomicLattice* GetLattice();
     G4Material* GetMaterial();
     
-    void AddBase(XLogicalAtomicLattice&,G4Material&);
+    // Set methods
+    void SetLattice(XLogicalAtomicLattice*);
+    void SetMaterial(G4Material*);
     
-    XLogicalBase();
+     
+    XLogicalBase(XLogicalAtomicLattice*,G4Material*);
     ~XLogicalBase();
 };
 

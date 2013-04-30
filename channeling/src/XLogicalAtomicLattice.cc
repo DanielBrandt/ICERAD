@@ -74,41 +74,20 @@ void XLogicalAtomicLattice::DeleteAtom(G4ThreeVector vAtomPosition){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-//void XLogicalAtomicLattice::FindLatticePoints()
-//{
-//    if(fLatticeType == 0) //cubic lattice
-//    {
-//        AddAtom(G4ThreeVector(0.0,0.0,0.0));
-//    }
-//    else if(fLatticeType == 1)//cc centered cubic lattice
-//    {
-//        AddAtom(G4ThreeVector(0.5,0.5,0.5));
-//    }
-//    else if(fLatticeType == 2)//bcc body centered cubic
-//    {
-//        AddAtom(G4ThreeVector(0.0,0.0,0.0));
-//        AddAtom(G4ThreeVector(0.5,0.5,0.5));
-//    }
-//    else if(fLatticeType == 3)//fcc face centered lattice
-//    {
-//        AddAtom(G4ThreeVector(0.0,0.0,0.0));
-//        AddAtom(G4ThreeVector(0.5,0.5,0.0));
-//        AddAtom(G4ThreeVector(0.0,0.5,0.5));
-//        AddAtom(G4ThreeVector(0.5,0.0,0.5));
-//    }
-//    else if(fLatticeType == 4)//diamond lattice
-//    {
-//        for(unsigned int i=0;i<2;i++)
-//        {
-//            AddAtom(G4ThreeVector(0.0+0.25*i,0.0+0.25*i,0.0+0.25*i));
-//            AddAtom(G4ThreeVector(0.5+0.25*i,0.5+0.25*i,0.0+0.25*i));
-//            AddAtom(G4ThreeVector(0.0+0.25*i,0.5+0.25*i,0.5+0.25*i));
-//            AddAtom(G4ThreeVector(0.5+0.25*i,0.0+0.25*i,0.5+0.25*i));
-//        }
-//    }
-//    else
-//    {
-//        G4cout << "XLogicalAtomicLattice::Not valid type selected!!!!" << endl;
-//    }
-//}
+G4complex XLogicalAtomicLattice::EvaluateStructureFactor(G4int m,G4int n ,G4int l){
+    G4double vTempDouble = 0.;
+    G4complex vResult = G4complex(0.,0.);
 
+    for(G4int i=0;i<fLatticeAtomNumber;i++)
+    {
+        vTempDouble = 0.0;
+        vTempDouble += m * fLatticeAtomPosition[i].x();
+        vTempDouble += n * fLatticeAtomPosition[i].y();
+        vTempDouble += l * fLatticeAtomPosition[i].z();
+        vResult += G4complex(cos(2 * M_PI * vTempDouble),sin(2 * M_PI * vTempDouble));
+    }
+
+    return vResult;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

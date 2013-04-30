@@ -127,10 +127,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     logicalLattice->SetUnitCell(myCell);
     
     
-    logicalLattice->GetUnitCell()->GetSize().setX(200.*angstrom);
-    G4cout << logicalLattice->GetUnitCell()->GetSize().x()/angstrom << " X [angstrom]"<< endl;
-    G4cout << logicalLattice->GetUnitCell()->GetSize().y()/angstrom << " Y [angstrom]"<< endl;
-    G4cout << logicalLattice->GetUnitCell()->GetSize().z()/angstrom << " Z [angstrom]"<< endl;
+//    logicalLattice->GetUnitCell()->GetSize().setX(200.*angstrom);
+//    G4cout << logicalLattice->GetUnitCell()->GetSize().x()/angstrom << " X [angstrom]"<< endl;
+//    G4cout << logicalLattice->GetUnitCell()->GetSize().y()/angstrom << " Y [angstrom]"<< endl;
+//    G4cout << logicalLattice->GetUnitCell()->GetSize().z()/angstrom << " Z [angstrom]"<< endl;
 
     myLatticeManager->RegisterLattice(physicalLattice);
 

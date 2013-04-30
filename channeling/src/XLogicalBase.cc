@@ -29,8 +29,9 @@
 #include "G4PhysicalConstants.hh"
 #include <cmath>
 
-XLogicalBase::XLogicalBase(){
-    InitializeXLogicalBase();
+XLogicalBase::XLogicalBase(XLogicalAtomicLattice* lattice, G4Material* material){
+    fMaterial = material;
+    fLattice = lattice;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -40,13 +41,8 @@ XLogicalBase::~XLogicalBase(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void XLogicalBase::InitializeXLogicalBase(){
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
 XLogicalAtomicLattice* XLogicalBase::GetLattice(){
-    return fXLogicalAtomicLattice;
+    return fLattice;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -54,3 +50,19 @@ XLogicalAtomicLattice* XLogicalBase::GetLattice(){
 G4Material* XLogicalBase::GetMaterial(){
     return fMaterial;
 }
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XLogicalBase::SetLattice(XLogicalAtomicLattice* lattice){
+    fLattice = lattice;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XLogicalBase::SetMaterial(G4Material* material){
+    fMaterial = material;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+
