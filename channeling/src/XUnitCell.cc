@@ -41,12 +41,9 @@ XUnitCell::~XUnitCell(){
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void XUnitCell::InitializeXUnitCell(){
-    fLatticeAtomNumber = 0;
-    fLatticeType = 0;
-    for(G4int i=0;i<MAXLATTICEATOMS;i++) fLatticeAtomPosition[i] = G4ThreeVector(0.,0.,0.);
+    //for(G4int i=0;i<MAXATOMNUMBER;i++) fLatticeAtomPosition[i] = G4ThreeVector(0.,0.,0.);
     fSize = G4ThreeVector(1. * angstrom,1. * angstrom,1. * angstrom);
     fAngle = G4ThreeVector(0.5 * radian,0.5 * radian,0.5 * radian);
-    FindLatticePoints();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -60,84 +57,3 @@ G4ThreeVector& XUnitCell::GetSize(){
 G4ThreeVector& XUnitCell::GetAngle(){
     return fAngle;
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4int XUnitCell::GetLatticeType(){
-    return fLatticeType;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XUnitCell::SetLatticeType(G4int vLatticeType){
-    fLatticeType = vLatticeType;
-    FindLatticePoints();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XUnitCell::AddAtom(G4ThreeVector vAtomPosition){
-    fLatticeAtomNumber++;
-    //Add an atom to the lattice
-    fLatticeAtomPosition[fLatticeAtomNumber - 1] = vAtomPosition;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XUnitCell::DeleteAtom(G4ThreeVector vAtomPosition){
-    //Delete atoms in the lattice in the selected position
-    
-    G4int CheckIfAtomExist = fLatticeAtomNumber;
-    for(G4int i=0;i<fLatticeAtomNumber;i++)
-        if(vAtomPosition == fLatticeAtomPosition[i])
-        {
-            CheckIfAtomExist = i;
-            for(G4int j=(i+1);j<fLatticeAtomNumber;j++)
-            {
-                fLatticeAtomPosition[j-1]=fLatticeAtomPosition[j];
-            }
-            i--;
-            fLatticeAtomNumber--;
-        }
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XUnitCell::FindLatticePoints()
-{
-    if(fLatticeType == 0) //cubic lattice
-    {
-        AddAtom(G4ThreeVector(0.0,0.0,0.0));
-    }
-    else if(fLatticeType == 1)//cc centered cubic lattice
-    {
-        AddAtom(G4ThreeVector(0.5,0.5,0.5));
-    }
-    else if(fLatticeType == 2)//bcc body centered cubic
-    {
-        AddAtom(G4ThreeVector(0.0,0.0,0.0));
-        AddAtom(G4ThreeVector(0.5,0.5,0.5));
-    }
-    else if(fLatticeType == 3)//fcc face centered lattice
-    {
-        AddAtom(G4ThreeVector(0.0,0.0,0.0));
-        AddAtom(G4ThreeVector(0.5,0.5,0.0));
-        AddAtom(G4ThreeVector(0.0,0.5,0.5));
-        AddAtom(G4ThreeVector(0.5,0.0,0.5));
-    }
-    else if(fLatticeType == 4)//diamond lattice
-    {
-        for(unsigned int i=0;i<2;i++)
-        {
-            AddAtom(G4ThreeVector(0.0+0.25*i,0.0+0.25*i,0.0+0.25*i));
-            AddAtom(G4ThreeVector(0.5+0.25*i,0.5+0.25*i,0.0+0.25*i));
-            AddAtom(G4ThreeVector(0.0+0.25*i,0.5+0.25*i,0.5+0.25*i));
-            AddAtom(G4ThreeVector(0.5+0.25*i,0.0+0.25*i,0.5+0.25*i));
-        }
-    }
-    else
-    {
-        G4cout << "XUnitCell::Not valid type selected!!!!" << endl;
-    }
-}
-

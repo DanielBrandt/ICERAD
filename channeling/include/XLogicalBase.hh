@@ -26,8 +26,8 @@
 //
 // $Id$
 //
-#ifndef XUnitCell_h
-#define XUnitCell_h
+#ifndef XLogicalBase_h
+#define XLogicalBase_h
 
 #include <iostream>
 #include <fstream>
@@ -36,26 +36,24 @@
 #include "XLogicalAtomicLattice.hh"
 #include "G4Material.hh"
 
-#define MAXATOMNUMBER 32
-
 using namespace std;
 
-class XUnitCell{
+class XLogicalBase{
 
 private:
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
+    XLogicalAtomicLattice* fXLogicalAtomicLattice;
+    G4Material* fMaterial;
     
-    void InitializeXUnitCell();
+    void InitializeXLogicalBase();
 
 public:
-    G4ThreeVector& GetSize();
-    G4ThreeVector& GetAngle();
+    XLogicalAtomicLattice* GetLattice();
+    G4Material* GetMaterial();
     
-    void AddBasis();
-    void DeleteBasis();
-    XUnitCell();
-    ~XUnitCell();
+    void AddBase(XLogicalAtomicLattice&,G4Material&);
+    
+    XLogicalBase();
+    ~XLogicalBase();
 };
 
 #endif

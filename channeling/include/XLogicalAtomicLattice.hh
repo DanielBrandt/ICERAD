@@ -26,36 +26,33 @@
 //
 // $Id$
 //
-#ifndef XUnitCell_h
-#define XUnitCell_h
+#ifndef XLogicalAtomicLattice_h
+#define XLogicalAtomicLattice_h
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include "G4ThreeVector.hh"
-#include "XLogicalAtomicLattice.hh"
-#include "G4Material.hh"
 
-#define MAXATOMNUMBER 32
+#define MAXLATTICEATOMS 64
 
 using namespace std;
 
-class XUnitCell{
+class XLogicalAtomicLattice{
 
 private:
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
+    // position of the atoms are saved in unit cell system, i.e MIN 0. & MAX 1.
+    G4ThreeVector fLatticeAtomPosition[MAXLATTICEATOMS];
+    G4int fLatticeAtomNumber;
     
-    void InitializeXUnitCell();
+public:    
+    void AddAtom(G4ThreeVector);
+    void DeleteAtom(G4ThreeVector);
+    
+    void InitializeXLogicalAtomicLattice();
 
-public:
-    G4ThreeVector& GetSize();
-    G4ThreeVector& GetAngle();
-    
-    void AddBasis();
-    void DeleteBasis();
-    XUnitCell();
-    ~XUnitCell();
+    XLogicalAtomicLattice();
+    ~XLogicalAtomicLattice();
 };
 
 #endif
