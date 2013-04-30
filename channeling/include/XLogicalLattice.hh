@@ -39,6 +39,10 @@
 #include "G4ThreeVector.hh"
 #include "XUnitCell.hh"
 
+class XNuclearDensityDistribution;
+class XElectronicsDensityDistribution;
+class XChannellingPlane;
+
 
 using namespace std;
 
@@ -80,7 +84,7 @@ public:
   void SetLDOS(double);
   void SetSTDOS(double);
   void SetFTDOS(double);
-    void SetUnitCell(XUnitCell*);
+
     
     
   double GetBeta();
@@ -92,12 +96,23 @@ public:
   double GetLDOS();
   double GetSTDOS();
   double GetFTDOS();
-    XUnitCell* GetUnitCell();
+
     
   bool LoadMap(int, int, int, string);
   bool Load_NMap(int, int, int, string);
   double MapKtoV(int, G4ThreeVector);   //Get full group velocity vector
   G4ThreeVector MapKtoVDir(int, G4ThreeVector);//Get normalized group velocity direction so that normalisatioon does not have to be done at run time
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+// Begin channeling specific code
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+public:
+  void SetUnitCell(XUnitCell*);
+  XUnitCell* GetUnitCell();
+
+private:
+
 
 };
 
