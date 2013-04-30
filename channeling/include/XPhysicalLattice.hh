@@ -87,6 +87,22 @@ public:
   void SetMillerOrientation(int, int, int);
 
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+// Begin channeling specific code
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+public:
+  void SetUnitCell(XUnitCell*);
+  void SetNuclearDistribution(XNuclearDensityDistribution*);
+  void SetElectronicDistribution(XElectronicsDensityDistribution*);
+  void SetChannelingPlane(G4double miller1, G4double miller2, G4double miller3);  void SetChannelingPlane(G4double* millerArray);
+
+  XUnitCell* GetUnitCell();
+  XNuclearDensityDistribution* GetNuclearDistribution();
+  XElectronicsDensityDistribution* GetElectronDistribution();
+  G4double* GetCutPlane();
+
+
 };
 
 #endif

@@ -247,4 +247,40 @@ void XPhysicalLattice::SetXLogicalLattice(XLogicalLattice* Lat){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+// Begin Channeling specific code
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+void XPhysicalLattice::SetUnitCell(XUnitCell* cell){
+  fLattice->SetUnitCell(cell);
+}
+
+void XPhysicalLattice::SetNuclearDistribution(XNuclearDensityDistribution* nDist){
+  fLattice->SetNuclearDistribution(nDist);
+}
+
+void XPhysicalLattice::SetElectronicDistribution(XElectronicsDensityDistribution* eDist){
+  fLattice->SetElectronicDistribution(eDist);
+}
+void XPhysicalLattice::SetChannelingPlane(G4double miller1, G4double miller2, G4double miller3){
+  fLattice->SetChannelingPlane(miller1, miller2, miller3);
+}
+
+void XPhysicalLattice::SetChannelingPlane(G4double* millerArray){
+  fLattice->SetChannelingPlane(millerArray);
+}
+
+XUnitCell* XPhysicalLattice::GetUnitCell(){
+  fLattice->GetUnitCell();
+}
+
+XNuclearDensityDistribution* XPhysicalLattice::GetNuclearDistribution(){
+  fLattice->GetNuclearDistribution();
+}
+
+XElectronicsDensityDistribution* XPhysicalLattice::GetElectronDistribution(){
+  fLattice->GetElectronDistribution();
+}
+
+G4double* XPhysicalLattice::GetCutPlane(){
+  fLattice->GetCutPlane();
+}

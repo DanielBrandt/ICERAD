@@ -118,9 +118,9 @@ public:
   G4double* GetCutPlane();
 
 private:
-  G4double channelingPlaneMiller[3];
-  XNuclearDensityDistribution* nuclearDensityDistribution;
-  XElectronicsDensityDistribution* electronDensityDistribution;
+  G4double fChannelingPlaneMiller[3];
+  XNuclearDensityDistribution* fNuclearDensityDistribution;
+  XElectronicsDensityDistribution* fElectronDensityDistribution;
   XUnitCell *fCell; //Unit cell with atom position and main cell parameters
 
 };

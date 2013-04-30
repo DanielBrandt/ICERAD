@@ -332,19 +332,12 @@ void XLogicalLattice::SetUnitCell(XUnitCell* cell)
     fCell = cell;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XUnitCell* XLogicalLattice::GetUnitCell()
-{
-    return fCell;
-}
-
-void XLogicalLattice::SetNuclearDistribution(XNuclearDensityDistribution*){
+void XLogicalLattice::SetNuclearDistribution(XNuclearDensityDistribution* nDist){
 
 }
 
 
-void XLogicalLattice::SetElectronicDistribution(XElectronicsDensityDistribution*){
+void XLogicalLattice::SetElectronicDistribution(XElectronicsDensityDistribution* eDist){
 
 }
 
@@ -357,3 +350,19 @@ void XLogicalLattice::SetChannelingPlane(G4double* millerArray){
 
 }
 
+XUnitCell* XLogicalLattice::GetUnitCell(){
+  return fCell;
+}
+
+XNuclearDensityDistribution* XLogicalLattice::GetNuclearDistribution(){
+  return fNuclearDensityDistribution;
+}
+
+XElectronicsDensityDistribution* XLogicalLattice::GetElectronDistribution(){
+  return fElectronDensityDistribution;
+}
+
+
+G4double* XLogicalLattice::GetCutPlane(){
+  return fChannelingPlaneMiller;
+}
