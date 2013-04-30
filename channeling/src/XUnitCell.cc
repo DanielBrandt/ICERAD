@@ -46,17 +46,18 @@ void XUnitCell::InitializeXUnitCell(){
     for(G4int i=0;i<MAXLATTICEATOMS;i++) fLatticeAtomPosition[i] = G4ThreeVector(0.,0.,0.);
     fSize = G4ThreeVector(1. * angstrom,1. * angstrom,1. * angstrom);
     fAngle = G4ThreeVector(0.5 * radian,0.5 * radian,0.5 * radian);
+    FindLatticePoints();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ThreeVector XUnitCell::GetSize(){
+G4ThreeVector& XUnitCell::GetSize(){
     return fSize;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ThreeVector XUnitCell::GetAngle(){
+G4ThreeVector& XUnitCell::GetAngle(){
     return fAngle;
 }
 

@@ -55,14 +55,15 @@ private:
     void InitializeXUnitCell();
 
 public:
-    G4ThreeVector GetSize();
-    G4ThreeVector GetAngle();
+    G4ThreeVector& GetSize();
+    G4ThreeVector& GetAngle();
     
-    void SetLatticeType(G4int vLatticeType);
+    
+    void SetLatticeType(G4int);
     G4int GetLatticeType();
     
-    void AddAtom(G4ThreeVector vAtomPosition);
-    void DeleteAtom(G4ThreeVector vAtomPosition);
+    void AddAtom(G4ThreeVector);
+    void DeleteAtom(G4ThreeVector);
     
     XUnitCell();
     ~XUnitCell();

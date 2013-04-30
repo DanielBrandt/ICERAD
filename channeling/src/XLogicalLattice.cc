@@ -286,7 +286,19 @@ double XLogicalLattice::MapKtoV(int polarizationState,G4ThreeVector k)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+void XLogicalLattice::SetUnitCell(XUnitCell* cell)
+{
+    fCell = cell;
+}
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+XUnitCell* XLogicalLattice::GetUnitCell()
+{
+    return fCell;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4ThreeVector XLogicalLattice::MapKtoVDir(int polarizationState,G4ThreeVector k)
 {  

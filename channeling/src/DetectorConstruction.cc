@@ -121,9 +121,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   XLogicalLattice* logicalLattice = new XLogicalLattice();
   XPhysicalLattice* physicalLattice = new XPhysicalLattice(PhysicalTarget, logicalLattice);
   XLatticeManager3* myLatticeManager = XLatticeManager3::GetXLatticeManager();
-
+    XUnitCell* myCell = new XUnitCell();
+    
   logicalLattice->SetScatteringConstant(3.67e-41*s*s*s);
-  myLatticeManager->RegisterLattice(physicalLattice);
+    logicalLattice->SetUnitCell(myCell);
+    
+    
+    logicalLattice->GetUnitCell()->GetSize().setX(200.*angstrom);
+    G4cout << logicalLattice->GetUnitCell()->GetSize().x()/angstrom << " X [angstrom]"<< endl;
+    G4cout << logicalLattice->GetUnitCell()->GetSize().y()/angstrom << " Y [angstrom]"<< endl;
+    G4cout << logicalLattice->GetUnitCell()->GetSize().z()/angstrom << " Z [angstrom]"<< endl;
+
+    myLatticeManager->RegisterLattice(physicalLattice);
 
 
 

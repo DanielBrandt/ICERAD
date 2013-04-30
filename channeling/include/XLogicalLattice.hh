@@ -37,6 +37,7 @@
 #include <fstream>
 #include <string>
 #include "G4ThreeVector.hh"
+#include "XUnitCell.hh"
 
 
 using namespace std;
@@ -64,6 +65,7 @@ private:
   ifstream fMapFile;
   int fThetaRes, fPhiRes;
 
+    XUnitCell *fCell; //Unit cell with atom position and main cell parameters
 
 public:
 
@@ -78,7 +80,9 @@ public:
   void SetLDOS(double);
   void SetSTDOS(double);
   void SetFTDOS(double);
-  
+    void SetUnitCell(XUnitCell*);
+    
+    
   double GetBeta();
   double GetGamma();
   double GetLambda();
@@ -88,7 +92,8 @@ public:
   double GetLDOS();
   double GetSTDOS();
   double GetFTDOS();
-  
+    XUnitCell* GetUnitCell();
+    
   bool LoadMap(int, int, int, string);
   bool Load_NMap(int, int, int, string);
   double MapKtoV(int, G4ThreeVector);   //Get full group velocity vector
