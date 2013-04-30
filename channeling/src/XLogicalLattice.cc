@@ -338,3 +338,22 @@ XUnitCell* XLogicalLattice::GetUnitCell()
 {
     return fCell;
 }
+
+void XLogicalLattice::SetNuclearDistribution(XNuclearDensityDistribution*){
+
+}
+
+
+void XLogicalLattice::SetElectronicDistribution(XElectronicsDensityDistribution*){
+
+}
+
+
+void XLogicalLattice::SetChannelingPlane(G4double miller1, G4double miller2, G4double miller3){
+
+}
+
+void XLogicalLattice::SetChannelingPlane(G4double* millerArray){
+
+}
+

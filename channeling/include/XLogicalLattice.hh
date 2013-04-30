@@ -69,8 +69,6 @@ private:
   ifstream fMapFile;
   int fThetaRes, fPhiRes;
 
-    XUnitCell *fCell; //Unit cell with atom position and main cell parameters
-
 public:
 
 
@@ -109,10 +107,21 @@ public:
 
 public:
   void SetUnitCell(XUnitCell*);
+  void SetNuclearDistribution(XNuclearDensityDistribution*);
+  void SetElectronicDistribution(XElectronicsDensityDistribution*);
+  void SetChannelingPlane(G4double miller1, G4double miller2, G4double miller3);
+  void SetChannelingPlane(G4double* millerArray);
+
   XUnitCell* GetUnitCell();
+  XNuclearDensityDistribution* GetNuclearDistribution();
+  XElectronicsDensityDistribution* GetElectronDistribution();
+  G4double* GetCutPlane();
 
 private:
-
+  G4double channelingPlaneMiller[3];
+  XNuclearDensityDistribution* nuclearDensityDistribution;
+  XElectronicsDensityDistribution* electronDensityDistribution;
+  XUnitCell *fCell; //Unit cell with atom position and main cell parameters
 
 };
 
