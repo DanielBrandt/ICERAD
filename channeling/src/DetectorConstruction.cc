@@ -122,7 +122,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   XPhysicalLattice* physicalLattice = new XPhysicalLattice(PhysicalTarget, logicalLattice);
   XLatticeManager3* myLatticeManager = XLatticeManager3::GetXLatticeManager();
 
-  GeLogical->SetScatteringConstant(3.67e-41*s*s*s);
+  logicalLattice->SetScatteringConstant(3.67e-41*s*s*s);
   myLatticeManager->RegisterLattice(physicalLattice);
 
 

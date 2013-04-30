@@ -47,19 +47,19 @@ private:
     
     // position of the atoms are saved in unit cell system, i.e MIN 0. & MAX 1.
     G4ThreeVector fLatticeAtomPosition[MAXLATTICEATOMS];
-    G4uint fLatticeAtomNumber;
+    G4int fLatticeAtomNumber;
 
     G4int fLatticeType;
     
-    void FindLatticePoints()
+    void FindLatticePoints();
     void InitializeXUnitCell();
 
 public:
     G4ThreeVector GetSize();
     G4ThreeVector GetAngle();
     
-    void SetLatticeType(G4uint vLatticeType);
-    G4uint GetLatticeType();
+    void SetLatticeType(G4int vLatticeType);
+    G4int GetLatticeType();
     
     void AddAtom(G4ThreeVector vAtomPosition);
     void DeleteAtom(G4ThreeVector vAtomPosition);
