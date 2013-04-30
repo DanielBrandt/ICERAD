@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:../channeling"
+      name = "channeling">
+      <FileRef
+         location = "group:channelling.cc">
+      </FileRef>
+      <FileRef
+         location = "group:CMakeLists.txt">
+      </FileRef>
+      <Group
+         location = "group:include"
+         name = "include">
+         <FileRef
+            location = "group:XLogicalBase.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XLogicalAtomicLatticeSingleAtom.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XLogicalAtomicLatticeDiamond.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XLogicalAtomicLattice.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XUnitCell.hh">
+         </FileRef>
+         <FileRef
+            location = "group:DetectorConstruction.hh">
+         </FileRef>
+         <FileRef
+            location = "group:PhysicsList.hh">
+         </FileRef>
+         <FileRef
+            location = "group:PrimaryGeneratorAction.hh">
+         </FileRef>
+         <FileRef
+            location = "group:ProcessChanneling.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XLatticeManager3.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XLogicalLattice.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XPhysicalLattice.hh">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:scorer.mac">
+      </FileRef>
+      <Group
+         location = "group:src"
+         name = "src">
+         <FileRef
+            location = "group:XLogicalBase.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XLogicalAtomicLatticeDiamondSingleAtom.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XLogicalAtomicLatticeDiamond.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XLogicalAtomicLattice.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XUnitCell.cc">
+         </FileRef>
+         <FileRef
+            location = "group:DetectorConstruction.cc">
+         </FileRef>
+         <FileRef
+            location = "group:DetectorConstruction.cc~">
+         </FileRef>
+         <FileRef
+            location = "group:PhysicsList.cc">
+         </FileRef>
+         <FileRef
+            location = "group:PrimaryGeneratorAction.cc">
+         </FileRef>
+         <FileRef
+            location = "group:ProcessChanneling.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XLatticeManager3.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XLogicalLattice.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XPhysicalLattice.cc">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:vis.mac">
+      </FileRef>
+   </Group>
+</Workspace>

@@ -1,0 +1,114 @@
+//
+// ********************************************************************
+// * License and Disclaimer                                           *
+// *                                                                  *
+// * The  Geant4 software  is  copyright of the Copyright Holders  of *
+// * the Geant4 Collaboration.  It is provided  under  the terms  and *
+// * conditions of the Geant4 Software License,  included in the file *
+// * LICENSE and available at  http://cern.ch/geant4/license .  These *
+// * include a list of copyright holders.                             *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.  Please see the license in the file  LICENSE  and URL above *
+// * for the full disclaimer and the limitation of liability.         *
+// *                                                                  *
+// * This  code  implementation is the result of  the  scientific and *
+// * technical work of the GEANT4 collaboration.                      *
+// * By using,  copying,  modifying or  distributing the software (or *
+// * any work based  on the software)  you  agree  to acknowledge its *
+// * use  in  resulting  scientific  publications,  and indicate your *
+// * acceptance of all terms of the Geant4 Software license.          *
+// ********************************************************************
+//
+//
+
+#include "XLogicalAtomicLattice.hh"
+#include "G4PhysicalConstants.hh"
+#include <cmath>
+
+XLogicalAtomicLattice::XLogicalAtomicLattice(){
+    InitializeXLogicalAtomicLattice();
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+XLogicalAtomicLattice::~XLogicalAtomicLattice(){
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XLogicalAtomicLattice::InitializeXLogicalAtomicLattice(){
+    fLatticeAtomNumber = 1;
+    for(G4int i=0;i<MAXLATTICEATOMS;i++) fLatticeAtomPosition[i] = G4ThreeVector(0.,0.,0.);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XLogicalAtomicLattice::AddAtom(G4ThreeVector vAtomPosition){
+    fLatticeAtomNumber++;
+    //Add an atom to the lattice
+    fLatticeAtomPosition[fLatticeAtomNumber - 1] = vAtomPosition;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XLogicalAtomicLattice::DeleteAtom(G4ThreeVector vAtomPosition){
+    //Delete atoms in the lattice in the selected position
+    
+    G4int CheckIfAtomExist = fLatticeAtomNumber;
+    for(G4int i=0;i<fLatticeAtomNumber;i++)
+        if(vAtomPosition == fLatticeAtomPosition[i])
+        {
+            CheckIfAtomExist = i;
+            for(G4int j=(i+1);j<fLatticeAtomNumber;j++)
+            {
+                fLatticeAtomPosition[j-1]=fLatticeAtomPosition[j];
+            }
+            i--;
+            fLatticeAtomNumber--;
+        }
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+//void XLogicalAtomicLattice::FindLatticePoints()
+//{
+//    if(fLatticeType == 0) //cubic lattice
+//    {
+//        AddAtom(G4ThreeVector(0.0,0.0,0.0));
+//    }
+//    else if(fLatticeType == 1)//cc centered cubic lattice
+//    {
+//        AddAtom(G4ThreeVector(0.5,0.5,0.5));
+//    }
+//    else if(fLatticeType == 2)//bcc body centered cubic
+//    {
+//        AddAtom(G4ThreeVector(0.0,0.0,0.0));
+//        AddAtom(G4ThreeVector(0.5,0.5,0.5));
+//    }
+//    else if(fLatticeType == 3)//fcc face centered lattice
+//    {
+//        AddAtom(G4ThreeVector(0.0,0.0,0.0));
+//        AddAtom(G4ThreeVector(0.5,0.5,0.0));
+//        AddAtom(G4ThreeVector(0.0,0.5,0.5));
+//        AddAtom(G4ThreeVector(0.5,0.0,0.5));
+//    }
+//    else if(fLatticeType == 4)//diamond lattice
+//    {
+//        for(unsigned int i=0;i<2;i++)
+//        {
+//            AddAtom(G4ThreeVector(0.0+0.25*i,0.0+0.25*i,0.0+0.25*i));
+//            AddAtom(G4ThreeVector(0.5+0.25*i,0.5+0.25*i,0.0+0.25*i));
+//            AddAtom(G4ThreeVector(0.0+0.25*i,0.5+0.25*i,0.5+0.25*i));
+//            AddAtom(G4ThreeVector(0.5+0.25*i,0.0+0.25*i,0.5+0.25*i));
+//        }
+//    }
+//    else
+//    {
+//        G4cout << "XLogicalAtomicLattice::Not valid type selected!!!!" << endl;
+//    }
+//}
+

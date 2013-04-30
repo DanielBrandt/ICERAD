@@ -24,38 +24,33 @@
 // ********************************************************************
 //
 //
-// $Id$
-//
-#ifndef XUnitCell_h
-#define XUnitCell_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
-#include "XLogicalAtomicLattice.hh"
-#include "G4Material.hh"
+#include "XLogicalBase.hh"
+#include "G4PhysicalConstants.hh"
+#include <cmath>
 
-#define MAXATOMNUMBER 32
+XLogicalBase::XLogicalBase(){
+    InitializeXLogicalBase();
+}
 
-using namespace std;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-class XUnitCell{
+XLogicalBase::~XLogicalBase(){
+}
 
-private:
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-public:
-    G4ThreeVector& GetSize();
-    G4ThreeVector& GetAngle();
-    
-    void AddBasis();
-    void DeleteBasis();
-    XUnitCell();
-    ~XUnitCell();
-};
+void XLogicalBase::InitializeXLogicalBase(){
+}
 
-#endif
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+XLogicalAtomicLattice* XLogicalBase::GetLattice(){
+    return fXLogicalAtomicLattice;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4Material* XLogicalBase::GetMaterial(){
+    return fMaterial;
+}

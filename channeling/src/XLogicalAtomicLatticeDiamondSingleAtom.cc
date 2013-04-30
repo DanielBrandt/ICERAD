@@ -24,38 +24,25 @@
 // ********************************************************************
 //
 //
-// $Id$
-//
-#ifndef XUnitCell_h
-#define XUnitCell_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
-#include "XLogicalAtomicLattice.hh"
-#include "G4Material.hh"
+#include "XLogicalAtomicLatticeSingleAtom.hh"
+#include "G4PhysicalConstants.hh"
+#include <cmath>
 
-#define MAXATOMNUMBER 32
+XLogicalAtomicLatticeSingleAtom::XLogicalAtomicLatticeSingleAtom(){
+    InitializeXLogicalAtomicLatticeSingleAtom();
+}
 
-using namespace std;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-class XUnitCell{
+XLogicalAtomicLatticeSingleAtom::~XLogicalAtomicLatticeSingleAtom(){
+}
 
-private:
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-public:
-    G4ThreeVector& GetSize();
-    G4ThreeVector& GetAngle();
-    
-    void AddBasis();
-    void DeleteBasis();
-    XUnitCell();
-    ~XUnitCell();
-};
+void XLogicalAtomicLatticeSingleAtom::InitializeXLogicalAtomicLatticeSingleAtom(){
+    InitializeXLogicalAtomicLattice();
+    AddAtom(G4ThreeVector(0.,0.,0.));
+}
 
-#endif
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

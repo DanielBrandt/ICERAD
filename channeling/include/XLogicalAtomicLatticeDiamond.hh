@@ -26,36 +26,28 @@
 //
 // $Id$
 //
-#ifndef XUnitCell_h
-#define XUnitCell_h
+#ifndef XLogicalAtomicLatticeDiamond_h
+#define XLogicalAtomicLatticeDiamond_h
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include "G4ThreeVector.hh"
 #include "XLogicalAtomicLattice.hh"
-#include "G4Material.hh"
 
-#define MAXATOMNUMBER 32
+#define MAXLATTICEATOMS 64
 
 using namespace std;
 
-class XUnitCell{
+class XLogicalAtomicLatticeDiamond: public XLogicalAtomicLattice
+{
 
 private:
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
+    void InitializeXLogicalAtomicLatticeDiamond();
 
-public:
-    G4ThreeVector& GetSize();
-    G4ThreeVector& GetAngle();
-    
-    void AddBasis();
-    void DeleteBasis();
-    XUnitCell();
-    ~XUnitCell();
+public:    
+    XLogicalAtomicLatticeDiamond();
+    ~XLogicalAtomicLatticeDiamond();
 };
 
 #endif
