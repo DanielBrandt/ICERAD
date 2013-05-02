@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// 
+//
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -49,18 +49,23 @@
 
 #include "XLatticeManager3.hh"
 
+#include "XLogicalAtomicLattice.hh"
+#include "XLogicalAtomicLatticeDiamond.hh"
+#include "XLogicalBase.hh"
+#include "XUnitCell.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::DetectorConstruction()
 {
-
+    
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
 DetectorConstruction::~DetectorConstruction()
 {
-
+    
 }
 
 
@@ -68,75 +73,73 @@ DetectorConstruction::~DetectorConstruction()
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
-  int z;      //atomic number
-  G4double a; //atomic weight
-  G4double density;
-
-  G4Material* Pb = 
+    int z;      //atomic number
+    G4double a; //atomic weight
+    G4double density;
+    
+    G4Material* Pb =
     new G4Material("Lead"     , z=82, a = 207.19*g/mole, density= 11.35*g/cm3);
-
-  G4Material* Vacuum =
+    
+    G4Material* Vacuum =
     new G4Material("Galactic", z=1, a=1.01*g/mole,density= universe_mean_density,
-		   kStateGas, 2.73*kelvin, 3.e-18*pascal);
-
-  G4double worldSize = 0.5*m;
-  G4Box* SolidWorld;
-  G4LogicalVolume* LogicalWorld;
-  G4VPhysicalVolume* PhysicalWorld;
-
-  SolidWorld = new G4Box("World", worldSize/2,worldSize/2,worldSize/2);
-  LogicalWorld = new G4LogicalVolume(SolidWorld,            //shape
-				     Vacuum,                //material
-				     "World");              //name
-
-  PhysicalWorld = new G4PVPlacement(0,
-				    G4ThreeVector(0,0,0),   //no rotation
-				    LogicalWorld,           //shape and material
-				    "World",                //name
-				    0,                      //pointer to mother volume
-				    false,                  //no boolean operation
-				    0);                     //copy number
-
-  G4double targetSize = 15.*cm;
-  G4Box* SolidTarget;
-  G4LogicalVolume* LogicalTarget;
-  G4VPhysicalVolume* PhysicalTarget;
-
-  SolidTarget = new G4Box("Target", targetSize/2,targetSize/2,targetSize/2);
-  LogicalTarget = new G4LogicalVolume(SolidTarget,          //shape
-				     Pb,                    //material
-				     "Target");              //name
-
-  PhysicalTarget = new G4PVPlacement(0,
-				    G4ThreeVector(0.*cm,+5.*cm,0),   //no rotation
-				    LogicalTarget,           //shape and material
-				    "Target",                //name
-				    LogicalWorld,           //pointer to mother volume
-				    false,                  //no boolean operation
-				    0);                     //copy number
-
-  //----------------------------------------
-  // Obtain pointer to lattice manager
-  //----------------------------------------
-  XLogicalLattice* logicalLattice = new XLogicalLattice();
-  XPhysicalLattice* physicalLattice = new XPhysicalLattice(PhysicalTarget, logicalLattice);
-  XLatticeManager3* myLatticeManager = XLatticeManager3::GetXLatticeManager();
-    XUnitCell* myCell = new XUnitCell();
+                   kStateGas, 2.73*kelvin, 3.e-18*pascal);
     
-  logicalLattice->SetScatteringConstant(3.67e-41*s*s*s);
-    logicalLattice->SetUnitCell(myCell);
+    G4double worldSize = 0.5*m;
+    G4Box* SolidWorld;
+    G4LogicalVolume* LogicalWorld;
+    G4VPhysicalVolume* PhysicalWorld;
     
+    SolidWorld = new G4Box("World", worldSize/2,worldSize/2,worldSize/2);
+    LogicalWorld = new G4LogicalVolume(SolidWorld,            //shape
+                                       Vacuum,                //material
+                                       "World");              //name
     
-//    logicalLattice->GetUnitCell()->GetSize().setX(200.*angstrom);
-//    G4cout << logicalLattice->GetUnitCell()->GetSize().x()/angstrom << " X [angstrom]"<< endl;
-//    G4cout << logicalLattice->GetUnitCell()->GetSize().y()/angstrom << " Y [angstrom]"<< endl;
-//    G4cout << logicalLattice->GetUnitCell()->GetSize().z()/angstrom << " Z [angstrom]"<< endl;
-
+    PhysicalWorld = new G4PVPlacement(0,
+                                      G4ThreeVector(0,0,0),   //no rotation
+                                      LogicalWorld,           //shape and material
+                                      "World",                //name
+                                      0,                      //pointer to mother volume
+                                      false,                  //no boolean operation
+                                      0);                     //copy number
+    
+    G4double targetSize = 15.*cm;
+    G4Box* SolidTarget;
+    G4LogicalVolume* LogicalTarget;
+    G4VPhysicalVolume* PhysicalTarget;
+    
+    SolidTarget = new G4Box("Target", targetSize/2,targetSize/2,targetSize/2);
+    LogicalTarget = new G4LogicalVolume(SolidTarget,          //shape
+                                        Pb,                    //material
+                                        "Target");              //name
+    
+    PhysicalTarget = new G4PVPlacement(0,
+                                       G4ThreeVector(0.*cm,+5.*cm,0),   //no rotation
+                                       LogicalTarget,           //shape and material
+                                       "Target",                //name
+                                       LogicalWorld,           //pointer to mother volume
+                                       false,                  //no boolean operation
+                                       0);                     //copy number
+    
+    //----------------------------------------
+    // Obtain pointer to lattice manager
+    //----------------------------------------
+    XLogicalLattice* logicalLattice = new XLogicalLattice();
+    XPhysicalLattice* physicalLattice = new XPhysicalLattice(PhysicalTarget, logicalLattice);
+    XLatticeManager3* myLatticeManager = XLatticeManager3::GetXLatticeManager();
     myLatticeManager->RegisterLattice(physicalLattice);
 
-
-
-  return PhysicalWorld;
+    logicalLattice->SetScatteringConstant(3.67e-41*s*s*s);
+    
+    XUnitCell* myCell = new XUnitCell();
+    logicalLattice->SetUnitCell(myCell);
+    
+    XLogicalAtomicLatticeDiamond *diamond_lattice = new XLogicalAtomicLatticeDiamond();
+    G4Element* elSi = new G4Element("Silicon","Si",14.,28.09*g/mole);
+    XLogicalBase *base_si = new XLogicalBase();
+    base_si->SetElement(elSi);
+    base_si->SetLattice(diamond_lattice);   
+    
+    return PhysicalWorld;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

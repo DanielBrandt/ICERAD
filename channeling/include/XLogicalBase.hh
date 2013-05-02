@@ -34,7 +34,7 @@
 #include <string>
 #include "G4ThreeVector.hh"
 #include "XLogicalAtomicLattice.hh"
-#include "G4Material.hh"
+#include "G4Element.hh"
 
 using namespace std;
 
@@ -42,19 +42,23 @@ class XLogicalBase{
 
 private:
     XLogicalAtomicLattice* fLattice;
-    G4Material* fMaterial;
+    G4Element* fElement;
     
 public:
     // Retrieval methods
     XLogicalAtomicLattice* GetLattice();
-    G4Material* GetMaterial();
+    G4Element* GetElement();
     
     // Set methods
     void SetLattice(XLogicalAtomicLattice*);
-    void SetMaterial(G4Material*);
+    void SetElement(G4Element*);
     
-     
-    XLogicalBase(XLogicalAtomicLattice*,G4Material*);
+    // Calculation methods
+    // ints == Miller indexes
+    G4double EvaluateAtomicFormFactor(); //Kittel - chapter 2 Eq. (42) for single atomic kind
+    G4complex EvaluateStructureFactorSingleAtomicKind(G4int,G4int,G4int);  //Kittel - chapter 2 Eq. (46) for single atomic kind
+  
+    XLogicalBase();
     ~XLogicalBase();
 };
 

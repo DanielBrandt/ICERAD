@@ -47,6 +47,13 @@ void XLogicalAtomicLattice::InitializeXLogicalAtomicLattice(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+G4ThreeVector& XLogicalAtomicLattice::GetAtomPosition(G4int i){
+    if(i<fLatticeAtomNumber) return fLatticeAtomPosition[i];
+    else G4cout << "XLogicalAtomicLattice::GetAtomPosition - atom " << i << " does not exist!!" <<std::endl;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
 void XLogicalAtomicLattice::AddAtom(G4ThreeVector vAtomPosition){
     fLatticeAtomNumber++;
     //Add an atom to the lattice
@@ -74,15 +81,15 @@ void XLogicalAtomicLattice::DeleteAtom(G4ThreeVector vAtomPosition){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4complex XLogicalAtomicLattice::EvaluateStructureFactor(G4int m,G4int n ,G4int l){
+G4complex XLogicalAtomicLattice::EvaluateGeometricalStructureFactorSingleKind(G4int h,G4int k ,G4int l){
     G4double vTempDouble = 0.;
     G4complex vResult = G4complex(0.,0.);
 
     for(G4int i=0;i<fLatticeAtomNumber;i++)
     {
         vTempDouble = 0.0;
-        vTempDouble += m * fLatticeAtomPosition[i].x();
-        vTempDouble += n * fLatticeAtomPosition[i].y();
+        vTempDouble += h * fLatticeAtomPosition[i].x();
+        vTempDouble += k * fLatticeAtomPosition[i].y();
         vTempDouble += l * fLatticeAtomPosition[i].z();
         vResult += G4complex(cos(2 * M_PI * vTempDouble),sin(2 * M_PI * vTempDouble));
     }

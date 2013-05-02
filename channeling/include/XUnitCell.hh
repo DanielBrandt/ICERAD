@@ -33,7 +33,11 @@
 #include <fstream>
 #include <string>
 #include "G4ThreeVector.hh"
+
+#include "XLogicalAtomicLattice.hh"
+#include "XLogicalAtomicLatticeDiamond.hh"
 #include "XLogicalBase.hh"
+#include "XUnitCell.hh"
 
 #define MAXBASENUMBER 32
 
@@ -42,7 +46,9 @@ using namespace std;
 class XUnitCell{
 
 private:
+    G4int fNumberOfBases;
     XLogicalBase *fBase[MAXBASENUMBER];
+    
     G4ThreeVector fSize;
     G4ThreeVector fAngle;
     
@@ -53,11 +59,33 @@ public:
     G4ThreeVector& GetAngle();
 
     // Set methods
-    XLogicalBase& GetBase(G4int i);
-    void SetBase(G4int i);
+    XLogicalBase* GetBase(G4int);
+    void SetBase(G4int,XLogicalBase*);
     
     void AddBase(XLogicalBase*);
 
+    //Calculation methods
+    G4complex EvaluateStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
+
+    G4double EvaluateVolume();
+    G4double EvaluateMillerOverSizeSquared(G4int,G4int,G4int);
+    G4double EvaluateMillerPerSizeSquared(G4int,G4int,G4int);
+
+    G4double EvaluateReciprocalVectorSquared(G4int,G4int,G4int);
+    G4double EvaluateReciprocalVector(G4int,G4int,G4int);
+    G4double EvaluateReciprocalPeriodSquared(G4int,G4int,G4int);
+    G4double EvaluateReciprocalPeriod(G4int,G4int,G4int);
+
+    G4double EvaluateDirectVectorSquared(G4int,G4int,G4int);
+    G4double EvaluateDirectVector(G4int,G4int,G4int);
+    G4double EvaluateDirectPeriodSquared(G4int,G4int,G4int);
+    G4double EvaluateDirectPeriod(G4int,G4int,G4int);
+    
+    //Check method
+    G4bool IsOrthogonal();
+    G4bool IsCubic();
+    
+    //Contructors
     XUnitCell();
     ~XUnitCell();
 };

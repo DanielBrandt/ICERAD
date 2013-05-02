@@ -48,6 +48,9 @@ private:
 public:    
     void InitializeXLogicalAtomicLattice();
 
+    // Get methods
+    G4ThreeVector& GetAtomPosition(G4int i);
+
     // Set methods
     void AddAtom(G4ThreeVector);
     void DeleteAtom(G4ThreeVector);
@@ -55,7 +58,7 @@ public:
 
     // Calculation methods
     // ints == Miller indexes
-    G4complex EvaluateStructureFactor(G4int,G4int,G4int);
+    G4complex EvaluateGeometricalStructureFactorSingleKind(G4int,G4int,G4int);
 
     // Definition methods
     XLogicalAtomicLattice();

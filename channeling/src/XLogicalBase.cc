@@ -29,9 +29,7 @@
 #include "G4PhysicalConstants.hh"
 #include <cmath>
 
-XLogicalBase::XLogicalBase(XLogicalAtomicLattice* lattice, G4Material* material){
-    fMaterial = material;
-    fLattice = lattice;
+XLogicalBase::XLogicalBase(){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -47,8 +45,8 @@ XLogicalAtomicLattice* XLogicalBase::GetLattice(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4Material* XLogicalBase::GetMaterial(){
-    return fMaterial;
+G4Element* XLogicalBase::GetElement(){
+    return fElement;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -59,8 +57,23 @@ void XLogicalBase::SetLattice(XLogicalAtomicLattice* lattice){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void XLogicalBase::SetMaterial(G4Material* material){
-    fMaterial = material;
+void XLogicalBase::SetElement(G4Element* element){
+    fElement = element;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XLogicalBase::EvaluateAtomicFormFactor(){
+    return 1.0;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4complex XLogicalBase::EvaluateStructureFactorSingleAtomicKind(G4int h,G4int k ,G4int l){
+    G4double vAtomicFormFactor = EvaluateAtomicFormFactor();
+    G4complex vResult = GetLattice()->EvaluateGeometricalStructureFactorSingleKind(h,k,l);
+    vResult = G4complex(vResult.real() * vAtomicFormFactor,vResult.imag() * vAtomicFormFactor);
+    return vResult;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

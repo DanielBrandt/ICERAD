@@ -37,7 +37,6 @@
 
 class G4VPhysicalVolume;
 
-
 class XPhysicalLattice{
 
 private:

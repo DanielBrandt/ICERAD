@@ -35,8 +35,6 @@
 #include "G4ThreeVector.hh"
 #include "XLogicalAtomicLattice.hh"
 
-#define MAXLATTICEATOMS 64
-
 using namespace std;
 
 class XLogicalAtomicLatticeSingleAtom: public XLogicalAtomicLattice
