@@ -237,6 +237,12 @@ void XPhysicalLattice::SetLatticeOrientation(G4double t_rot, G4double p_rot){
 void XPhysicalLattice::SetMillerOrientation(int l, int k, int n){
   fTheta=pi/2-std::atan2(n+0.000001,l+0.000001)*rad;
   fPhi=pi/2-std::atan2(l+0.000001,k+0.000001)*rad;
+    
+    // // // added for channeling // // //
+    fMillerOrientation[0]=l;
+    fMillerOrientation[1]=k;
+    fMillerOrientation[2]=n;
+    // // // // // // // // // // // // //
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -246,41 +252,35 @@ void XPhysicalLattice::SetXLogicalLattice(XLogicalLattice* Lat){
   fLattice=Lat;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-// Begin Channeling specific code
+////....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+//// Begin Channeling specific code
+////....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+//
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void XPhysicalLattice::SetUnitCell(XUnitCell* cell){
-  fLattice->SetUnitCell(cell);
+    fUnitCell = cell;
 }
 
-void XPhysicalLattice::SetNuclearDistribution(XNuclearDensityDistribution* nDist){
-  fLattice->SetNuclearDistribution(nDist);
-}
-
-void XPhysicalLattice::SetElectronicDistribution(XElectronicsDensityDistribution* eDist){
-  fLattice->SetElectronicDistribution(eDist);
-}
-void XPhysicalLattice::SetChannelingPlane(G4double miller1, G4double miller2, G4double miller3){
-  fLattice->SetChannelingPlane(miller1, miller2, miller3);
-}
-
-void XPhysicalLattice::SetChannelingPlane(G4double* millerArray){
-  fLattice->SetChannelingPlane(millerArray);
-}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 XUnitCell* XPhysicalLattice::GetUnitCell(){
-  fLattice->GetUnitCell();
+    return fUnitCell;
 }
 
-XNuclearDensityDistribution* XPhysicalLattice::GetNuclearDistribution(){
-  fLattice->GetNuclearDistribution();
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+XLogicalLattice* XPhysicalLattice::GetLogicalLattice(){
+    return fLattice;
 }
 
-XElectronicsDensityDistribution* XPhysicalLattice::GetElectronDistribution(){
-  fLattice->GetElectronDistribution();
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4int XPhysicalLattice::GetMillerOrientation(G4int vIndex){
+    if(vIndex<3 && vIndex>=0)
+        return fMillerOrientation[vIndex];
+    else return -1;
 }
 
-G4double* XPhysicalLattice::GetCutPlane(){
-  fLattice->GetCutPlane();
-}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

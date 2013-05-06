@@ -129,15 +129,27 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     myLatticeManager->RegisterLattice(physicalLattice);
 
     logicalLattice->SetScatteringConstant(3.67e-41*s*s*s);
+    physicalLattice->SetMillerOrientation(2,2,0);
     
-    XUnitCell* myCell = new XUnitCell();
-    logicalLattice->SetUnitCell(myCell);
-    
+    //----------------------------------------
+    // Create XUnitCell objecy for Si
+    //----------------------------------------
     XLogicalAtomicLatticeDiamond *diamond_lattice = new XLogicalAtomicLatticeDiamond();
     G4Element* elSi = new G4Element("Silicon","Si",14.,28.09*g/mole);
     XLogicalBase *base_si = new XLogicalBase();
     base_si->SetElement(elSi);
-    base_si->SetLattice(diamond_lattice);   
+    base_si->SetLattice(diamond_lattice);
+    XUnitCell* myCell = new XUnitCell();
+    myCell->SetSize(G4ThreeVector( 5.43 * angstrom, 5.43 * angstrom, 5.43 * angstrom));
+    
+    physicalLattice->SetUnitCell(myCell);
+    
+    G4cout << "///////////////*************///////////////" << std::endl;
+    G4cout << myLatticeManager->GetXPhysicalLattice(PhysicalTarget)->GetUnitCell()->EvaluateVolume() / pow(angstrom,3.) << std::endl;
+    G4cout << myLatticeManager->GetXPhysicalLattice(PhysicalTarget)->GetUnitCell()->EvaluateDirectPeriod(2,2,0) / angstrom << std::endl;
+    G4cout << "///////////////*************///////////////" << std::endl;
+
+
     
     return PhysicalWorld;
 }

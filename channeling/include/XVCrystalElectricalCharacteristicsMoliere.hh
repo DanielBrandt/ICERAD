@@ -26,68 +26,33 @@
 //
 // $Id$
 //
-#ifndef XUnitCell_h
-#define XUnitCell_h
+#ifndef XVCrystalElectricalCharacteristicsMoliere_h
+#define XVCrystalElectricalCharacteristicsMoliere_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
-
-#include "XLogicalAtomicLattice.hh"
-#include "XLogicalAtomicLatticeDiamond.hh"
-#include "XLogicalBase.hh"
-
-#define MAXBASENUMBER 32
+#include "XVCrystalElectricalCharacteristics.hh"
 
 using namespace std;
 
-class XUnitCell{
+class XVCrystalElectricalCharacteristicsMoliere:public XVCrystalElectricalCharacteristics {
 
 private:
-    G4int fNumberOfBases;
-    XLogicalBase* fBase[MAXBASENUMBER];
-    
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
+    void InitializeXVCrystalElectricalCharacteristicsMoliere();
+    G4double fAlfa[3];
+    G4double fBeta[3];
+
 public:
-    //Retrieval methods
-    G4ThreeVector& GetSize();
-    G4ThreeVector& GetAngle();
-
-    //Set methods
-    void SetSize(G4ThreeVector);
-    void SetAngle(G4ThreeVector);
-    XLogicalBase* GetBase(G4int);
-    void SetBase(G4int,XLogicalBase*);
-    void AddBase(XLogicalBase*);
-
-    //Calculation methods
-    G4complex EvaluateStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
-
-    G4double EvaluateVolume();
+    //virtual function in XVUnitCell
+    G4double GetNormalizedElectronDensity(G4ThreeVector);
+    G4double GetNormalizedNucleiDensity(G4ThreeVector);
+    G4double GetPotential(G4ThreeVector);
+    G4ThreeVector GetElectricalField(G4ThreeVector);
     
-    G4double EvaluateMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double EvaluateMillerPerSizeSquared(G4int,G4int,G4int);
-
-    G4double EvaluateReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double EvaluateReciprocalVector(G4int,G4int,G4int);
-
-    G4double EvaluateDirectVectorSquared(G4int,G4int,G4int);
-    G4double EvaluateDirectVector(G4int,G4int,G4int);
-    
-    G4double EvaluateDirectPeriodSquared(G4int,G4int,G4int);
-    G4double EvaluateDirectPeriod(G4int,G4int,G4int);
-
-    //Check method
-    G4bool IsOrthogonal();
-    G4bool IsCubic();
+    //class-only functions
+    G4double GetPotentialSinglePlane(G4double);
     
     //Contructors
-    XUnitCell();
-    ~XUnitCell();
+    XVCrystalElectricalCharacteristicsMoliere();
+    ~XVCrystalElectricalCharacteristicsMoliere();
 };
 
 #endif

@@ -37,11 +37,6 @@
 #include <fstream>
 #include <string>
 #include "G4ThreeVector.hh"
-#include "XUnitCell.hh"
-
-class XNuclearDensityDistribution;
-class XElectronicsDensityDistribution;
-class XChannellingPlane;
 
 
 using namespace std;
@@ -100,28 +95,6 @@ public:
   bool Load_NMap(int, int, int, string);
   double MapKtoV(int, G4ThreeVector);   //Get full group velocity vector
   G4ThreeVector MapKtoVDir(int, G4ThreeVector);//Get normalized group velocity direction so that normalisatioon does not have to be done at run time
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-// Begin channeling specific code
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-public:
-  void SetUnitCell(XUnitCell*);
-  void SetNuclearDistribution(XNuclearDensityDistribution*);
-  void SetElectronicDistribution(XElectronicsDensityDistribution*);
-  void SetChannelingPlane(G4double miller1, G4double miller2, G4double miller3);
-  void SetChannelingPlane(G4double* millerArray);
-
-  XUnitCell* GetUnitCell();
-  XNuclearDensityDistribution* GetNuclearDistribution();
-  XElectronicsDensityDistribution* GetElectronDistribution();
-  G4double* GetCutPlane();
-
-private:
-  G4double fChannelingPlaneMiller[3];
-  XNuclearDensityDistribution* fNuclearDensityDistribution;
-  XElectronicsDensityDistribution* fElectronDensityDistribution;
-  XUnitCell *fCell; //Unit cell with atom position and main cell parameters
 
 };
 

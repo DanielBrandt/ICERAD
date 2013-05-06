@@ -287,8 +287,6 @@ double XLogicalLattice::MapKtoV(int polarizationState,G4ThreeVector k)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
 G4ThreeVector XLogicalLattice::MapKtoVDir(int polarizationState,G4ThreeVector k)
 {  
   //Given the phonon wave vector k, phonon physical volume Vol 
@@ -324,45 +322,4 @@ G4ThreeVector XLogicalLattice::MapKtoVDir(int polarizationState,G4ThreeVector k)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-// Begin channeling specific code
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void XLogicalLattice::SetUnitCell(XUnitCell* cell)
-{
-    fCell = cell;
-}
-
-void XLogicalLattice::SetNuclearDistribution(XNuclearDensityDistribution* nDist){
-
-}
-
-
-void XLogicalLattice::SetElectronicDistribution(XElectronicsDensityDistribution* eDist){
-
-}
-
-
-void XLogicalLattice::SetChannelingPlane(G4double miller1, G4double miller2, G4double miller3){
-
-}
-
-void XLogicalLattice::SetChannelingPlane(G4double* millerArray){
-
-}
-
-XUnitCell* XLogicalLattice::GetUnitCell(){
-  return fCell;
-}
-
-XNuclearDensityDistribution* XLogicalLattice::GetNuclearDistribution(){
-  return fNuclearDensityDistribution;
-}
-
-XElectronicsDensityDistribution* XLogicalLattice::GetElectronDistribution(){
-  return fElectronDensityDistribution;
-}
-
-
-G4double* XLogicalLattice::GetCutPlane(){
-  return fChannelingPlaneMiller;
-}

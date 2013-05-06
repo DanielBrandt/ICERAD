@@ -43,7 +43,7 @@ XUnitCell::~XUnitCell(){
 void XUnitCell::InitializeXUnitCell(){
     //for(G4int i=0;i<MAXATOMNUMBER;i++) fLatticeAtomPosition[i] = G4ThreeVector(0.,0.,0.);
     fSize = G4ThreeVector(1. * angstrom,1. * angstrom,1. * angstrom);
-    fAngle = G4ThreeVector(0.5 * radian,0.5 * radian,0.5 * radian);
+    fAngle = G4ThreeVector(0.5 * M_PI * radian,0.5 * M_PI * radian,0.5 * M_PI * radian);
     fNumberOfBases = 0.;
 }
 
@@ -69,6 +69,18 @@ XLogicalBase* XUnitCell::GetBase(G4int i){
         G4cout << "XUnitCell::GetBase(G4int) Base " << i << " does not exist" << std::endl;
         return NULL;
     }
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XUnitCell::SetSize(G4ThreeVector vSize){
+    fSize = vSize;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XUnitCell::SetAngle(G4ThreeVector vAngle){
+    fAngle = vAngle;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -120,9 +132,10 @@ G4double XUnitCell::EvaluateMillerPerSizeSquared(G4int h, G4int k, G4int l)
 
 G4double XUnitCell::EvaluateReciprocalVectorSquared(G4int h, G4int k, G4int l)
 {
-    
+    G4double vReciprocalVectorSquared = 0.0;
+
     if(IsOrthogonal()){
-        return EvaluateReciprocalPeriodSquared(h,k,l);
+        vReciprocalVectorSquared = EvaluateMillerOverSizeSquared(h,k,l);
     }
     else{
         G4double vTempDouble[6];
@@ -144,30 +157,22 @@ G4double XUnitCell::EvaluateReciprocalVectorSquared(G4int h, G4int k, G4int l)
         vTempDouble[4] *= (2. * l * h);
         
         vTempDouble[5] = pow(fSize.x(),2.) * fSize.y() * fSize.z() * (cos(fAngle.y()) * cos(fAngle.z()) - cos(fAngle.x()));
-        vTempDouble[5] *= (2. * l * l);
+        vTempDouble[5] *= (2. * k * l);
 
-        G4double vReciprocalVectorSquared = 0.0;
         vReciprocalVectorSquared = (vTempDouble[0]+vTempDouble[1]+vTempDouble[2]) / vVolume;
         vReciprocalVectorSquared += (vTempDouble[3]+vTempDouble[4]+vTempDouble[5]);
-        vReciprocalVectorSquared  *= (4. * M_PI * M_PI);
         vReciprocalVectorSquared /= vVolume;
-        return vReciprocalVectorSquared;
     }
+    
+    vReciprocalVectorSquared  *= (4. * M_PI * M_PI);    
+    return vReciprocalVectorSquared;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::EvaluateReciprocalPeriodSquared(G4int h, G4int k, G4int l)
+G4double XUnitCell::EvaluateReciprocalVector(G4int h, G4int k, G4int l)
 {
-    G4double vReciprocalPeriodSquared = EvaluateMillerOverSizeSquared(h,k,l) * (4. * M_PI * M_PI);
-    return vReciprocalPeriodSquared;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-G4double XUnitCell::EvaluateReciprocalPeriod(G4int h, G4int k, G4int l)
-{
-    return sqrt(EvaluateReciprocalPeriodSquared(h,k,l));
+    return sqrt(EvaluateReciprocalVectorSquared(h,k,l));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -198,8 +203,7 @@ G4double XUnitCell::EvaluateDirectVector(G4int h, G4int k, G4int l)
 
 G4double XUnitCell::EvaluateDirectPeriodSquared(G4int h, G4int k, G4int l)
 {
-    G4double vDirectPeriodSquared = EvaluateMillerOverSizeSquared(h,k,l);
-    return sqrt(1./vDirectPeriodSquared);
+    return (1./EvaluateMillerOverSizeSquared(h,k,l));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -214,9 +218,9 @@ G4double XUnitCell::EvaluateDirectPeriod(G4int h, G4int k, G4int l)
 
 G4bool XUnitCell::IsOrthogonal()
 {
-    if(fAngle.x() == M_PI/2)
-        if(fAngle.y() == M_PI/2)
-            if(fAngle.z() == M_PI/2)
+    if(fAngle.x() == M_PI / 2.)
+        if(fAngle.y() == M_PI / 2.)
+            if(fAngle.z() == M_PI / 2.)
                 return true;
     return false;
 }

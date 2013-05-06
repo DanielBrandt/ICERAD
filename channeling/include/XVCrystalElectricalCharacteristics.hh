@@ -26,68 +26,45 @@
 //
 // $Id$
 //
-#ifndef XUnitCell_h
-#define XUnitCell_h
+#ifndef XVCrystalElectricalCharacteristics_h
+#define XVCrystalElectricalCharacteristics_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
-
-#include "XLogicalAtomicLattice.hh"
-#include "XLogicalAtomicLatticeDiamond.hh"
-#include "XLogicalBase.hh"
-
-#define MAXBASENUMBER 32
+#include "XLatticeManager3.hh"
+#include "G4NistManager.hh"
 
 using namespace std;
 
-class XUnitCell{
+class XVCrystalElectricalCharacteristics {
 
 private:
-    G4int fNumberOfBases;
-    XLogicalBase* fBase[MAXBASENUMBER];
+    void InitializeXVCrystalElectricalCharacteristics();
+    XLatticeManager3* fLatticeManager;
+    G4VPhysicalVolume* fVolume;
+    G4NistManager* fNistManager;
     
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
 public:
-    //Retrieval methods
-    G4ThreeVector& GetSize();
-    G4ThreeVector& GetAngle();
-
-    //Set methods
-    void SetSize(G4ThreeVector);
-    void SetAngle(G4ThreeVector);
-    XLogicalBase* GetBase(G4int);
-    void SetBase(G4int,XLogicalBase*);
-    void AddBase(XLogicalBase*);
-
-    //Calculation methods
-    G4complex EvaluateStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
-
-    G4double EvaluateVolume();
+    //retrieval functions
+    XPhysicalLattice* GetPhysicalLattice();
+    XUnitCell* GetUnitCell();
+    XLogicalLattice* GetLogicalLattice();
+    G4VPhysicalVolume* GetPhysicalVolume();
+    G4NistManager* GeNistManager();
     
-    G4double EvaluateMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double EvaluateMillerPerSizeSquared(G4int,G4int,G4int);
-
-    G4double EvaluateReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double EvaluateReciprocalVector(G4int,G4int,G4int);
-
-    G4double EvaluateDirectVectorSquared(G4int,G4int,G4int);
-    G4double EvaluateDirectVector(G4int,G4int,G4int);
+    //set methods
+    void SetVolume(G4VPhysicalVolume*);
     
-    G4double EvaluateDirectPeriodSquared(G4int,G4int,G4int);
-    G4double EvaluateDirectPeriod(G4int,G4int,G4int);
-
-    //Check method
-    G4bool IsOrthogonal();
-    G4bool IsCubic();
+    //virtual function in XVCrystalElectricalCharacteristics
+    virtual G4double GetNormalizedElectronDensity(G4ThreeVector) {return 0.;};
+    virtual G4double GetNormalizedNucleiDensity(G4ThreeVector) {return 0.;};
+    virtual G4double GetPotential(G4ThreeVector) {return 0.;};
+    virtual G4ThreeVector GetElectricalField(G4ThreeVector) {return G4ThreeVector(0.,0.,0.);};
     
+    //calculation functions
+    G4double EvaluateInverseThomasFermiRadius(G4Element *vElement);
+
     //Contructors
-    XUnitCell();
-    ~XUnitCell();
+    XVCrystalElectricalCharacteristics();
+    ~XVCrystalElectricalCharacteristics();
 };
 
 #endif
