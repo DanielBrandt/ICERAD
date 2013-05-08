@@ -24,51 +24,28 @@
 // ********************************************************************
 //
 //
+// $Id$
+//
+#ifndef XThomasFermiScreeningRadius_h
+#define XThomasFermiScreeningRadius_h
 
-#include "XVCrystalElectricalCharacteristics.hh"
+#include "G4Element.hh"
+#include "G4ParticleDefinition.hh"
 
-XVCrystalElectricalCharacteristics::XVCrystalElectricalCharacteristics(){
-    fLatticeManager = XLatticeManager3::GetXLatticeManager();
-}
+using namespace std;
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+class XThomasFermiScreeningRadius {
 
-XVCrystalElectricalCharacteristics::~XVCrystalElectricalCharacteristics(){
-}
+private:
+    
+public:
+    //Compute methods
+    G4double ComputeScreeningRadius(G4Element*,G4ParticleDefinition*);
+    G4double ComputeScreeningRadius(G4Element*);
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+    //Contructors
+    XThomasFermiScreeningRadius();
+    ~XThomasFermiScreeningRadius();
+};
 
-XPhysicalLattice* XVCrystalElectricalCharacteristics::GetPhysicalLattice()
-{
-    return fLatticeManager->GetXPhysicalLattice(fVolume);
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XUnitCell* XVCrystalElectricalCharacteristics::GetUnitCell()
-{
-    return GetPhysicalLattice()->GetUnitCell();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XLogicalLattice* XVCrystalElectricalCharacteristics::GetLogicalLattice()
-{
-    return GetPhysicalLattice()->GetLogicalLattice();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4VPhysicalVolume* XVCrystalElectricalCharacteristics::GetPhysicalVolume()
-{
-    return GetPhysicalLattice()->GetVolume();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XVCrystalElectricalCharacteristics::SetVolume(G4VPhysicalVolume* vVolume)
-{
-    fVolume = vVolume;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+#endif

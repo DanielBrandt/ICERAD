@@ -25,50 +25,26 @@
 //
 //
 
-#include "XVCrystalElectricalCharacteristics.hh"
+#include "XAtomicScreeningFunction.hh"
 
-XVCrystalElectricalCharacteristics::XVCrystalElectricalCharacteristics(){
-    fLatticeManager = XLatticeManager3::GetXLatticeManager();
+XAtomicScreeningFunction::XAtomicScreeningFunction(){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XVCrystalElectricalCharacteristics::~XVCrystalElectricalCharacteristics(){
+XAtomicScreeningFunction::~XAtomicScreeningFunction(){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XPhysicalLattice* XVCrystalElectricalCharacteristics::GetPhysicalLattice()
-{
-    return fLatticeManager->GetXPhysicalLattice(fVolume);
+G4double XAtomicScreeningFunction::ComputeScreeningFunction(G4double& vXposition, G4Element *vElement, G4ParticleDefinition *vParticle){
+    return 0.;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XUnitCell* XVCrystalElectricalCharacteristics::GetUnitCell()
-{
-    return GetPhysicalLattice()->GetUnitCell();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XLogicalLattice* XVCrystalElectricalCharacteristics::GetLogicalLattice()
-{
-    return GetPhysicalLattice()->GetLogicalLattice();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4VPhysicalVolume* XVCrystalElectricalCharacteristics::GetPhysicalVolume()
-{
-    return GetPhysicalLattice()->GetVolume();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XVCrystalElectricalCharacteristics::SetVolume(G4VPhysicalVolume* vVolume)
-{
-    fVolume = vVolume;
+G4double XAtomicScreeningFunction::ComputeScreeningFunction(G4double& vXposition, G4Element *vElement){
+    return 0.;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

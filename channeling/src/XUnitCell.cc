@@ -104,7 +104,7 @@ void XUnitCell::AddBase(XLogicalBase* base){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::EvaluateVolume()
+G4double XUnitCell::ComputeVolume()
 {
     if(IsOrthogonal()){
         return ( fSize.x()*fSize.y()*fSize.z() );
@@ -114,32 +114,43 @@ G4double XUnitCell::EvaluateVolume()
     }
 }
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XUnitCell::ComputeAtomVolumeDensity(){
+    G4double vAtomVolumeDensity = 0.;
+    for(G4int i=0;i< fNumberOfBases;i++){
+        vAtomVolumeDensity += (fBase[i]->GetElement()->GetZ() * fBase[i]->GetLattice()->GetLatticeAtomNumber());
+    }
+    vAtomVolumeDensity /= ComputeVolume();
+    return vAtomVolumeDensity;
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::EvaluateMillerOverSizeSquared(G4int h, G4int k, G4int l)
+G4double XUnitCell::ComputeMillerOverSizeSquared(G4int h, G4int k, G4int l)
 {
     return pow(h/fSize.x(),2.) + pow(k/fSize.y(),2.) + pow(l/fSize.z(),2.);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::EvaluateMillerPerSizeSquared(G4int h, G4int k, G4int l)
+G4double XUnitCell::ComputeMillerPerSizeSquared(G4int h, G4int k, G4int l)
 {
     return pow(h*fSize.x(),2.) + pow(k*fSize.y(),2.) + pow(l*fSize.z(),2.);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::EvaluateReciprocalVectorSquared(G4int h, G4int k, G4int l)
+G4double XUnitCell::ComputeReciprocalVectorSquared(G4int h, G4int k, G4int l)
 {
     G4double vReciprocalVectorSquared = 0.0;
 
     if(IsOrthogonal()){
-        vReciprocalVectorSquared = EvaluateMillerOverSizeSquared(h,k,l);
+        vReciprocalVectorSquared = ComputeMillerOverSizeSquared(h,k,l);
     }
     else{
         G4double vTempDouble[6];
-        G4double vVolume = EvaluateVolume();
+        G4double vVolume = ComputeVolume();
         
         vTempDouble[0] = fSize.y() * fSize.z() * sin(fAngle.y());
         vTempDouble[0] = pow(vTempDouble[0] * h,2.) / vVolume;
@@ -170,21 +181,21 @@ G4double XUnitCell::EvaluateReciprocalVectorSquared(G4int h, G4int k, G4int l)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::EvaluateReciprocalVector(G4int h, G4int k, G4int l)
+G4double XUnitCell::ComputeReciprocalVector(G4int h, G4int k, G4int l)
 {
-    return sqrt(EvaluateReciprocalVectorSquared(h,k,l));
+    return sqrt(ComputeReciprocalVectorSquared(h,k,l));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::EvaluateDirectVectorSquared(G4int h, G4int k, G4int l)
+G4double XUnitCell::ComputeDirectVectorSquared(G4int h, G4int k, G4int l)
 {
     if(IsOrthogonal()){
-        return EvaluateMillerPerSizeSquared(h,k,l);
+        return ComputeMillerPerSizeSquared(h,k,l);
     }
     else{
         double vDirectVectorSquared = 0.0;
-        vDirectVectorSquared = EvaluateMillerPerSizeSquared(h,k,l);
+        vDirectVectorSquared = ComputeMillerPerSizeSquared(h,k,l);
         vDirectVectorSquared += 2. * h * k * fSize.y() * fSize.z() * cos(fAngle.y()) ;
         vDirectVectorSquared += 2. * l * h * fSize.x() * fSize.z() * cos(fAngle.x()) ;
         vDirectVectorSquared += 2. * l * l * fSize.x() * fSize.y() * cos(fAngle.z()) ;
@@ -194,23 +205,23 @@ G4double XUnitCell::EvaluateDirectVectorSquared(G4int h, G4int k, G4int l)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::EvaluateDirectVector(G4int h, G4int k, G4int l)
+G4double XUnitCell::ComputeDirectVector(G4int h, G4int k, G4int l)
 {
-    return sqrt(EvaluateDirectVectorSquared(h,k,l));
+    return sqrt(ComputeDirectVectorSquared(h,k,l));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::EvaluateDirectPeriodSquared(G4int h, G4int k, G4int l)
+G4double XUnitCell::ComputeDirectPeriodSquared(G4int h, G4int k, G4int l)
 {
-    return (1./EvaluateMillerOverSizeSquared(h,k,l));
+    return (1./ComputeMillerOverSizeSquared(h,k,l));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::EvaluateDirectPeriod(G4int h, G4int k, G4int l)
+G4double XUnitCell::ComputeDirectPeriod(G4int h, G4int k, G4int l)
 {
-    return sqrt(EvaluateDirectPeriodSquared(h,k,l));
+    return sqrt(ComputeDirectPeriodSquared(h,k,l));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

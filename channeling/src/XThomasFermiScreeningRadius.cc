@@ -25,50 +25,31 @@
 //
 //
 
-#include "XVCrystalElectricalCharacteristics.hh"
+#include "XThomasFermiScreeningRadius.hh"
 
-XVCrystalElectricalCharacteristics::XVCrystalElectricalCharacteristics(){
-    fLatticeManager = XLatticeManager3::GetXLatticeManager();
+XThomasFermiScreeningRadius::XThomasFermiScreeningRadius(){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XVCrystalElectricalCharacteristics::~XVCrystalElectricalCharacteristics(){
+XThomasFermiScreeningRadius::~XThomasFermiScreeningRadius(){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XPhysicalLattice* XVCrystalElectricalCharacteristics::GetPhysicalLattice()
-{
-    return fLatticeManager->GetXPhysicalLattice(fVolume);
+G4double XThomasFermiScreeningRadius::ComputeScreeningRadius(G4Element *vElement,G4ParticleDefinition *vParticle){
+    if(vParticle->GetParticleName() == "proton"){
+        return ComputeScreeningRadius(vElement);
+    }
+    else{
+        return (Bohr_radius * 0.88534 / (std::pow(vElement->GetZ(),0.23) + std::pow(vParticle->GetPDGCharge(),0.23)));
+    }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XUnitCell* XVCrystalElectricalCharacteristics::GetUnitCell()
-{
-    return GetPhysicalLattice()->GetUnitCell();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XLogicalLattice* XVCrystalElectricalCharacteristics::GetLogicalLattice()
-{
-    return GetPhysicalLattice()->GetLogicalLattice();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4VPhysicalVolume* XVCrystalElectricalCharacteristics::GetPhysicalVolume()
-{
-    return GetPhysicalLattice()->GetVolume();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XVCrystalElectricalCharacteristics::SetVolume(G4VPhysicalVolume* vVolume)
-{
-    fVolume = vVolume;
+G4double XThomasFermiScreeningRadius::ComputeScreeningRadius(G4Element *vElement){
+    return (Bohr_radius * 0.88534 / (std::pow(vElement->GetZ(),0.333333333)));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

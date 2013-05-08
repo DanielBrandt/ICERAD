@@ -63,15 +63,15 @@ void XLogicalBase::SetElement(G4Element* element){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XLogicalBase::EvaluateAtomicFormFactor(){
+G4double XLogicalBase::ComputeAtomicFormFactor(){
     return 1.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4complex XLogicalBase::EvaluateStructureFactorSingleAtomicKind(G4int h,G4int k ,G4int l){
-    G4double vAtomicFormFactor = EvaluateAtomicFormFactor();
-    G4complex vResult = GetLattice()->EvaluateGeometricalStructureFactorSingleKind(h,k,l);
+G4complex XLogicalBase::ComputeStructureFactorSingleAtomicKind(G4int h,G4int k ,G4int l){
+    G4double vAtomicFormFactor = ComputeAtomicFormFactor();
+    G4complex vResult = GetLattice()->ComputeGeometricalStructureFactorSingleKind(h,k,l);
     vResult = G4complex(vResult.real() * vAtomicFormFactor,vResult.imag() * vAtomicFormFactor);
     return vResult;
 }

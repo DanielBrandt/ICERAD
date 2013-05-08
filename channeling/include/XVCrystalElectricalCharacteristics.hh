@@ -30,17 +30,14 @@
 #define XVCrystalElectricalCharacteristics_h
 
 #include "XLatticeManager3.hh"
-#include "G4NistManager.hh"
 
 using namespace std;
 
 class XVCrystalElectricalCharacteristics {
 
 private:
-    void InitializeXVCrystalElectricalCharacteristics();
     XLatticeManager3* fLatticeManager;
     G4VPhysicalVolume* fVolume;
-    G4NistManager* fNistManager;
     
 public:
     //retrieval functions
@@ -48,7 +45,7 @@ public:
     XUnitCell* GetUnitCell();
     XLogicalLattice* GetLogicalLattice();
     G4VPhysicalVolume* GetPhysicalVolume();
-    G4NistManager* GeNistManager();
+    
     
     //set methods
     void SetVolume(G4VPhysicalVolume*);
@@ -58,10 +55,7 @@ public:
     virtual G4double GetNormalizedNucleiDensity(G4ThreeVector) {return 0.;};
     virtual G4double GetPotential(G4ThreeVector) {return 0.;};
     virtual G4ThreeVector GetElectricalField(G4ThreeVector) {return G4ThreeVector(0.,0.,0.);};
-    
-    //calculation functions
-    G4double EvaluateInverseThomasFermiRadius(G4Element *vElement);
-
+        
     //Contructors
     XVCrystalElectricalCharacteristics();
     ~XVCrystalElectricalCharacteristics();

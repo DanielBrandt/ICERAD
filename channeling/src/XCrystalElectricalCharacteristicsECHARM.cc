@@ -24,35 +24,56 @@
 // ********************************************************************
 //
 //
-// $Id$
-//
-#ifndef XVCrystalElectricalCharacteristicsMoliere_h
-#define XVCrystalElectricalCharacteristicsMoliere_h
 
-#include "XVCrystalElectricalCharacteristics.hh"
+#include "XCrystalElectricalCharacteristicsECHARM.hh"
 
-using namespace std;
+XCrystalElectricalCharacteristicsECHARM::XCrystalElectricalCharacteristicsECHARM(){
+    InitializeXCrystalElectricalCharacteristicsECHARM();
+}
 
-class XVCrystalElectricalCharacteristicsMoliere:public XVCrystalElectricalCharacteristics {
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-private:
-    void InitializeXVCrystalElectricalCharacteristicsMoliere();
-    G4double fAlfa[3];
-    G4double fBeta[3];
+XCrystalElectricalCharacteristicsECHARM::~XCrystalElectricalCharacteristicsECHARM(){
+}
 
-public:
-    //virtual function in XVUnitCell
-    G4double GetNormalizedElectronDensity(G4ThreeVector);
-    G4double GetNormalizedNucleiDensity(G4ThreeVector);
-    G4double GetPotential(G4ThreeVector);
-    G4ThreeVector GetElectricalField(G4ThreeVector);
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XCrystalElectricalCharacteristicsECHARM::InitializeXCrystalElectricalCharacteristicsECHARM(){
     
-    //class-only functions
-    G4double GetPotentialSinglePlane(G4double);
+    fAlfa[0] = 0.1;
+    fAlfa[1] = 0.55;
+    fAlfa[2] = 0.35;
     
-    //Contructors
-    XVCrystalElectricalCharacteristicsMoliere();
-    ~XVCrystalElectricalCharacteristicsMoliere();
-};
+    fBeta[0] = 6.0;
+    fBeta[1] = 1.2;
+    fBeta[2] = 0.3;
+    
+    fNumberOfPlanes = 4;
+}
 
-#endif
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalElectricalCharacteristicsECHARM::GetNormalizedElectronDensity(G4ThreeVector vPositionVector){
+    return 0.0;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalElectricalCharacteristicsECHARM::GetNormalizedNucleiDensity(G4ThreeVector vPositionVector){
+    return 0.0;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalElectricalCharacteristicsECHARM::GetPotential(G4ThreeVector vPositionVector){
+        G4double vPotential = 0.;
+    return vPotential;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4ThreeVector XCrystalElectricalCharacteristicsECHARM::GetElectricalField(G4ThreeVector vPositionVector){
+    return G4ThreeVector(0.,0.,0.);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

@@ -25,21 +25,9 @@
 //
 //
 
-#include "XVCrystalElectricalCharacteristicsMoliere.hh"
+#include "XAtomicScreeningFunctionMoliere.hh"
 
-XVCrystalElectricalCharacteristicsMoliere::XVCrystalElectricalCharacteristicsMoliere(){
-    InitializeXVCrystalElectricalCharacteristicsMoliere();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XVCrystalElectricalCharacteristicsMoliere::~XVCrystalElectricalCharacteristicsMoliere(){
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XVCrystalElectricalCharacteristicsMoliere::InitializeXVCrystalElectricalCharacteristicsMoliere(){
-    
+XAtomicScreeningFunctionMoliere::XAtomicScreeningFunctionMoliere(){
     fAlfa[0] = 0.1;
     fAlfa[1] = 0.55;
     fAlfa[2] = 0.35;
@@ -47,47 +35,45 @@ void XVCrystalElectricalCharacteristicsMoliere::InitializeXVCrystalElectricalCha
     fBeta[0] = 6.0;
     fBeta[1] = 1.2;
     fBeta[2] = 0.3;
-    
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XVCrystalElectricalCharacteristicsMoliere::GetPotentialSinglePlane(G4double vXposition){
-    G4double vPotentialSinglePlane = 0.;
-    
-    for(unsigned int i=0;i<3;i++){
-        vPotentialSinglePlane += ( fAlfa[i]/fBeta[i] * exp( - fabs(vXposition)) * fBeta[i] * EvaluateInverseThomasFermiRadius( GetUnitCell()->GetBase(0)->GetElement() ));
+XAtomicScreeningFunctionMoliere::~XAtomicScreeningFunctionMoliere(){
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XAtomicScreeningFunctionMoliere::SetThomasFermiScreeningFunction(XThomasFermiScreeningRadius *vThomasFermiScreeningRadius){
+    fThomasFermiScreeningRadius = vThomasFermiScreeningRadius;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+XThomasFermiScreeningRadius* XAtomicScreeningFunctionMoliere::GetThomasFermiScreeningFunction(){
+    return fThomasFermiScreeningRadius;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XAtomicScreeningFunctionMoliere::ComputeScreeningFunction(G4double& vXdistance, G4Element *vElement, G4ParticleDefinition *vParticle){
+    G4double vScreeningValue = 0.;
+    G4double aTF = fThomasFermiScreeningRadius->ComputeScreeningRadius(vElement);
+    for(G4int i=0;i<3;i++){
+        vScreeningValue += ( fAlfa[i]/fBeta[i] * exp( - fabs(vXdistance) * fBeta[i] / aTF ) );
     }
-    
-    //vPotentialSinglePlane *= 2. * M_PI * GetUnitCell()->EvaluateDirectPeriod(GetPhysicalLattice()->GetMillerOrientation(0),GetPhysicalLattice()->GetMillerOrientation(1),GetPhysicalLattice()->GetMillerOrientation(2));
-    
-    
-    return vPotentialSinglePlane;
+    return vScreeningValue;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XVCrystalElectricalCharacteristicsMoliere::GetNormalizedElectronDensity(G4ThreeVector vPositionVector){
-    return 0.0;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4double XVCrystalElectricalCharacteristicsMoliere::GetNormalizedNucleiDensity(G4ThreeVector vPositionVector){
-    return 0.0;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4double XVCrystalElectricalCharacteristicsMoliere::GetPotential(G4ThreeVector vPositionVector){
-    G4double vPotential = GetPotentialSinglePlane(vPositionVector.x());
-   return 0.0;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4ThreeVector XVCrystalElectricalCharacteristicsMoliere::GetElectricalField(G4ThreeVector vPositionVector){
-    return G4ThreeVector(0.,0.,0.);
+G4double XAtomicScreeningFunctionMoliere::ComputeScreeningFunction(G4double& vXdistance, G4Element *vElement){
+    G4double vScreeningValue = 0.;
+    G4double aTF = fThomasFermiScreeningRadius->ComputeScreeningRadius(vElement);
+    for(G4int i=0;i<3;i++){
+        vScreeningValue += ( fAlfa[i]/fBeta[i] * exp( - (fabs(vXdistance) * fBeta[i] / aTF) ) );
+    }
+    return vScreeningValue;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

@@ -54,6 +54,11 @@
 #include "XLogicalBase.hh"
 #include "XUnitCell.hh"
 
+#include "XAtomicScreeningFunctionMoliere.hh"
+#include "XCrystalElectricalCharacteristicsAnalytical.hh"
+#include "XThomasFermiScreeningRadius.hh"
+
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::DetectorConstruction()
@@ -132,7 +137,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     physicalLattice->SetMillerOrientation(2,2,0);
     
     //----------------------------------------
-    // Create XUnitCell objecy for Si
+    // Create XUnitCell object for Si
     //----------------------------------------
     XLogicalAtomicLatticeDiamond *diamond_lattice = new XLogicalAtomicLatticeDiamond();
     G4Element* elSi = new G4Element("Silicon","Si",14.,28.09*g/mole);
@@ -141,12 +146,32 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     base_si->SetLattice(diamond_lattice);
     XUnitCell* myCell = new XUnitCell();
     myCell->SetSize(G4ThreeVector( 5.43 * angstrom, 5.43 * angstrom, 5.43 * angstrom));
-    
     physicalLattice->SetUnitCell(myCell);
+    myCell->AddBase(base_si);
+    
+    XThomasFermiScreeningRadius* vTF = new XThomasFermiScreeningRadius();
+    XAtomicScreeningFunctionMoliere* vScreening = new XAtomicScreeningFunctionMoliere();
+    vScreening->SetThomasFermiScreeningFunction(vTF);
+    
+    XCrystalElectricalCharacteristicsAnalytical *vAnalytical = new XCrystalElectricalCharacteristicsAnalytical();
+    vAnalytical->SetThomasFermiScreeningFunction(vTF);
+    vAnalytical->SetAtomicScreeningFunction(vScreening);
+    vAnalytical->SetVolume(PhysicalTarget);
+
+    std::ofstream vFileOut;
+    vFileOut.open("tmep.txt");
+    G4int imax = 1024;
+    G4double vXposition = 0.;
+    for(G4int i = -imax;i<imax;i++){
+        vXposition = double(i)/double(imax)*vAnalytical->GetUnitCell()->ComputeDirectPeriod(vAnalytical->GetPhysicalLattice()->GetMillerOrientation(0),vAnalytical->GetPhysicalLattice()->GetMillerOrientation(1),vAnalytical->GetPhysicalLattice()->GetMillerOrientation(2));
+        vFileOut << vXposition / angstrom << " " << vAnalytical->GetPotential(G4ThreeVector(vXposition,0.,0.)) / eV << std::endl;
+    }
+    vFileOut.close();
     
     G4cout << "///////////////*************///////////////" << std::endl;
-    G4cout << myLatticeManager->GetXPhysicalLattice(PhysicalTarget)->GetUnitCell()->EvaluateVolume() / pow(angstrom,3.) << std::endl;
-    G4cout << myLatticeManager->GetXPhysicalLattice(PhysicalTarget)->GetUnitCell()->EvaluateDirectPeriod(2,2,0) / angstrom << std::endl;
+    G4cout << myLatticeManager->GetXPhysicalLattice(PhysicalTarget)->GetUnitCell()->ComputeVolume() / pow(angstrom,3.) << std::endl;
+    G4cout << myLatticeManager->GetXPhysicalLattice(PhysicalTarget)->GetUnitCell()->ComputeDirectPeriod(2,2,0) / angstrom << std::endl;
+    G4cout << (vTF->ComputeScreeningRadius(elSi)) / angstrom << std::endl;
     G4cout << "///////////////*************///////////////" << std::endl;
 
 

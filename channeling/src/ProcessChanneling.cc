@@ -76,8 +76,8 @@ ProcessChanneling::ProjectMomentumInCrystalCoordinateSystem(const G4Track& aTrac
     //project momentum in the xtal reference frame to check if the particle can be channeled
     G4ThreeVector startMomentum = G4ThreeVector(aTrack.GetMomentumDirection().unit());
     
-    //get orthonormal vectors to the crystal plane to evaluate the transverse particle momentum on such a direction
-    //starting from transverse momentum we evaluate change in position and momentum in the crystal basis
+    //get orthonormal vectors to the crystal plane to Compute the transverse particle momentum on such a direction
+    //starting from transverse momentum we Compute change in position and momentum in the crystal basis
     G4ThreeVector vPlaneDirectionX = G4ThreeVector(0,1,0); // we have to link to the direction of the lattice
     G4ThreeVector vPlaneDirectionY = G4ThreeVector(0,0,1); // we have to link to the direction of the lattice
     G4ThreeVector vPlaneDirectionZ = G4ThreeVector(1,0,0); // we have to link to the direction of the lattice

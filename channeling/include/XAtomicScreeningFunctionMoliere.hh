@@ -24,51 +24,35 @@
 // ********************************************************************
 //
 //
+// $Id$
+//
+#ifndef XAtomicScreeningFunctionMoliere_h
+#define XAtomicScreeningFunctionMoliere_h
 
-#include "XVCrystalElectricalCharacteristics.hh"
+#include "XAtomicScreeningFunction.hh"
+#include "XThomasFermiScreeningRadius.hh"
 
-XVCrystalElectricalCharacteristics::XVCrystalElectricalCharacteristics(){
-    fLatticeManager = XLatticeManager3::GetXLatticeManager();
-}
+class XAtomicScreeningFunctionMoliere: public XAtomicScreeningFunction {
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+private:
+    XThomasFermiScreeningRadius *fThomasFermiScreeningRadius;
+    G4double fAlfa[3];
+    G4double fBeta[3];
 
-XVCrystalElectricalCharacteristics::~XVCrystalElectricalCharacteristics(){
-}
+public:
+    //set function
+    void SetThomasFermiScreeningFunction(XThomasFermiScreeningRadius*);
+    
+    //retrieval function
+    XThomasFermiScreeningRadius* GetThomasFermiScreeningFunction();
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+    //virtual function in main class
+    G4double ComputeScreeningFunction(G4double&,G4Element*,G4ParticleDefinition*);
+    G4double ComputeScreeningFunction(G4double&,G4Element*);
 
-XPhysicalLattice* XVCrystalElectricalCharacteristics::GetPhysicalLattice()
-{
-    return fLatticeManager->GetXPhysicalLattice(fVolume);
-}
+    //Contructors
+    XAtomicScreeningFunctionMoliere();
+    ~XAtomicScreeningFunctionMoliere();
+};
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XUnitCell* XVCrystalElectricalCharacteristics::GetUnitCell()
-{
-    return GetPhysicalLattice()->GetUnitCell();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XLogicalLattice* XVCrystalElectricalCharacteristics::GetLogicalLattice()
-{
-    return GetPhysicalLattice()->GetLogicalLattice();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4VPhysicalVolume* XVCrystalElectricalCharacteristics::GetPhysicalVolume()
-{
-    return GetPhysicalLattice()->GetVolume();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XVCrystalElectricalCharacteristics::SetVolume(G4VPhysicalVolume* vVolume)
-{
-    fVolume = vVolume;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+#endif

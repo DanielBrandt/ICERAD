@@ -54,6 +54,12 @@ G4ThreeVector& XLogicalAtomicLattice::GetAtomPosition(G4int i){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+G4int XLogicalAtomicLattice::GetLatticeAtomNumber(){
+    return fLatticeAtomNumber;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
 void XLogicalAtomicLattice::AddAtom(G4ThreeVector vAtomPosition){
     fLatticeAtomNumber++;
     //Add an atom to the lattice
@@ -81,7 +87,7 @@ void XLogicalAtomicLattice::DeleteAtom(G4ThreeVector vAtomPosition){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4complex XLogicalAtomicLattice::EvaluateGeometricalStructureFactorSingleKind(G4int h,G4int k ,G4int l){
+G4complex XLogicalAtomicLattice::ComputeGeometricalStructureFactorSingleKind(G4int h,G4int k ,G4int l){
     G4double vTempDouble = 0.;
     G4complex vResult = G4complex(0.,0.);
 

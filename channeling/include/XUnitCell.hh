@@ -56,7 +56,7 @@ public:
     //Retrieval methods
     G4ThreeVector& GetSize();
     G4ThreeVector& GetAngle();
-
+    
     //Set methods
     void SetSize(G4ThreeVector);
     void SetAngle(G4ThreeVector);
@@ -65,21 +65,22 @@ public:
     void AddBase(XLogicalBase*);
 
     //Calculation methods
-    G4complex EvaluateStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
+    G4double ComputeVolume();
+    G4double ComputeAtomVolumeDensity();
 
-    G4double EvaluateVolume();
+    G4double ComputeMillerOverSizeSquared(G4int,G4int,G4int);
+    G4double ComputeMillerPerSizeSquared(G4int,G4int,G4int);
+
+    G4double ComputeReciprocalVectorSquared(G4int,G4int,G4int);
+    G4double ComputeReciprocalVector(G4int,G4int,G4int);
+
+    G4double ComputeDirectVectorSquared(G4int,G4int,G4int);
+    G4double ComputeDirectVector(G4int,G4int,G4int);
     
-    G4double EvaluateMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double EvaluateMillerPerSizeSquared(G4int,G4int,G4int);
+    G4double ComputeDirectPeriodSquared(G4int,G4int,G4int);
+    G4double ComputeDirectPeriod(G4int,G4int,G4int);
 
-    G4double EvaluateReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double EvaluateReciprocalVector(G4int,G4int,G4int);
-
-    G4double EvaluateDirectVectorSquared(G4int,G4int,G4int);
-    G4double EvaluateDirectVector(G4int,G4int,G4int);
-    
-    G4double EvaluateDirectPeriodSquared(G4int,G4int,G4int);
-    G4double EvaluateDirectPeriod(G4int,G4int,G4int);
+    G4complex ComputeStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
 
     //Check method
     G4bool IsOrthogonal();

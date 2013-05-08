@@ -55,8 +55,8 @@ public:
     
     // Calculation methods
     // ints == Miller indexes
-    G4double EvaluateAtomicFormFactor(); //Kittel - chapter 2 Eq. (42) for single atomic kind
-    G4complex EvaluateStructureFactorSingleAtomicKind(G4int,G4int,G4int);  //Kittel - chapter 2 Eq. (46) for single atomic kind
+    G4double ComputeAtomicFormFactor(); //Kittel - chapter 2 Eq. (42) for single atomic kind
+    G4complex ComputeStructureFactorSingleAtomicKind(G4int,G4int,G4int);  //Kittel - chapter 2 Eq. (46) for single atomic kind
   
     XLogicalBase();
     ~XLogicalBase();

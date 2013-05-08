@@ -24,51 +24,29 @@
 // ********************************************************************
 //
 //
+// $Id$
+//
+#ifndef XAtomicScreeningFunction_h
+#define XAtomicScreeningFunction_h
 
-#include "XVCrystalElectricalCharacteristics.hh"
+#include "G4ThreeVector.hh"
+#include "G4Element.hh"
+#include "G4ParticleDefinition.hh"
 
-XVCrystalElectricalCharacteristics::XVCrystalElectricalCharacteristics(){
-    fLatticeManager = XLatticeManager3::GetXLatticeManager();
-}
+using namespace std;
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+class XAtomicScreeningFunction {
 
-XVCrystalElectricalCharacteristics::~XVCrystalElectricalCharacteristics(){
-}
+private:
+    
+public:
+    //Compute methods
+    virtual G4double ComputeScreeningFunction(G4double&,G4Element*,G4ParticleDefinition*);
+    virtual G4double ComputeScreeningFunction(G4double&,G4Element*);
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+    //Contructors
+    XAtomicScreeningFunction();
+    ~XAtomicScreeningFunction();
+};
 
-XPhysicalLattice* XVCrystalElectricalCharacteristics::GetPhysicalLattice()
-{
-    return fLatticeManager->GetXPhysicalLattice(fVolume);
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XUnitCell* XVCrystalElectricalCharacteristics::GetUnitCell()
-{
-    return GetPhysicalLattice()->GetUnitCell();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XLogicalLattice* XVCrystalElectricalCharacteristics::GetLogicalLattice()
-{
-    return GetPhysicalLattice()->GetLogicalLattice();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4VPhysicalVolume* XVCrystalElectricalCharacteristics::GetPhysicalVolume()
-{
-    return GetPhysicalLattice()->GetVolume();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XVCrystalElectricalCharacteristics::SetVolume(G4VPhysicalVolume* vVolume)
-{
-    fVolume = vVolume;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+#endif
