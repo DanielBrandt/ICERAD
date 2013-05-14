@@ -40,8 +40,7 @@ private:
     
 public:
     //Compute methods
-    G4double ComputeScreeningRadius(G4Element*,G4ParticleDefinition*);
-    G4double ComputeScreeningRadius(G4Element*);
+    G4double ComputeScreeningRadius(G4Element*,G4ParticleDefinition* = NULL);
 
     //Contructors
     XThomasFermiScreeningRadius();

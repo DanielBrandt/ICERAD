@@ -26,69 +26,31 @@
 //
 // $Id$
 //
-#ifndef XUnitCell_h
-#define XUnitCell_h
+#ifndef XVCrystalCharacteristic_h
+#define XVCrystalCharacteristic_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
-
-#include "XLogicalAtomicLattice.hh"
-#include "XLogicalAtomicLatticeDiamond.hh"
-#include "XLogicalBase.hh"
-
-#define MAXBASENUMBER 32
+#include "XLatticeManager3.hh"
 
 using namespace std;
 
-class XUnitCell{
+class XVCrystalCharacteristic {
 
 private:
-    G4int fNumberOfBases;
-    XLogicalBase* fBase[MAXBASENUMBER];
+    XLatticeManager3* fLatticeManager;
     
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
 public:
-    //Retrieval methods
-    inline G4ThreeVector& GetSize();
-    inline G4ThreeVector& GetAngle();
-    XLogicalBase* GetBase(G4int);
-    
-    //Set methods
-    void SetSize(G4ThreeVector);
-    void SetAngle(G4ThreeVector);
-    void SetBase(G4int,XLogicalBase*);
-    void AddBase(XLogicalBase*);
+    //retrieval functions
+    XPhysicalLattice* GetPhysicalLattice(G4VPhysicalVolume*);
+    XUnitCell* GetUnitCell(G4VPhysicalVolume*);
+    XLogicalLattice* GetLogicalLattice(G4VPhysicalVolume*);
+        
+    //virtual function to compute value starting from the point in the xtal reference frame and the physical volume of the xtal
+    virtual G4ThreeVector ComputeValue(G4ThreeVector,G4VPhysicalVolume*) = 0;
+    virtual G4double ComputePositionInPeriodicUnit(G4double,G4double&);
 
-    //Calculation methods
-    G4double ComputeVolume();
-    G4double ComputeAtomVolumeDensity();
-
-    G4double ComputeMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double ComputeMillerPerSizeSquared(G4int,G4int,G4int);
-
-    G4double ComputeReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double ComputeReciprocalVector(G4int,G4int,G4int);
-
-    G4double ComputeDirectVectorSquared(G4int,G4int,G4int);
-    G4double ComputeDirectVector(G4int,G4int,G4int);
-    
-    G4double ComputeDirectPeriodSquared(G4int,G4int,G4int);
-    G4double ComputeDirectPeriod(G4int,G4int,G4int);
-
-    G4complex ComputeStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
-
-    //Check method
-    G4bool IsOrthogonal();
-    G4bool IsCubic();
-    
     //Contructors
-    XUnitCell();
-    ~XUnitCell();
+    XVCrystalCharacteristic();
+    ~XVCrystalCharacteristic();
 };
 
 #endif

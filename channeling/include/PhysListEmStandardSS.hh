@@ -23,65 +23,46 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file electromagnetic/TestEm5/include/PhysListEmStandardSS.hh
+/// \brief Definition of the PhysListEmStandardSS class
 //
-// $Id: PrimaryGeneratorAction.cc,v 1.1 2010-10-18 15:56:17 maire Exp $
-// GEANT4 tag $Name: not supported by cvs2svn $
+// $Id$
 //
-// 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+#ifndef PhysListEmStandardSS_h
+#define PhysListEmStandardSS_h 1
+
+#include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "PrimaryGeneratorAction.hh"
-
-#include "DetectorConstruction.hh"
-
-#include "G4RunManager.hh"
-#include "G4Event.hh"
-#include "G4ParticleGun.hh"
-#include "G4ParticleTable.hh"
-#include "G4ParticleDefinition.hh"
-#include "Randomize.hh"
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-PrimaryGeneratorAction::PrimaryGeneratorAction()
+class PhysListEmStandardSS : public G4VPhysicsConstructor
 {
-  G4int n_particle = 1;
-  particleGun  = new G4ParticleGun(n_particle);
+public: 
+  PhysListEmStandardSS(const G4String& name = "standardSS");
+ ~PhysListEmStandardSS();
 
-  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  G4String particleName;
-  G4ParticleDefinition* particle
-                    = particleTable->FindParticle(particleName="proton");
-  particleGun->SetParticleDefinition(particle);
-  particleGun->SetParticlePosition(G4ThreeVector(0*cm,0.*cm,0.*cm));
-
-
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-PrimaryGeneratorAction::~PrimaryGeneratorAction()
-{
-  delete particleGun;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
-{
-  //this function is called at the begining of event
-  // 
-  G4double x0 = -15.*cm;
-  G4double y0 = 0.*cm;
-  G4double z0 = 0.*cm;
+public: 
+  // This method is dummy for physics
+  virtual void ConstructParticle() {};
  
-  particleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
-  particleGun->SetParticleMomentumDirection(G4ThreeVector(1.,(G4UniformRand()-0.5)*4.E-1,0.).unit());
-  particleGun->SetParticleEnergy(400.*GeV);
-
-  particleGun->GeneratePrimaryVertex(anEvent);
-}
+  // This method will be invoked in the Construct() method.
+  // each physics process will be instantiated and
+  // registered to the process manager of each particle type 
+  virtual void ConstructProcess();
+};
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+#endif
+
+
+
+
+
+
+
 

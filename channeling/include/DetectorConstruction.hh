@@ -37,6 +37,11 @@
 #endif
 
 #include "G4VUserDetectorConstruction.hh"
+
+#include "G4SDManager.hh"
+#include "G4MultiFunctionalDetector.hh"
+#include "ExN04TrackerSD.hh"
+
 #include "globals.hh"
 
 

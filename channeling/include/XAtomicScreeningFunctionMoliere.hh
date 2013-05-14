@@ -41,14 +41,19 @@ private:
 
 public:
     //set function
-    void SetThomasFermiScreeningFunction(XThomasFermiScreeningRadius*);
+    void SetTFSR(XThomasFermiScreeningRadius*);
     
     //retrieval function
-    XThomasFermiScreeningRadius* GetThomasFermiScreeningFunction();
+    XThomasFermiScreeningRadius* GetTFSR();
 
     //virtual function in main class
-    G4double ComputeScreeningFunction(G4double&,G4Element*,G4ParticleDefinition*);
-    G4double ComputeScreeningFunction(G4double&,G4Element*);
+    G4double ComputeScreeningFunctionIntegral(G4double,G4Element*,G4ParticleDefinition*);
+ 
+    G4double ComputeScreeningFunction(G4double,G4Element*,G4ParticleDefinition*);
+
+    G4double ComputeScreeningFunctionFirstDerivative(G4double,G4Element*,G4ParticleDefinition*);
+
+    G4double ComputeNormalization(G4double,G4Element*,G4ParticleDefinition*);
 
     //Contructors
     XAtomicScreeningFunctionMoliere();

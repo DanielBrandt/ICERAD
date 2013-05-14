@@ -23,72 +23,67 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//
-// $Id$
-//
-#ifndef XUnitCell_h
-#define XUnitCell_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
+#include "ExN04EventAction.hh"
 
-#include "XLogicalAtomicLattice.hh"
-#include "XLogicalAtomicLatticeDiamond.hh"
-#include "XLogicalBase.hh"
+#include "ExN04TrackerHit.hh"
 
-#define MAXBASENUMBER 32
+#include "G4Event.hh"
+#include "G4EventManager.hh"
+#include "G4HCofThisEvent.hh"
+#include "G4VHitsCollection.hh"
+#include "G4TrajectoryContainer.hh"
+#include "G4Trajectory.hh"
+#include "G4VVisManager.hh"
+#include "G4SDManager.hh"
+#include "G4UImanager.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4ios.hh"
 
-using namespace std;
+#include "G4THitsMap.hh"
 
-class XUnitCell{
+ExN04EventAction::ExN04EventAction()
+{
+    trackerCollID = -1;
+    fFileOut.open("data.txt",std::ios_base::app);
+}
 
-private:
-    G4int fNumberOfBases;
-    XLogicalBase* fBase[MAXBASENUMBER];
+ExN04EventAction::~ExN04EventAction()
+{
+    fFileOut.close();
+}
+
+void ExN04EventAction::BeginOfEventAction(const G4Event*)
+{
+    G4SDManager * SDman = G4SDManager::GetSDMpointer();
+    if(trackerCollID<0)
+    {
+        G4String colNam;
+        trackerCollID = SDman->GetCollectionID(colNam="trackerCollection");
+    }
+}
+
+void ExN04EventAction::EndOfEventAction(const G4Event* evt)
+{
+    G4cout << ">>> Event " << evt->GetEventID() << G4endl;
     
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
+    if(trackerCollID<0) return;
     
-    void InitializeXUnitCell();
-public:
-    //Retrieval methods
-    inline G4ThreeVector& GetSize();
-    inline G4ThreeVector& GetAngle();
-    XLogicalBase* GetBase(G4int);
+    G4HCofThisEvent * HCE = evt->GetHCofThisEvent();
+    ExN04TrackerHitsCollection* THC = 0;
     
-    //Set methods
-    void SetSize(G4ThreeVector);
-    void SetAngle(G4ThreeVector);
-    void SetBase(G4int,XLogicalBase*);
-    void AddBase(XLogicalBase*);
-
-    //Calculation methods
-    G4double ComputeVolume();
-    G4double ComputeAtomVolumeDensity();
-
-    G4double ComputeMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double ComputeMillerPerSizeSquared(G4int,G4int,G4int);
-
-    G4double ComputeReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double ComputeReciprocalVector(G4int,G4int,G4int);
-
-    G4double ComputeDirectVectorSquared(G4int,G4int,G4int);
-    G4double ComputeDirectVector(G4int,G4int,G4int);
+    if(HCE){
+        THC = (ExN04TrackerHitsCollection*)(HCE->GetHC(trackerCollID));
+    }
     
-    G4double ComputeDirectPeriodSquared(G4int,G4int,G4int);
-    G4double ComputeDirectPeriod(G4int,G4int,G4int);
-
-    G4complex ComputeStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
-
-    //Check method
-    G4bool IsOrthogonal();
-    G4bool IsCubic();
-    
-    //Contructors
-    XUnitCell();
-    ~XUnitCell();
-};
-
-#endif
+    if(THC){
+        int n_hit = THC->entries();
+        G4cout << "     " << n_hit << " hits are stored in ExN04TrackerHitsCollection." << G4endl;
+        G4ThreeVector pos;
+        G4double vCorrection = 1.E6/(10.*cm);
+        for(int i=0 ; i<n_hit; i++ ){
+            pos = (THC->GetVector()->at(i))->GetPos();
+            fFileOut << pos.y()*vCorrection << " " << pos.z()*vCorrection << std::endl;
+        }
+    }
+}

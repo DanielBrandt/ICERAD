@@ -277,7 +277,7 @@ XLogicalLattice* XPhysicalLattice::GetLogicalLattice(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4int XPhysicalLattice::GetMillerOrientation(G4int vIndex){
+G4int XPhysicalLattice::GetMiller(G4int vIndex){
     if(vIndex<3 && vIndex>=0)
         return fMillerOrientation[vIndex];
     else return -1;

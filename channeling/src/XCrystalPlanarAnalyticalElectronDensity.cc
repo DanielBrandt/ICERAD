@@ -24,71 +24,27 @@
 // ********************************************************************
 //
 //
-// $Id$
-//
-#ifndef XUnitCell_h
-#define XUnitCell_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
+#include "XCrystalPlanarAnalyticalElectronDensity.hh"
 
-#include "XLogicalAtomicLattice.hh"
-#include "XLogicalAtomicLatticeDiamond.hh"
-#include "XLogicalBase.hh"
+XCrystalPlanarAnalyticalElectronDensity::XCrystalPlanarAnalyticalElectronDensity(){
+}
 
-#define MAXBASENUMBER 32
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-using namespace std;
+XCrystalPlanarAnalyticalElectronDensity::~XCrystalPlanarAnalyticalElectronDensity(){
+}
 
-class XUnitCell{
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-private:
-    G4int fNumberOfBases;
-    XLogicalBase* fBase[MAXBASENUMBER];
+G4double XCrystalPlanarAnalyticalElectronDensity::ComputeValueForSinglePlane(G4double vXposition,G4VPhysicalVolume* vVolume){
+
+    G4double vValueForSinglePlane = (GetScreeningFunction()->ComputeScreeningFunction(fabs(vXposition),GetUnitCell(vVolume)->GetBase(0)->GetElement()));
     
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
+    vValueForSinglePlane *= GetScreeningFunction()->ComputeNormalization(fabs(vXposition),GetUnitCell(vVolume)->GetBase(0)->GetElement());
     
-    void InitializeXUnitCell();
-public:
-    //Retrieval methods
-    inline G4ThreeVector& GetSize();
-    inline G4ThreeVector& GetAngle();
-    XLogicalBase* GetBase(G4int);
-    
-    //Set methods
-    void SetSize(G4ThreeVector);
-    void SetAngle(G4ThreeVector);
-    void SetBase(G4int,XLogicalBase*);
-    void AddBase(XLogicalBase*);
 
-    //Calculation methods
-    G4double ComputeVolume();
-    G4double ComputeAtomVolumeDensity();
+    return vValueForSinglePlane;
+}
 
-    G4double ComputeMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double ComputeMillerPerSizeSquared(G4int,G4int,G4int);
-
-    G4double ComputeReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double ComputeReciprocalVector(G4int,G4int,G4int);
-
-    G4double ComputeDirectVectorSquared(G4int,G4int,G4int);
-    G4double ComputeDirectVector(G4int,G4int,G4int);
-    
-    G4double ComputeDirectPeriodSquared(G4int,G4int,G4int);
-    G4double ComputeDirectPeriod(G4int,G4int,G4int);
-
-    G4complex ComputeStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
-
-    //Check method
-    G4bool IsOrthogonal();
-    G4bool IsCubic();
-    
-    //Contructors
-    XUnitCell();
-    ~XUnitCell();
-};
-
-#endif
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

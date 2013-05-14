@@ -25,86 +25,66 @@
 //
 //
 
-#include "XLogicalAtomicLattice.hh"
-#include "G4PhysicalConstants.hh"
-#include <cmath>
+#include "XVCrystalPlanarAnalytical.hh"
 
-XLogicalAtomicLattice::XLogicalAtomicLattice(){
-    InitializeXLogicalAtomicLattice();
+XVCrystalPlanarAnalytical::XVCrystalPlanarAnalytical(){
+    fNumberOfPlanes = 4;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XLogicalAtomicLattice::~XLogicalAtomicLattice(){
+XVCrystalPlanarAnalytical::~XVCrystalPlanarAnalytical(){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void XLogicalAtomicLattice::InitializeXLogicalAtomicLattice(){
-    fLatticeAtomNumber = 1;
-    for(G4int i=0;i<MAXLATTICEATOMS;i++) fLatticeAtomPosition[i] = G4ThreeVector(0.,0.,0.);
+void XVCrystalPlanarAnalytical::SetNumberOfPlanes(G4int vNumberOfPlanes){
+    fNumberOfPlanes = vNumberOfPlanes;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ThreeVector& XLogicalAtomicLattice::GetAtomPosition(G4int i){
-    if(i<fLatticeAtomNumber){
-        return fLatticeAtomPosition[i];
-    }
-    else{
-        G4cout << "XLogicalAtomicLattice::GetAtomPosition - atom " << i << " does not exist!!" <<std::endl;
-    }
+void XVCrystalPlanarAnalytical::SetScreeningFunction(XAtomicScreeningFunction *vScreeningFunction){
+    fScreeningFunction = vScreeningFunction;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4int XLogicalAtomicLattice::GetLatticeNumberOfAtoms(){
-    return fLatticeAtomNumber;
+void XVCrystalPlanarAnalytical::SetTFSR(XThomasFermiScreeningRadius *vThomasFermiScreeningRadius){
+    fThomasFermiScreeningRadius = vThomasFermiScreeningRadius;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void XLogicalAtomicLattice::AddAtom(G4ThreeVector vAtomPosition){
-    fLatticeAtomNumber++;
-    //Add an atom to the lattice
-    fLatticeAtomPosition[fLatticeAtomNumber - 1] = vAtomPosition;
+G4int XVCrystalPlanarAnalytical::GetNumberOfPlanes(){
+    return fNumberOfPlanes;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void XLogicalAtomicLattice::DeleteAtom(G4ThreeVector vAtomPosition){
-    //Delete atoms in the lattice in the selected position
+XAtomicScreeningFunction* XVCrystalPlanarAnalytical::GetScreeningFunction(){
+    return fScreeningFunction;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+XThomasFermiScreeningRadius* XVCrystalPlanarAnalytical::GetTFSR(){
+    return fThomasFermiScreeningRadius;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4ThreeVector XVCrystalPlanarAnalytical::ComputeValue(G4ThreeVector vPositionVector,G4VPhysicalVolume* vVolume){
+    G4double vInterplanarDistance = GetUnitCell(vVolume)->ComputeDirectPeriod(GetPhysicalLattice(vVolume)->GetMiller(0),GetPhysicalLattice(vVolume)->GetMiller(1),GetPhysicalLattice(vVolume)->GetMiller(2));
     
-    G4int CheckIfAtomExist = fLatticeAtomNumber;
-    for(G4int i=0;i<fLatticeAtomNumber;i++)
-        if(vAtomPosition == fLatticeAtomPosition[i])
-        {
-            CheckIfAtomExist = i;
-            for(G4int j=(i+1);j<fLatticeAtomNumber;j++)
-            {
-                fLatticeAtomPosition[j-1]=fLatticeAtomPosition[j];
-            }
-            i--;
-            fLatticeAtomNumber--;
-        }
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4complex XLogicalAtomicLattice::ComputeGeometricalStructureFactorSingleKind(G4int h,G4int k ,G4int l){
-    G4double vTempDouble = 0.;
-    G4complex vResult = G4complex(0.,0.);
-
-    for(G4int i=0;i<fLatticeAtomNumber;i++)
-    {
-        vTempDouble = 0.0;
-        vTempDouble += h * fLatticeAtomPosition[i].x();
-        vTempDouble += k * fLatticeAtomPosition[i].y();
-        vTempDouble += l * fLatticeAtomPosition[i].z();
-        vResult += G4complex(cos(2 * M_PI * vTempDouble),sin(2 * M_PI * vTempDouble));
+    G4double vPotential = 0.;
+    G4double vX = ComputePositionInPeriodicUnit(vPositionVector.x(),vInterplanarDistance);
+    
+    for(G4int i=-int(GetNumberOfPlanes()/2);i<=+int(GetNumberOfPlanes()/2);i++){
+        vPotential += ComputeValueForSinglePlane(vX + vInterplanarDistance * i,vVolume);
     }
-
-    return vResult;
+    
+    return G4ThreeVector(vPotential,0.,0.);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

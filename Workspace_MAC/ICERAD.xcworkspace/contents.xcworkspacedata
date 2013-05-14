@@ -14,19 +14,22 @@
          location = "group:include"
          name = "include">
          <FileRef
-            location = "group:XThomasFermiScreeningRadius.hh">
-         </FileRef>
-         <FileRef
-            location = "group:XAtomicScreeningFunctionMoliere.hh">
-         </FileRef>
-         <FileRef
-            location = "group:XAtomicScreeningFunction.hh">
-         </FileRef>
-         <FileRef
             location = "group:DetectorConstruction.hh">
          </FileRef>
          <FileRef
+            location = "group:ExN04EventAction.hh">
+         </FileRef>
+         <FileRef
+            location = "group:ExN04TrackerHit.hh">
+         </FileRef>
+         <FileRef
+            location = "group:ExN04TrackerSD.hh">
+         </FileRef>
+         <FileRef
             location = "group:PhysicsList.hh">
+         </FileRef>
+         <FileRef
+            location = "group:PhysListEmStandardSS.hh">
          </FileRef>
          <FileRef
             location = "group:PrimaryGeneratorAction.hh">
@@ -35,10 +38,22 @@
             location = "group:ProcessChanneling.hh">
          </FileRef>
          <FileRef
-            location = "group:XCrystalElectricalCharacteristicsECHARM.hh">
+            location = "group:XAtomicScreeningFunction.hh">
          </FileRef>
          <FileRef
-            location = "group:XCrystalElectricalCharacteristicsAnalytical.hh">
+            location = "group:XAtomicScreeningFunctionMoliere.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XCrystalPlanarAnalyticalElectricField.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XCrystalPlanarAnalyticalElectronDensity.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XCrystalPlanarAnalyticalNucleiDensity.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XCrystalPlanarAnalyticalPotential.hh">
          </FileRef>
          <FileRef
             location = "group:XLatticeManager3.hh">
@@ -62,10 +77,16 @@
             location = "group:XPhysicalLattice.hh">
          </FileRef>
          <FileRef
+            location = "group:XThomasFermiScreeningRadius.hh">
+         </FileRef>
+         <FileRef
             location = "group:XUnitCell.hh">
          </FileRef>
          <FileRef
-            location = "group:XVCrystalElectricalCharacteristics.hh">
+            location = "group:XVCrystalCharacteristic.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XVCrystalPlanarAnalytical.hh">
          </FileRef>
       </Group>
       <FileRef
@@ -75,19 +96,22 @@
          location = "group:src"
          name = "src">
          <FileRef
-            location = "group:XThomasFermiScreeningRadius.cc">
-         </FileRef>
-         <FileRef
-            location = "group:XAtomicScreeningFunctionMoliere.cc">
-         </FileRef>
-         <FileRef
-            location = "group:XAtomicScreeningFunction.cc">
-         </FileRef>
-         <FileRef
             location = "group:DetectorConstruction.cc">
          </FileRef>
          <FileRef
+            location = "group:ExN04EventAction.cc">
+         </FileRef>
+         <FileRef
+            location = "group:ExN04TrackerHit.cc">
+         </FileRef>
+         <FileRef
+            location = "group:ExN04TrackerSD.cc">
+         </FileRef>
+         <FileRef
             location = "group:PhysicsList.cc">
+         </FileRef>
+         <FileRef
+            location = "group:PhysListEmStandardSS.cc">
          </FileRef>
          <FileRef
             location = "group:PrimaryGeneratorAction.cc">
@@ -96,10 +120,22 @@
             location = "group:ProcessChanneling.cc">
          </FileRef>
          <FileRef
-            location = "group:XCrystalElectricalCharacteristicsECHARM.cc">
+            location = "group:XAtomicScreeningFunction.cc">
          </FileRef>
          <FileRef
-            location = "group:XCrystalElectricalCharacteristicsAnalytical.cc">
+            location = "group:XAtomicScreeningFunctionMoliere.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XCrystalPlanarAnalyticalElectricField.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XCrystalPlanarAnalyticalElectronDensity.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XCrystalPlanarAnalyticalNucleiDensity.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XCrystalPlanarAnalyticalPotential.cc">
          </FileRef>
          <FileRef
             location = "group:XLatticeManager3.cc">
@@ -123,10 +159,16 @@
             location = "group:XPhysicalLattice.cc">
          </FileRef>
          <FileRef
+            location = "group:XThomasFermiScreeningRadius.cc">
+         </FileRef>
+         <FileRef
             location = "group:XUnitCell.cc">
          </FileRef>
          <FileRef
-            location = "group:XVCrystalElectricalCharacteristics.cc">
+            location = "group:XVCrystalCharacteristic.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XVCrystalPlanarAnalytical.cc">
          </FileRef>
       </Group>
       <FileRef

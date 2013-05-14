@@ -38,11 +38,20 @@ using namespace std;
 class XAtomicScreeningFunction {
 
 private:
+    G4double fDerivativePrecision;
     
 public:
+    inline void SetDerivativePrecision(G4double);
+    inline G4double GetDerivativePrecision();
+    
     //Compute methods
-    virtual G4double ComputeScreeningFunction(G4double&,G4Element*,G4ParticleDefinition*);
-    virtual G4double ComputeScreeningFunction(G4double&,G4Element*);
+    virtual G4double ComputeScreeningFunctionIntegral(G4double,G4Element*,G4ParticleDefinition* = NULL);
+ 
+    virtual G4double ComputeScreeningFunction(G4double,G4Element*,G4ParticleDefinition* = NULL);
+
+    virtual G4double ComputeScreeningFunctionFirstDerivative(G4double,G4Element*,G4ParticleDefinition* = NULL);
+
+    virtual G4double ComputeNormalization(G4double,G4Element*,G4ParticleDefinition* = NULL);
 
     //Contructors
     XAtomicScreeningFunction();

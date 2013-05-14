@@ -23,72 +23,66 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//
-// $Id$
-//
-#ifndef XUnitCell_h
-#define XUnitCell_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
+#ifndef ExN04TrackerHit_h
+#define ExN04TrackerHit_h 1
+
+#include "G4VHit.hh"
+#include "G4THitsCollection.hh"
+#include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
 
-#include "XLogicalAtomicLattice.hh"
-#include "XLogicalAtomicLatticeDiamond.hh"
-#include "XLogicalBase.hh"
+class G4AttDef;
 
-#define MAXBASENUMBER 32
+class ExN04TrackerHit : public G4VHit
+{
+  public:
 
-using namespace std;
+      ExN04TrackerHit();
+      ~ExN04TrackerHit();
+      ExN04TrackerHit(const ExN04TrackerHit &right);
+      const ExN04TrackerHit& operator=(const ExN04TrackerHit &right);
+      G4int operator==(const ExN04TrackerHit &right) const;
 
-class XUnitCell{
+      inline void *operator new(size_t);
+      inline void operator delete(void *aHit);
 
-private:
-    G4int fNumberOfBases;
-    XLogicalBase* fBase[MAXBASENUMBER];
-    
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
-public:
-    //Retrieval methods
-    inline G4ThreeVector& GetSize();
-    inline G4ThreeVector& GetAngle();
-    XLogicalBase* GetBase(G4int);
-    
-    //Set methods
-    void SetSize(G4ThreeVector);
-    void SetAngle(G4ThreeVector);
-    void SetBase(G4int,XLogicalBase*);
-    void AddBase(XLogicalBase*);
+      void Draw();
+      const std::map<G4String,G4AttDef>* GetAttDefs() const;
+      std::vector<G4AttValue>* CreateAttValues() const;
+      void Print();
 
-    //Calculation methods
-    G4double ComputeVolume();
-    G4double ComputeAtomVolumeDensity();
+  private:
+      G4double edep;
+      G4ThreeVector pos;
+      static std::map<G4String,G4AttDef> fAttDefs;
 
-    G4double ComputeMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double ComputeMillerPerSizeSquared(G4int,G4int,G4int);
+  public:
+      inline void SetEdep(G4double de)
+      { edep = de; }
+      inline G4double GetEdep()
+      { return edep; }
+      inline void SetPos(G4ThreeVector xyz)
+      { pos = xyz; }
+      inline G4ThreeVector GetPos()
+      { return pos; }
 
-    G4double ComputeReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double ComputeReciprocalVector(G4int,G4int,G4int);
-
-    G4double ComputeDirectVectorSquared(G4int,G4int,G4int);
-    G4double ComputeDirectVector(G4int,G4int,G4int);
-    
-    G4double ComputeDirectPeriodSquared(G4int,G4int,G4int);
-    G4double ComputeDirectPeriod(G4int,G4int,G4int);
-
-    G4complex ComputeStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
-
-    //Check method
-    G4bool IsOrthogonal();
-    G4bool IsCubic();
-    
-    //Contructors
-    XUnitCell();
-    ~XUnitCell();
 };
+
+typedef G4THitsCollection<ExN04TrackerHit> ExN04TrackerHitsCollection;
+
+extern G4Allocator<ExN04TrackerHit> ExN04TrackerHitAllocator;
+
+inline void* ExN04TrackerHit::operator new(size_t)
+{
+  void *aHit;
+  aHit = (void *) ExN04TrackerHitAllocator.MallocSingle();
+  return aHit;
+}
+
+inline void ExN04TrackerHit::operator delete(void *aHit)
+{
+  ExN04TrackerHitAllocator.FreeSingle((ExN04TrackerHit*) aHit);
+}
 
 #endif

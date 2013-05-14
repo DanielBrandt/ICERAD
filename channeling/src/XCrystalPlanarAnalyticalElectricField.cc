@@ -24,35 +24,35 @@
 // ********************************************************************
 //
 //
-// $Id$
-//
-#ifndef XCrystalElectricalCharacteristicsECHARM_h
-#define XCrystalElectricalCharacteristicsECHARM_h
 
-#include "XVCrystalElectricalCharacteristics.hh"
+#include "XCrystalPlanarAnalyticalElectricField.hh"
 
-using namespace std;
+XCrystalPlanarAnalyticalElectricField::XCrystalPlanarAnalyticalElectricField(){
+}
 
-class XCrystalElectricalCharacteristicsECHARM:public XVCrystalElectricalCharacteristics {
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-private:
-    void InitializeXCrystalElectricalCharacteristicsECHARM();
-    G4double fAlfa[3];
-    G4double fBeta[3];
-    G4int fNumberOfPlanes;
+XCrystalPlanarAnalyticalElectricField::~XCrystalPlanarAnalyticalElectricField(){
+}
 
-public:
-    //virtual function
-    G4double GetNormalizedElectronDensity(G4ThreeVector);
-    G4double GetNormalizedNucleiDensity(G4ThreeVector);
-    G4double GetPotential(G4ThreeVector);
-    G4ThreeVector GetElectricalField(G4ThreeVector);
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalPlanarAnalyticalElectricField::ComputeValueForSinglePlane(G4double vXposition,G4VPhysicalVolume* vVolume){
     
-    //class-only functions
-    
-    //Contructors
-    XCrystalElectricalCharacteristicsECHARM();
-    ~XCrystalElectricalCharacteristicsECHARM();
-};
+    G4double vValueForSinglePlane = GetScreeningFunction()->ComputeScreeningFunction(vXposition,GetUnitCell(vVolume)->GetBase(0)->GetElement());
 
-#endif
+    vValueForSinglePlane *= 2. * M_PI * GetUnitCell(vVolume)->ComputeDirectPeriod(GetPhysicalLattice(vVolume)->GetMiller(0),GetPhysicalLattice(vVolume)->GetMiller(1),GetPhysicalLattice(vVolume)->GetMiller(2));
+    
+    vValueForSinglePlane *= (elm_coupling);
+    
+    vValueForSinglePlane *= (GetUnitCell(vVolume)->ComputeAtomVolumeDensity());
+    
+    G4int vSign = -1;
+    if(vXposition < 0.) vSign = +1;
+
+    vValueForSinglePlane *= vSign;
+    
+    return vValueForSinglePlane;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

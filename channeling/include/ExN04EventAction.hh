@@ -23,72 +23,29 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//
-// $Id$
-//
-#ifndef XUnitCell_h
-#define XUnitCell_h
 
-#include <iostream>
+#ifndef ExN04EventAction_h
+#define ExN04EventAction_h 1
+
+#include "G4UserEventAction.hh"
+#include "globals.hh"
 #include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
 
-#include "XLogicalAtomicLattice.hh"
-#include "XLogicalAtomicLatticeDiamond.hh"
-#include "XLogicalBase.hh"
+class ExN04EventAction : public G4UserEventAction
+{
+  public:
+    ExN04EventAction();
+    ~ExN04EventAction();
 
-#define MAXBASENUMBER 32
+  public:
+    void BeginOfEventAction(const G4Event*);
+    void EndOfEventAction(const G4Event*);
 
-using namespace std;
-
-class XUnitCell{
-
-private:
-    G4int fNumberOfBases;
-    XLogicalBase* fBase[MAXBASENUMBER];
-    
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
-public:
-    //Retrieval methods
-    inline G4ThreeVector& GetSize();
-    inline G4ThreeVector& GetAngle();
-    XLogicalBase* GetBase(G4int);
-    
-    //Set methods
-    void SetSize(G4ThreeVector);
-    void SetAngle(G4ThreeVector);
-    void SetBase(G4int,XLogicalBase*);
-    void AddBase(XLogicalBase*);
-
-    //Calculation methods
-    G4double ComputeVolume();
-    G4double ComputeAtomVolumeDensity();
-
-    G4double ComputeMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double ComputeMillerPerSizeSquared(G4int,G4int,G4int);
-
-    G4double ComputeReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double ComputeReciprocalVector(G4int,G4int,G4int);
-
-    G4double ComputeDirectVectorSquared(G4int,G4int,G4int);
-    G4double ComputeDirectVector(G4int,G4int,G4int);
-    
-    G4double ComputeDirectPeriodSquared(G4int,G4int,G4int);
-    G4double ComputeDirectPeriod(G4int,G4int,G4int);
-
-    G4complex ComputeStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
-
-    //Check method
-    G4bool IsOrthogonal();
-    G4bool IsCubic();
-    
-    //Contructors
-    XUnitCell();
-    ~XUnitCell();
+  private:
+    G4int trackerCollID;
+    std::ofstream fFileOut;
 };
 
 #endif
+
+    

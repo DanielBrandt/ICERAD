@@ -26,39 +26,24 @@
 //
 // $Id$
 //
-#ifndef XVCrystalElectricalCharacteristics_h
-#define XVCrystalElectricalCharacteristics_h
+#ifndef XCrystalPlanarAnalyticalElectricField_h
+#define XCrystalPlanarAnalyticalElectricField_h
 
-#include "XLatticeManager3.hh"
+#include "XVCrystalPlanarAnalytical.hh"
+#include "XAtomicScreeningFunction.hh"
+#include "XThomasFermiScreeningRadius.hh"
 
-using namespace std;
-
-class XVCrystalElectricalCharacteristics {
+class XCrystalPlanarAnalyticalElectricField:public XVCrystalPlanarAnalytical {
 
 private:
-    XLatticeManager3* fLatticeManager;
-    G4VPhysicalVolume* fVolume;
-    
+
 public:
-    //retrieval functions
-    XPhysicalLattice* GetPhysicalLattice();
-    XUnitCell* GetUnitCell();
-    XLogicalLattice* GetLogicalLattice();
-    G4VPhysicalVolume* GetPhysicalVolume();
+    //class-only functions
+    G4double ComputeValueForSinglePlane(G4double,G4VPhysicalVolume*);
     
-    
-    //set methods
-    void SetVolume(G4VPhysicalVolume*);
-    
-    //virtual function in XVCrystalElectricalCharacteristics
-    virtual G4double GetNormalizedElectronDensity(G4ThreeVector) {return 0.;};
-    virtual G4double GetNormalizedNucleiDensity(G4ThreeVector) {return 0.;};
-    virtual G4double GetPotential(G4ThreeVector) {return 0.;};
-    virtual G4ThreeVector GetElectricalField(G4ThreeVector) {return G4ThreeVector(0.,0.,0.);};
-        
     //Contructors
-    XVCrystalElectricalCharacteristics();
-    ~XVCrystalElectricalCharacteristics();
+    XCrystalPlanarAnalyticalElectricField();
+    ~XCrystalPlanarAnalyticalElectricField();
 };
 
 #endif

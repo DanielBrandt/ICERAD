@@ -23,72 +23,38 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//
-// $Id$
-//
-#ifndef XUnitCell_h
-#define XUnitCell_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
+#ifndef ExN04TrackerSD_h
+#define ExN04TrackerSD_h 1
 
-#include "XLogicalAtomicLattice.hh"
-#include "XLogicalAtomicLatticeDiamond.hh"
-#include "XLogicalBase.hh"
+#include "G4VSensitiveDetector.hh"
+#include "ExN04TrackerHit.hh"
+class G4Step;
+class G4HCofThisEvent;
+class G4TouchableHistory;
 
-#define MAXBASENUMBER 32
+class ExN04TrackerSD : public G4VSensitiveDetector
+{
 
-using namespace std;
+  public:
+      ExN04TrackerSD(G4String name);
+      ~ExN04TrackerSD();
 
-class XUnitCell{
+      void Initialize(G4HCofThisEvent*HCE);
+      G4bool ProcessHits(G4Step*aStep,G4TouchableHistory*ROhist);
+      void EndOfEvent(G4HCofThisEvent*HCE);
+      void clear();
+      void DrawAll();
+      void PrintAll();
 
-private:
-    G4int fNumberOfBases;
-    XLogicalBase* fBase[MAXBASENUMBER];
-    
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
-public:
-    //Retrieval methods
-    inline G4ThreeVector& GetSize();
-    inline G4ThreeVector& GetAngle();
-    XLogicalBase* GetBase(G4int);
-    
-    //Set methods
-    void SetSize(G4ThreeVector);
-    void SetAngle(G4ThreeVector);
-    void SetBase(G4int,XLogicalBase*);
-    void AddBase(XLogicalBase*);
+  private:
+      ExN04TrackerHitsCollection *trackerCollection;
 
-    //Calculation methods
-    G4double ComputeVolume();
-    G4double ComputeAtomVolumeDensity();
-
-    G4double ComputeMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double ComputeMillerPerSizeSquared(G4int,G4int,G4int);
-
-    G4double ComputeReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double ComputeReciprocalVector(G4int,G4int,G4int);
-
-    G4double ComputeDirectVectorSquared(G4int,G4int,G4int);
-    G4double ComputeDirectVector(G4int,G4int,G4int);
-    
-    G4double ComputeDirectPeriodSquared(G4int,G4int,G4int);
-    G4double ComputeDirectPeriod(G4int,G4int,G4int);
-
-    G4complex ComputeStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
-
-    //Check method
-    G4bool IsOrthogonal();
-    G4bool IsCubic();
-    
-    //Contructors
-    XUnitCell();
-    ~XUnitCell();
+  public:
 };
 
+
+
+
 #endif
+

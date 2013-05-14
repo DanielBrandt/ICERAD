@@ -38,18 +38,18 @@ XThomasFermiScreeningRadius::~XThomasFermiScreeningRadius(){
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4double XThomasFermiScreeningRadius::ComputeScreeningRadius(G4Element *vElement,G4ParticleDefinition *vParticle){
-    if(vParticle->GetParticleName() == "proton"){
-        return ComputeScreeningRadius(vElement);
+    
+    G4double vTFSR = Bohr_radius * 0.88534;
+    if(vParticle==NULL){
+        vTFSR /= (std::pow(vElement->GetZ(),0.333333333));
+    }
+    else if(vParticle->GetParticleName() == "proton"){
+        vTFSR /= (std::pow(vElement->GetZ(),0.333333333));
     }
     else{
-        return (Bohr_radius * 0.88534 / (std::pow(vElement->GetZ(),0.23) + std::pow(vParticle->GetPDGCharge(),0.23)));
+        vTFSR /= (std::pow(vElement->GetZ(),0.23) + std::pow(vParticle->GetPDGCharge(),0.23));
     }
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4double XThomasFermiScreeningRadius::ComputeScreeningRadius(G4Element *vElement){
-    return (Bohr_radius * 0.88534 / (std::pow(vElement->GetZ(),0.333333333)));
+    return vTFSR;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

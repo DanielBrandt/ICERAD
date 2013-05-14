@@ -24,44 +24,42 @@
 // ********************************************************************
 //
 //
-// $Id$
-//
-#ifndef XCrystalElectricalCharacteristicsAnalytical_h
-#define XCrystalElectricalCharacteristicsAnalytical_h
 
-#include "XVCrystalElectricalCharacteristics.hh"
-#include "XAtomicScreeningFunction.hh"
-#include "XThomasFermiScreeningRadius.hh"
+#include "XCrystalPlanarAnalyticalNucleiDensity.hh"
 
-class XCrystalElectricalCharacteristicsAnalytical:public XVCrystalElectricalCharacteristics {
+XCrystalPlanarAnalyticalNucleiDensity::XCrystalPlanarAnalyticalNucleiDensity(){
+    fThermalVibrationAmplitude = 1. * angstrom;
+}
 
-private:
-    void InitializeXCrystalElectricalCharacteristicsAnalytical();
-    XAtomicScreeningFunction *fScreeningFunction;
-    XThomasFermiScreeningRadius *fThomasFermiScreeningRadius;
-    G4int fNumberOfPlanes;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-public:
-    //set function
-    void SetAtomicScreeningFunction(XAtomicScreeningFunction *vScreeningFunction);
-    void SetThomasFermiScreeningFunction(XThomasFermiScreeningRadius*);
+XCrystalPlanarAnalyticalNucleiDensity::~XCrystalPlanarAnalyticalNucleiDensity(){
+}
 
-    //retrieval function
-    XAtomicScreeningFunction* GetAtomicScreeningFunction();
-    XThomasFermiScreeningRadius* GetThomasFermiScreeningFunction();
-       
-    //virtual function
-    G4double GetNormalizedElectronDensity(G4ThreeVector);
-    G4double GetNormalizedNucleiDensity(G4ThreeVector);
-    G4double GetPotential(G4ThreeVector);
-    G4ThreeVector GetElectricalField(G4ThreeVector);
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XCrystalPlanarAnalyticalNucleiDensity::SetThermalVibrationAmplitude(G4double vThermalVibrationAmplitude){
+    fThermalVibrationAmplitude = vThermalVibrationAmplitude;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalPlanarAnalyticalNucleiDensity::GetThermalVibrationAmplitude(){
+    return fThermalVibrationAmplitude;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalPlanarAnalyticalNucleiDensity::ComputeValueForSinglePlane(G4double vXposition,G4VPhysicalVolume* vVolume){
     
-    //class-only functions
-    G4double GetPotentialSinglePlane(G4double);
-    
-    //Contructors
-    XCrystalElectricalCharacteristicsAnalytical();
-    ~XCrystalElectricalCharacteristicsAnalytical();
-};
+    G4double vValueForSinglePlane = exp( - 0.5 * pow(vXposition/fThermalVibrationAmplitude,2.0 ) );
 
-#endif
+    vValueForSinglePlane /= (fThermalVibrationAmplitude);
+    vValueForSinglePlane /= ( sqrt( 2 * M_PI) );
+ //   vValueForSinglePlane += GetUnitCell(vVolume)->GetBase(0)->GetLattice()->GetLatticeNumberOfAtoms();
+ //   vValueForSinglePlane /= GetUnitCell(vVolume)->GetBase(0)->GetLattice()->GetLatticeNumberOfAtoms();
+   
+    return vValueForSinglePlane;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

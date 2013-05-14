@@ -26,69 +26,39 @@
 //
 // $Id$
 //
-#ifndef XUnitCell_h
-#define XUnitCell_h
+#ifndef XVCrystalPlanarAnalytical_h
+#define XVCrystalPlanarAnalytical_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
+#include "XVCrystalCharacteristic.hh"
+#include "XAtomicScreeningFunction.hh"
+#include "XThomasFermiScreeningRadius.hh"
 
-#include "XLogicalAtomicLattice.hh"
-#include "XLogicalAtomicLatticeDiamond.hh"
-#include "XLogicalBase.hh"
-
-#define MAXBASENUMBER 32
-
-using namespace std;
-
-class XUnitCell{
+class XVCrystalPlanarAnalytical:public XVCrystalCharacteristic {
 
 private:
-    G4int fNumberOfBases;
-    XLogicalBase* fBase[MAXBASENUMBER];
-    
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
+    XAtomicScreeningFunction *fScreeningFunction;
+    XThomasFermiScreeningRadius *fThomasFermiScreeningRadius;
+    G4int fNumberOfPlanes;
+
 public:
-    //Retrieval methods
-    inline G4ThreeVector& GetSize();
-    inline G4ThreeVector& GetAngle();
-    XLogicalBase* GetBase(G4int);
+    //set function
+    void SetNumberOfPlanes(G4int);
+    void SetScreeningFunction(XAtomicScreeningFunction*);
+    void SetTFSR(XThomasFermiScreeningRadius*);
+
+    //retrieval function
+    G4int GetNumberOfPlanes();
+    XAtomicScreeningFunction* GetScreeningFunction();
+    XThomasFermiScreeningRadius* GetTFSR();
     
-    //Set methods
-    void SetSize(G4ThreeVector);
-    void SetAngle(G4ThreeVector);
-    void SetBase(G4int,XLogicalBase*);
-    void AddBase(XLogicalBase*);
-
-    //Calculation methods
-    G4double ComputeVolume();
-    G4double ComputeAtomVolumeDensity();
-
-    G4double ComputeMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double ComputeMillerPerSizeSquared(G4int,G4int,G4int);
-
-    G4double ComputeReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double ComputeReciprocalVector(G4int,G4int,G4int);
-
-    G4double ComputeDirectVectorSquared(G4int,G4int,G4int);
-    G4double ComputeDirectVector(G4int,G4int,G4int);
+    virtual G4double ComputeValueForSinglePlane(G4double,G4VPhysicalVolume*) = 0;
     
-    G4double ComputeDirectPeriodSquared(G4int,G4int,G4int);
-    G4double ComputeDirectPeriod(G4int,G4int,G4int);
-
-    G4complex ComputeStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
-
-    //Check method
-    G4bool IsOrthogonal();
-    G4bool IsCubic();
+    //virtual function of XVCrystalCharacteristic
+    G4ThreeVector ComputeValue(G4ThreeVector,G4VPhysicalVolume*);
     
     //Contructors
-    XUnitCell();
-    ~XUnitCell();
+    XVCrystalPlanarAnalytical();
+    ~XVCrystalPlanarAnalytical();
 };
 
 #endif

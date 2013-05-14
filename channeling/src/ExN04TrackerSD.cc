@@ -23,52 +23,57 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//
 
-#include "XVCrystalElectricalCharacteristics.hh"
+#include "ExN04TrackerSD.hh"
+#include "ExN04TrackerHit.hh"
+#include "G4Step.hh"
+#include "G4HCofThisEvent.hh"
+#include "G4TouchableHistory.hh"
+#include "G4ios.hh"
 
-XVCrystalElectricalCharacteristics::XVCrystalElectricalCharacteristics(){
-    fLatticeManager = XLatticeManager3::GetXLatticeManager();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XVCrystalElectricalCharacteristics::~XVCrystalElectricalCharacteristics(){
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XPhysicalLattice* XVCrystalElectricalCharacteristics::GetPhysicalLattice()
+ExN04TrackerSD::ExN04TrackerSD(G4String name)
+:G4VSensitiveDetector(name)
 {
-    return fLatticeManager->GetXPhysicalLattice(fVolume);
+  G4String HCname;
+  collectionName.insert(HCname="trackerCollection");
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+ExN04TrackerSD::~ExN04TrackerSD(){;}
 
-XUnitCell* XVCrystalElectricalCharacteristics::GetUnitCell()
+void ExN04TrackerSD::Initialize(G4HCofThisEvent* HCE)
 {
-    return GetPhysicalLattice()->GetUnitCell();
+  static int HCID = -1;
+  trackerCollection = new ExN04TrackerHitsCollection
+                      (SensitiveDetectorName,collectionName[0]); 
+  if(HCID<0)
+  { HCID = GetCollectionID(0); }
+  HCE->AddHitsCollection(HCID,trackerCollection);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XLogicalLattice* XVCrystalElectricalCharacteristics::GetLogicalLattice()
+G4bool ExN04TrackerSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-    return GetPhysicalLattice()->GetLogicalLattice();
+  G4double edep = aStep->GetTotalEnergyDeposit();
+  if(edep==0.) return false;
+
+  ExN04TrackerHit* newHit = new ExN04TrackerHit();
+  newHit->SetEdep( edep );
+  newHit->SetPos( aStep->GetPreStepPoint()->GetPosition() );
+  trackerCollection->insert( newHit );
+  return true;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4VPhysicalVolume* XVCrystalElectricalCharacteristics::GetPhysicalVolume()
+void ExN04TrackerSD::EndOfEvent(G4HCofThisEvent*)
 {
-    return GetPhysicalLattice()->GetVolume();
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XVCrystalElectricalCharacteristics::SetVolume(G4VPhysicalVolume* vVolume)
+void ExN04TrackerSD::clear()
 {
-    fVolume = vVolume;
-}
+} 
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+void ExN04TrackerSD::DrawAll()
+{
+} 
+
+void ExN04TrackerSD::PrintAll()
+{
+} 

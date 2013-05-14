@@ -104,8 +104,7 @@ void XUnitCell::AddBase(XLogicalBase* base){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::ComputeVolume()
-{
+G4double XUnitCell::ComputeVolume(){
     if(IsOrthogonal()){
         return ( fSize.x()*fSize.y()*fSize.z() );
     }
@@ -119,7 +118,7 @@ G4double XUnitCell::ComputeVolume()
 G4double XUnitCell::ComputeAtomVolumeDensity(){
     G4double vAtomVolumeDensity = 0.;
     for(G4int i=0;i< fNumberOfBases;i++){
-        vAtomVolumeDensity += (fBase[i]->GetElement()->GetZ() * fBase[i]->GetLattice()->GetLatticeAtomNumber());
+        vAtomVolumeDensity += (fBase[i]->GetElement()->GetZ() * fBase[i]->GetLattice()->GetLatticeNumberOfAtoms());
     }
     vAtomVolumeDensity /= ComputeVolume();
     return vAtomVolumeDensity;
@@ -127,22 +126,19 @@ G4double XUnitCell::ComputeAtomVolumeDensity(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::ComputeMillerOverSizeSquared(G4int h, G4int k, G4int l)
-{
+G4double XUnitCell::ComputeMillerOverSizeSquared(G4int h, G4int k, G4int l){
     return pow(h/fSize.x(),2.) + pow(k/fSize.y(),2.) + pow(l/fSize.z(),2.);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::ComputeMillerPerSizeSquared(G4int h, G4int k, G4int l)
-{
+G4double XUnitCell::ComputeMillerPerSizeSquared(G4int h, G4int k, G4int l){
     return pow(h*fSize.x(),2.) + pow(k*fSize.y(),2.) + pow(l*fSize.z(),2.);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::ComputeReciprocalVectorSquared(G4int h, G4int k, G4int l)
-{
+G4double XUnitCell::ComputeReciprocalVectorSquared(G4int h, G4int k, G4int l){
     G4double vReciprocalVectorSquared = 0.0;
 
     if(IsOrthogonal()){
@@ -181,15 +177,13 @@ G4double XUnitCell::ComputeReciprocalVectorSquared(G4int h, G4int k, G4int l)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::ComputeReciprocalVector(G4int h, G4int k, G4int l)
-{
+G4double XUnitCell::ComputeReciprocalVector(G4int h, G4int k, G4int l){
     return sqrt(ComputeReciprocalVectorSquared(h,k,l));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::ComputeDirectVectorSquared(G4int h, G4int k, G4int l)
-{
+G4double XUnitCell::ComputeDirectVectorSquared(G4int h, G4int k, G4int l){
     if(IsOrthogonal()){
         return ComputeMillerPerSizeSquared(h,k,l);
     }
@@ -205,30 +199,26 @@ G4double XUnitCell::ComputeDirectVectorSquared(G4int h, G4int k, G4int l)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::ComputeDirectVector(G4int h, G4int k, G4int l)
-{
+G4double XUnitCell::ComputeDirectVector(G4int h, G4int k, G4int l){
     return sqrt(ComputeDirectVectorSquared(h,k,l));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::ComputeDirectPeriodSquared(G4int h, G4int k, G4int l)
-{
+G4double XUnitCell::ComputeDirectPeriodSquared(G4int h, G4int k, G4int l){
     return (1./ComputeMillerOverSizeSquared(h,k,l));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double XUnitCell::ComputeDirectPeriod(G4int h, G4int k, G4int l)
-{
+G4double XUnitCell::ComputeDirectPeriod(G4int h, G4int k, G4int l){
     return sqrt(ComputeDirectPeriodSquared(h,k,l));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 
-G4bool XUnitCell::IsOrthogonal()
-{
+G4bool XUnitCell::IsOrthogonal(){
     if(fAngle.x() == M_PI / 2.)
         if(fAngle.y() == M_PI / 2.)
             if(fAngle.z() == M_PI / 2.)
@@ -238,8 +228,7 @@ G4bool XUnitCell::IsOrthogonal()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool XUnitCell::IsCubic()
-{
+G4bool XUnitCell::IsCubic(){
     if(IsOrthogonal())
         if(fSize.x() == fSize.y())
             if(fSize.y() == fSize.z())

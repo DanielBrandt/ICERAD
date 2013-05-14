@@ -55,9 +55,11 @@
 #include "XUnitCell.hh"
 
 #include "XAtomicScreeningFunctionMoliere.hh"
-#include "XCrystalElectricalCharacteristicsAnalytical.hh"
+#include "XCrystalPlanarAnalyticalPotential.hh"
+#include "XCrystalPlanarAnalyticalElectricField.hh"
+#include "XCrystalPlanarAnalyticalNucleiDensity.hh"
 #include "XThomasFermiScreeningRadius.hh"
-
+#include "XCrystalPlanarAnalyticalElectronDensity.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -73,7 +75,6 @@ DetectorConstruction::~DetectorConstruction()
     
 }
 
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
@@ -81,15 +82,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     int z;      //atomic number
     G4double a; //atomic weight
     G4double density;
-    
-    G4Material* Pb =
-    new G4Material("Lead"     , z=82, a = 207.19*g/mole, density= 11.35*g/cm3);
+ 
+    G4NistManager* NISTman = G4NistManager::Instance();
+
+    G4Material* Si = NISTman->FindOrBuildMaterial("G4_Si");
     
     G4Material* Vacuum =
-    new G4Material("Galactic", z=1, a=1.01*g/mole,density= universe_mean_density,
+    new G4Material("Galactic", z=1., a=1.01*g/mole,density= universe_mean_density,
                    kStateGas, 2.73*kelvin, 3.e-18*pascal);
     
-    G4double worldSize = 0.5*m;
+    G4double worldSize = 40*cm;
     G4Box* SolidWorld;
     G4LogicalVolume* LogicalWorld;
     G4VPhysicalVolume* PhysicalWorld;
@@ -107,23 +109,54 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                       false,                  //no boolean operation
                                       0);                     //copy number
     
-    G4double targetSize = 15.*cm;
+    G4double targetSizeX = 1.*cm;
+    G4double targetSizeYZ = 1.*cm;
     G4Box* SolidTarget;
     G4LogicalVolume* LogicalTarget;
     G4VPhysicalVolume* PhysicalTarget;
     
-    SolidTarget = new G4Box("Target", targetSize/2,targetSize/2,targetSize/2);
+    SolidTarget = new G4Box("Target", targetSizeX/2,targetSizeYZ/2,targetSizeYZ/2);
     LogicalTarget = new G4LogicalVolume(SolidTarget,          //shape
-                                        Pb,                    //material
+                                        Si,                    //material
                                         "Target");              //name
     
     PhysicalTarget = new G4PVPlacement(0,
-                                       G4ThreeVector(0.*cm,+5.*cm,0),   //no rotation
+                                       G4ThreeVector(0.*cm,0.*cm,0),   //no rotation
                                        LogicalTarget,           //shape and material
                                        "Target",                //name
                                        LogicalWorld,           //pointer to mother volume
                                        false,                  //no boolean operation
                                        0);                     //copy number
+
+    
+    G4double detectorSizeYZ = 5.*cm;
+    G4double detectorSizeX = 50.E-3*mm;
+    G4double detectorDistanceX = 10.*cm + detectorSizeX/2. + targetSizeX/2.;
+    G4Box* SolidDetector;
+    G4LogicalVolume* LogicalDetector;
+    G4VPhysicalVolume* PhysicalDetector;
+    
+    SolidDetector = new G4Box("Detector", detectorSizeX/2,detectorSizeYZ/2,detectorSizeYZ/2);
+    LogicalDetector = new G4LogicalVolume(SolidDetector,          //shape
+                                        Si,                    //material
+                                        "Detector");              //name
+    
+    PhysicalDetector = new G4PVPlacement(0,
+                                       G4ThreeVector(detectorDistanceX,0.*cm,0.*cm),   //no rotation
+                                       LogicalDetector,           //shape and material
+                                       "Detector",                //name
+                                       LogicalWorld,           //pointer to mother volume
+                                       false,                  //no boolean operation
+                                       0);                     //copy number
+
+    //----------------------------------------
+    // Si detector construction
+    //----------------------------------------
+    ExN04TrackerSD* myTracker = new ExN04TrackerSD("myTracker");
+    G4SDManager::GetSDMpointer()->AddNewDetector(myTracker);
+    //logicLayer->SetSensitiveDetector(myTracker);
+
+    
     
     //----------------------------------------
     // Obtain pointer to lattice manager
@@ -132,7 +165,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     XPhysicalLattice* physicalLattice = new XPhysicalLattice(PhysicalTarget, logicalLattice);
     XLatticeManager3* myLatticeManager = XLatticeManager3::GetXLatticeManager();
     myLatticeManager->RegisterLattice(physicalLattice);
-
+    
     logicalLattice->SetScatteringConstant(3.67e-41*s*s*s);
     physicalLattice->SetMillerOrientation(2,2,0);
     
@@ -140,41 +173,65 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     // Create XUnitCell object for Si
     //----------------------------------------
     XLogicalAtomicLatticeDiamond *diamond_lattice = new XLogicalAtomicLatticeDiamond();
-    G4Element* elSi = new G4Element("Silicon","Si",14.,28.09*g/mole);
-    XLogicalBase *base_si = new XLogicalBase();
-    base_si->SetElement(elSi);
-    base_si->SetLattice(diamond_lattice);
+    
+    G4Element* element = NISTman->FindOrBuildElement(14);
+    
+    XLogicalBase *base = new XLogicalBase();
+    base->SetElement(element);
+    base->SetLattice(diamond_lattice);
     XUnitCell* myCell = new XUnitCell();
     myCell->SetSize(G4ThreeVector( 5.43 * angstrom, 5.43 * angstrom, 5.43 * angstrom));
     physicalLattice->SetUnitCell(myCell);
-    myCell->AddBase(base_si);
+    myCell->AddBase(base);
     
     XThomasFermiScreeningRadius* vTF = new XThomasFermiScreeningRadius();
     XAtomicScreeningFunctionMoliere* vScreening = new XAtomicScreeningFunctionMoliere();
-    vScreening->SetThomasFermiScreeningFunction(vTF);
+    vScreening->SetTFSR(vTF);
     
-    XCrystalElectricalCharacteristicsAnalytical *vAnalytical = new XCrystalElectricalCharacteristicsAnalytical();
-    vAnalytical->SetThomasFermiScreeningFunction(vTF);
-    vAnalytical->SetAtomicScreeningFunction(vScreening);
-    vAnalytical->SetVolume(PhysicalTarget);
+    XCrystalPlanarAnalyticalPotential *vPotential = new XCrystalPlanarAnalyticalPotential();
+    vPotential->SetTFSR(vTF);
+    vPotential->SetScreeningFunction(vScreening);
+    
+    XCrystalPlanarAnalyticalElectricField *vElectricField = new XCrystalPlanarAnalyticalElectricField();
+    vElectricField->SetTFSR(vTF);
+    vElectricField->SetScreeningFunction(vScreening);
 
-    std::ofstream vFileOut;
-    vFileOut.open("tmep.txt");
-    G4int imax = 1024;
+    XCrystalPlanarAnalyticalNucleiDensity *vNucleiDensity = new XCrystalPlanarAnalyticalNucleiDensity();
+    vNucleiDensity->SetTFSR(vTF);
+    vNucleiDensity->SetScreeningFunction(vScreening);
+    vNucleiDensity->SetThermalVibrationAmplitude(0.075*angstrom);
+
+    XCrystalPlanarAnalyticalElectronDensity *vElectronDensity = new XCrystalPlanarAnalyticalElectronDensity();
+    vElectronDensity->SetTFSR(vTF);
+    vElectronDensity->SetScreeningFunction(vScreening);
+
+    std::ofstream vFileOutPot;
+    std::ofstream vFileOutEfx;
+    std::ofstream vFileOutNud;
+    std::ofstream vFileOutEld;
+
+    vFileOutPot.open("pot.txt");
+    vFileOutEfx.open("efx.txt");
+    vFileOutNud.open("nud.txt");
+    vFileOutEld.open("eld.txt");
+
+    G4int imax = 8192;
     G4double vXposition = 0.;
     for(G4int i = -imax;i<imax;i++){
-        vXposition = double(i)/double(imax)*vAnalytical->GetUnitCell()->ComputeDirectPeriod(vAnalytical->GetPhysicalLattice()->GetMillerOrientation(0),vAnalytical->GetPhysicalLattice()->GetMillerOrientation(1),vAnalytical->GetPhysicalLattice()->GetMillerOrientation(2));
-        vFileOut << vXposition / angstrom << " " << vAnalytical->GetPotential(G4ThreeVector(vXposition,0.,0.)) / eV << std::endl;
+        vXposition = double(i)/double(imax)*8.*myCell->ComputeDirectPeriod(physicalLattice->GetMiller(0),physicalLattice->GetMiller(1),physicalLattice->GetMiller(2));
+        //vFileOutPot << vXposition / angstrom << " " << (vPotential->ComputeValue(G4ThreeVector(vXposition,0.,0.),PhysicalTarget)).x() / eV << std::endl;
+        vFileOutPot << vXposition / angstrom << " " << (vPotential->ComputeValueForSinglePlane(vXposition,PhysicalTarget)) / eV << std::endl;
+        //vFileOutEfx << vXposition / angstrom << " " << (vElectricField->ComputeValue(G4ThreeVector(vXposition,0.,0.),PhysicalTarget)).x() / eV * angstrom << std::endl;
+        vFileOutEfx << vXposition / angstrom << " " << (vElectricField->ComputeValueForSinglePlane(vXposition,PhysicalTarget)) / eV * angstrom << std::endl;
+        vFileOutNud << vXposition / angstrom << " " << (vNucleiDensity->ComputeValueForSinglePlane(vXposition,PhysicalTarget)) << std::endl;
+        vFileOutEld << vXposition / angstrom << " " << (vElectronDensity->ComputeValueForSinglePlane(vXposition,PhysicalTarget)) << std::endl;
     }
-    vFileOut.close();
+    vFileOutPot.close();
+    vFileOutEfx.close();
+    vFileOutNud.close();
+    vFileOutEld.close();
+
     
-    G4cout << "///////////////*************///////////////" << std::endl;
-    G4cout << myLatticeManager->GetXPhysicalLattice(PhysicalTarget)->GetUnitCell()->ComputeVolume() / pow(angstrom,3.) << std::endl;
-    G4cout << myLatticeManager->GetXPhysicalLattice(PhysicalTarget)->GetUnitCell()->ComputeDirectPeriod(2,2,0) / angstrom << std::endl;
-    G4cout << (vTF->ComputeScreeningRadius(elSi)) / angstrom << std::endl;
-    G4cout << "///////////////*************///////////////" << std::endl;
-
-
     
     return PhysicalWorld;
 }

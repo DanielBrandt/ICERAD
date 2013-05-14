@@ -50,7 +50,7 @@ public:
 
     // Get methods
     G4ThreeVector& GetAtomPosition(G4int i);
-    G4int GetLatticeAtomNumber();
+    G4int GetLatticeNumberOfAtoms();
     
     // Set methods
     void AddAtom(G4ThreeVector);

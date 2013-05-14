@@ -97,7 +97,7 @@ public:
     //retrieval methods
     XUnitCell* GetUnitCell();
     XLogicalLattice* GetLogicalLattice();
-    G4int GetMillerOrientation(G4int);
+    G4int GetMiller(G4int);
 
 private:
     G4int fMillerOrientation[3];

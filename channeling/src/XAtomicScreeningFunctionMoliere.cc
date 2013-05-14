@@ -44,36 +44,69 @@ XAtomicScreeningFunctionMoliere::~XAtomicScreeningFunctionMoliere(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void XAtomicScreeningFunctionMoliere::SetThomasFermiScreeningFunction(XThomasFermiScreeningRadius *vThomasFermiScreeningRadius){
+void XAtomicScreeningFunctionMoliere::SetTFSR(XThomasFermiScreeningRadius *vThomasFermiScreeningRadius){
     fThomasFermiScreeningRadius = vThomasFermiScreeningRadius;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XThomasFermiScreeningRadius* XAtomicScreeningFunctionMoliere::GetThomasFermiScreeningFunction(){
+XThomasFermiScreeningRadius* XAtomicScreeningFunctionMoliere::GetTFSR(){
     return fThomasFermiScreeningRadius;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XAtomicScreeningFunctionMoliere::ComputeScreeningFunction(G4double& vXdistance, G4Element *vElement, G4ParticleDefinition *vParticle){
+G4double XAtomicScreeningFunctionMoliere::ComputeScreeningFunctionIntegral(G4double vXdistance, G4Element *vElement, G4ParticleDefinition *vParticle = NULL){
     G4double vScreeningValue = 0.;
-    G4double aTF = fThomasFermiScreeningRadius->ComputeScreeningRadius(vElement);
+    G4double aTF = fThomasFermiScreeningRadius->ComputeScreeningRadius(vElement,vParticle);
     for(G4int i=0;i<3;i++){
         vScreeningValue += ( fAlfa[i]/fBeta[i] * exp( - fabs(vXdistance) * fBeta[i] / aTF ) );
     }
+    
+    vScreeningValue *= aTF;
+
     return vScreeningValue;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XAtomicScreeningFunctionMoliere::ComputeScreeningFunction(G4double& vXdistance, G4Element *vElement){
+G4double XAtomicScreeningFunctionMoliere::ComputeScreeningFunction(G4double vXdistance, G4Element *vElement, G4ParticleDefinition *vParticle = NULL){
     G4double vScreeningValue = 0.;
-    G4double aTF = fThomasFermiScreeningRadius->ComputeScreeningRadius(vElement);
+    G4double aTF = fThomasFermiScreeningRadius->ComputeScreeningRadius(vElement,vParticle);
     for(G4int i=0;i<3;i++){
-        vScreeningValue += ( fAlfa[i]/fBeta[i] * exp( - (fabs(vXdistance) * fBeta[i] / aTF) ) );
+        vScreeningValue += ( fAlfa[i] * exp( - fabs(vXdistance) * fBeta[i] / aTF ) );
     }
+
     return vScreeningValue;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XAtomicScreeningFunctionMoliere::ComputeScreeningFunctionFirstDerivative(G4double vXdistance, G4Element *vElement, G4ParticleDefinition *vParticle = NULL){
+    G4double vScreeningValue = 0.;
+    G4double aTF = fThomasFermiScreeningRadius->ComputeScreeningRadius(vElement,vParticle);
+    G4int vSign = +1;
+    if(vXdistance < 0.) vSign = -1;
+    for(G4int i=0;i<3;i++){
+        vScreeningValue -= ( vSign * fAlfa[i] * fBeta[i] * exp( - fabs(vXdistance) * fBeta[i] / aTF ) );
+    }
+    vScreeningValue /= aTF;
+    
+    return vScreeningValue;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XAtomicScreeningFunctionMoliere::ComputeNormalization(G4double vXdistance, G4Element *vElement, G4ParticleDefinition *vParticle = NULL){
+    G4double vNormalization = 0.;
+    G4double aTF = fThomasFermiScreeningRadius->ComputeScreeningRadius(vElement,vParticle);
+    for(G4int i=0;i<3;i++){
+        vNormalization += (fBeta[i] / fAlfa[i]);
+    }
+    vNormalization /= aTF;
+    vNormalization *= 0.5;
+
+    return vNormalization;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

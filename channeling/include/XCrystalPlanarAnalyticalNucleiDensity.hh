@@ -24,56 +24,29 @@
 // ********************************************************************
 //
 //
+// $Id$
+//
+#ifndef XCrystalPlanarAnalyticalNucleiDensity_h
+#define XCrystalPlanarAnalyticalNucleiDensity_h
 
-#include "XCrystalElectricalCharacteristicsECHARM.hh"
+#include "XVCrystalPlanarAnalytical.hh"
+#include "XAtomicScreeningFunction.hh"
+#include "XThomasFermiScreeningRadius.hh"
 
-XCrystalElectricalCharacteristicsECHARM::XCrystalElectricalCharacteristicsECHARM(){
-    InitializeXCrystalElectricalCharacteristicsECHARM();
-}
+class XCrystalPlanarAnalyticalNucleiDensity:public XVCrystalPlanarAnalytical {
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+private:
+    G4double fThermalVibrationAmplitude;
+public:
+    void SetThermalVibrationAmplitude(G4double);
+    G4double GetThermalVibrationAmplitude();
 
-XCrystalElectricalCharacteristicsECHARM::~XCrystalElectricalCharacteristicsECHARM(){
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XCrystalElectricalCharacteristicsECHARM::InitializeXCrystalElectricalCharacteristicsECHARM(){
+    //class-only functions
+    G4double ComputeValueForSinglePlane(G4double,G4VPhysicalVolume*);
     
-    fAlfa[0] = 0.1;
-    fAlfa[1] = 0.55;
-    fAlfa[2] = 0.35;
-    
-    fBeta[0] = 6.0;
-    fBeta[1] = 1.2;
-    fBeta[2] = 0.3;
-    
-    fNumberOfPlanes = 4;
-}
+    //Contructors
+    XCrystalPlanarAnalyticalNucleiDensity();
+    ~XCrystalPlanarAnalyticalNucleiDensity();
+};
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4double XCrystalElectricalCharacteristicsECHARM::GetNormalizedElectronDensity(G4ThreeVector vPositionVector){
-    return 0.0;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4double XCrystalElectricalCharacteristicsECHARM::GetNormalizedNucleiDensity(G4ThreeVector vPositionVector){
-    return 0.0;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4double XCrystalElectricalCharacteristicsECHARM::GetPotential(G4ThreeVector vPositionVector){
-        G4double vPotential = 0.;
-    return vPotential;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4ThreeVector XCrystalElectricalCharacteristicsECHARM::GetElectricalField(G4ThreeVector vPositionVector){
-    return G4ThreeVector(0.,0.,0.);
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+#endif

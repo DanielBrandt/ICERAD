@@ -24,71 +24,45 @@
 // ********************************************************************
 //
 //
-// $Id$
-//
-#ifndef XUnitCell_h
-#define XUnitCell_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
+#include "XVCrystalCharacteristic.hh"
 
-#include "XLogicalAtomicLattice.hh"
-#include "XLogicalAtomicLatticeDiamond.hh"
-#include "XLogicalBase.hh"
+XVCrystalCharacteristic::XVCrystalCharacteristic(){
+    fLatticeManager = XLatticeManager3::GetXLatticeManager();
+}
 
-#define MAXBASENUMBER 32
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-using namespace std;
+XVCrystalCharacteristic::~XVCrystalCharacteristic(){
+}
 
-class XUnitCell{
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-private:
-    G4int fNumberOfBases;
-    XLogicalBase* fBase[MAXBASENUMBER];
-    
-    G4ThreeVector fSize;
-    G4ThreeVector fAngle;
-    
-    void InitializeXUnitCell();
-public:
-    //Retrieval methods
-    inline G4ThreeVector& GetSize();
-    inline G4ThreeVector& GetAngle();
-    XLogicalBase* GetBase(G4int);
-    
-    //Set methods
-    void SetSize(G4ThreeVector);
-    void SetAngle(G4ThreeVector);
-    void SetBase(G4int,XLogicalBase*);
-    void AddBase(XLogicalBase*);
+XPhysicalLattice* XVCrystalCharacteristic::GetPhysicalLattice(G4VPhysicalVolume* vVolume)
+{
+    return fLatticeManager->GetXPhysicalLattice(vVolume);
+}
 
-    //Calculation methods
-    G4double ComputeVolume();
-    G4double ComputeAtomVolumeDensity();
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-    G4double ComputeMillerOverSizeSquared(G4int,G4int,G4int);
-    G4double ComputeMillerPerSizeSquared(G4int,G4int,G4int);
+XUnitCell* XVCrystalCharacteristic::GetUnitCell(G4VPhysicalVolume* vVolume)
+{
+    return GetPhysicalLattice(vVolume)->GetUnitCell();
+}
 
-    G4double ComputeReciprocalVectorSquared(G4int,G4int,G4int);
-    G4double ComputeReciprocalVector(G4int,G4int,G4int);
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-    G4double ComputeDirectVectorSquared(G4int,G4int,G4int);
-    G4double ComputeDirectVector(G4int,G4int,G4int);
-    
-    G4double ComputeDirectPeriodSquared(G4int,G4int,G4int);
-    G4double ComputeDirectPeriod(G4int,G4int,G4int);
+XLogicalLattice* XVCrystalCharacteristic::GetLogicalLattice(G4VPhysicalVolume* vVolume)
+{
+    return GetPhysicalLattice(vVolume)->GetLogicalLattice();
+}
 
-    G4complex ComputeStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-    //Check method
-    G4bool IsOrthogonal();
-    G4bool IsCubic();
-    
-    //Contructors
-    XUnitCell();
-    ~XUnitCell();
-};
+G4double XVCrystalCharacteristic::ComputePositionInPeriodicUnit(G4double vX, G4double &vPeriod){
+    if (vX < 0.0) vX += (fabs(int( vX / vPeriod ) ) + 1.0 ) * vPeriod;
+    else if ( vX > vPeriod ) vX -= fabs( int( vX / vPeriod ) * vPeriod );
+    return vX;
+}
 
-#endif
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

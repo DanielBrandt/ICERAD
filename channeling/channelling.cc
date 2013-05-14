@@ -78,7 +78,14 @@ int main(int argc,char** argv)
     
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
     G4UIExecutive* ui = new G4UIExecutive(argc,argv);
-    //UImanager->ApplyCommand("/control/execute file_name");
+
+    if(argc!=1){
+        G4String command;
+        G4String filename = argv[1];
+        UImanager->ApplyCommand(command + filename);
+    }
+    
+
     ui->SessionStart();
     delete ui;
     
