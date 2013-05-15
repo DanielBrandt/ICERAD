@@ -75,7 +75,7 @@ XThomasFermiScreeningRadius* XVCrystalPlanarAnalytical::GetTFSR(){
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4ThreeVector XVCrystalPlanarAnalytical::ComputeValue(G4ThreeVector vPositionVector,G4VPhysicalVolume* vVolume){
-    G4double vInterplanarDistance = GetUnitCell(vVolume)->ComputeDirectPeriod(GetPhysicalLattice(vVolume)->GetMiller(0),GetPhysicalLattice(vVolume)->GetMiller(1),GetPhysicalLattice(vVolume)->GetMiller(2));
+    G4double vInterplanarDistance = GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
     
     G4double vPotential = 0.;
     G4double vX = ComputePositionInPeriodicUnit(vPositionVector.x(),vInterplanarDistance);

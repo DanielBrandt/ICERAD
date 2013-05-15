@@ -14,16 +14,25 @@
          location = "group:include"
          name = "include">
          <FileRef
+            location = "group:StepMaxMessenger.hh">
+         </FileRef>
+         <FileRef
+            location = "group:StepMax.hh">
+         </FileRef>
+         <FileRef
+            location = "group:A01EventActionMessenger.hh">
+         </FileRef>
+         <FileRef
+            location = "group:A01DriftChamber.hh">
+         </FileRef>
+         <FileRef
+            location = "group:A01DriftChamberHit.hh">
+         </FileRef>
+         <FileRef
+            location = "group:A01EventAction.hh">
+         </FileRef>
+         <FileRef
             location = "group:DetectorConstruction.hh">
-         </FileRef>
-         <FileRef
-            location = "group:ExN04EventAction.hh">
-         </FileRef>
-         <FileRef
-            location = "group:ExN04TrackerHit.hh">
-         </FileRef>
-         <FileRef
-            location = "group:ExN04TrackerSD.hh">
          </FileRef>
          <FileRef
             location = "group:PhysicsList.hh">
@@ -96,16 +105,25 @@
          location = "group:src"
          name = "src">
          <FileRef
+            location = "group:StepMaxMessenger.cc">
+         </FileRef>
+         <FileRef
+            location = "group:StepMax.cc">
+         </FileRef>
+         <FileRef
+            location = "group:A01EventActionMessenger.cc">
+         </FileRef>
+         <FileRef
+            location = "group:A01DriftChamber.cc">
+         </FileRef>
+         <FileRef
+            location = "group:A01DriftChamberHit.cc">
+         </FileRef>
+         <FileRef
+            location = "group:A01EventAction.cc">
+         </FileRef>
+         <FileRef
             location = "group:DetectorConstruction.cc">
-         </FileRef>
-         <FileRef
-            location = "group:ExN04EventAction.cc">
-         </FileRef>
-         <FileRef
-            location = "group:ExN04TrackerHit.cc">
-         </FileRef>
-         <FileRef
-            location = "group:ExN04TrackerSD.cc">
          </FileRef>
          <FileRef
             location = "group:PhysicsList.cc">

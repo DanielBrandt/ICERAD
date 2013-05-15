@@ -27,7 +27,7 @@
 // $Id: DetectorConstruction.hh,v 1.1 2010-10-18 15:56:17 maire Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
-// 
+//
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -38,9 +38,12 @@
 
 #include "G4VUserDetectorConstruction.hh"
 
+#include "G4Box.hh"
+#include "G4LogicalVolume.hh"
+#include "G4VPhysicalVolume.hh"
+
 #include "G4SDManager.hh"
 #include "G4MultiFunctionalDetector.hh"
-#include "ExN04TrackerSD.hh"
 
 #include "globals.hh"
 
@@ -49,16 +52,39 @@
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
-  public:
-  
+public:
+    
     DetectorConstruction();
-   ~DetectorConstruction();
+    ~DetectorConstruction();
 
-  public:    
-     
-     G4VPhysicalVolume* Construct();
- 
-                   
+private:
+    void AddWorld();
+    void AddSiliconStripDetector();
+    void AddCrystalTarget();
+    void ComputeCrystalCharacteristicForChanneling();
+    
+public:
+    
+    G4VPhysicalVolume* Construct();
+    
+    G4double fWorldSizeX;
+    G4double fWorldSizeYZ;
+    G4Box* fWorldSolid;
+    G4LogicalVolume* fWorldLogic;
+    G4VPhysicalVolume* fWorldPhysical;
+    
+    G4double fSSDSizeX;
+    G4double fSSDSizeYZ;
+    G4Box* fSSDSolid;
+    G4LogicalVolume* fSSDLogic;
+    G4VPhysicalVolume* fSSDPhysical;
+
+    G4double fXtalSizeX;
+    G4double fXtalSizeYZ;
+    G4Box* fXtalSolid;
+    G4LogicalVolume* fXtalLogic;
+    G4VPhysicalVolume* fXtalPhysical;
+
 };
 
 

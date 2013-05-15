@@ -56,8 +56,8 @@ G4double XCrystalPlanarAnalyticalNucleiDensity::ComputeValueForSinglePlane(G4dou
 
     vValueForSinglePlane /= (fThermalVibrationAmplitude);
     vValueForSinglePlane /= ( sqrt( 2 * M_PI) );
- //   vValueForSinglePlane += GetUnitCell(vVolume)->GetBase(0)->GetLattice()->GetLatticeNumberOfAtoms();
- //   vValueForSinglePlane /= GetUnitCell(vVolume)->GetBase(0)->GetLattice()->GetLatticeNumberOfAtoms();
+ //   vValueForSinglePlane += GetXUnitCell(vVolume)->GetBase(0)->GetLattice()->GetLatticeNumberOfAtoms();
+ //   vValueForSinglePlane /= GetXUnitCell(vVolume)->GetBase(0)->GetLattice()->GetLatticeNumberOfAtoms();
    
     return vValueForSinglePlane;
 }

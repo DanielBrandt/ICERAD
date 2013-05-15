@@ -23,57 +23,36 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file analysis/A01/include/A01EventActionMessenger.hh
+/// \brief Definition of the A01EventActionMessenger class
+//
+// $Id$
+// --------------------------------------------------------------
+//
+#ifndef A01EventActionMessenger_h
+#define A01EventActionMessenger_h 1
 
-#include "ExN04TrackerSD.hh"
-#include "ExN04TrackerHit.hh"
-#include "G4Step.hh"
-#include "G4HCofThisEvent.hh"
-#include "G4TouchableHistory.hh"
-#include "G4ios.hh"
+class A01EventAction;
+class G4UIcmdWithAnInteger;
 
-ExN04TrackerSD::ExN04TrackerSD(G4String name)
-:G4VSensitiveDetector(name)
+#include "G4UImessenger.hh"
+#include "globals.hh"
+
+class A01EventActionMessenger: public G4UImessenger
 {
-  G4String HCname;
-  collectionName.insert(HCname="trackerCollection");
-}
+  public:
+    A01EventActionMessenger(A01EventAction* mpga);
+    virtual ~A01EventActionMessenger();
 
-ExN04TrackerSD::~ExN04TrackerSD(){;}
+    virtual void SetNewValue(G4UIcommand * command,G4String newValues);
+    virtual G4String GetCurrentValue(G4UIcommand * command);
 
-void ExN04TrackerSD::Initialize(G4HCofThisEvent* HCE)
-{
-  static int HCID = -1;
-  trackerCollection = new ExN04TrackerHitsCollection
-                      (SensitiveDetectorName,collectionName[0]); 
-  if(HCID<0)
-  { HCID = GetCollectionID(0); }
-  HCE->AddHitsCollection(HCID,trackerCollection);
-}
+  private:
+    A01EventAction* fTarget;
 
-G4bool ExN04TrackerSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
-{
-  G4double edep = aStep->GetTotalEnergyDeposit();
-  if(edep==0.) return false;
+    G4UIcmdWithAnInteger* fVerboseCmd;
+};
 
-  ExN04TrackerHit* newHit = new ExN04TrackerHit();
-  newHit->SetEdep( edep );
-  newHit->SetPos( aStep->GetPreStepPoint()->GetPosition() );
-  trackerCollection->insert( newHit );
-  return true;
-}
+#endif
 
-void ExN04TrackerSD::EndOfEvent(G4HCofThisEvent*)
-{
-}
 
-void ExN04TrackerSD::clear()
-{
-} 
-
-void ExN04TrackerSD::DrawAll()
-{
-} 
-
-void ExN04TrackerSD::PrintAll()
-{
-} 

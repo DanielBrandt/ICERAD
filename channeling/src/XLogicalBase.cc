@@ -34,6 +34,12 @@ XLogicalBase::XLogicalBase(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+XLogicalBase::XLogicalBase(G4Element* vElement,XLogicalAtomicLattice* vLattice){
+    SetElement(vElement);
+    SetLattice(vLattice);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 XLogicalBase::~XLogicalBase(){
 }
 
@@ -51,14 +57,14 @@ G4Element* XLogicalBase::GetElement(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void XLogicalBase::SetLattice(XLogicalAtomicLattice* lattice){
-    fLattice = lattice;
+void XLogicalBase::SetLattice(XLogicalAtomicLattice* vLattice){
+    fLattice = vLattice;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void XLogicalBase::SetElement(G4Element* element){
-    fElement = element;
+void XLogicalBase::SetElement(G4Element* vElement){
+    fElement = vElement;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

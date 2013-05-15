@@ -40,8 +40,8 @@ private:
     
 public:
     //retrieval functions
-    XPhysicalLattice* GetPhysicalLattice(G4VPhysicalVolume*);
-    XUnitCell* GetUnitCell(G4VPhysicalVolume*);
+    XPhysicalLattice* GetXPhysicalLattice(G4VPhysicalVolume*);
+    XUnitCell* GetXUnitCell(G4VPhysicalVolume*);
     XLogicalLattice* GetLogicalLattice(G4VPhysicalVolume*);
         
     //virtual function to compute value starting from the point in the xtal reference frame and the physical volume of the xtal

@@ -38,23 +38,23 @@ XVCrystalCharacteristic::~XVCrystalCharacteristic(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XPhysicalLattice* XVCrystalCharacteristic::GetPhysicalLattice(G4VPhysicalVolume* vVolume)
+XPhysicalLattice* XVCrystalCharacteristic::GetXPhysicalLattice(G4VPhysicalVolume* vVolume)
 {
     return fLatticeManager->GetXPhysicalLattice(vVolume);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XUnitCell* XVCrystalCharacteristic::GetUnitCell(G4VPhysicalVolume* vVolume)
+XUnitCell* XVCrystalCharacteristic::GetXUnitCell(G4VPhysicalVolume* vVolume)
 {
-    return GetPhysicalLattice(vVolume)->GetUnitCell();
+    return GetXPhysicalLattice(vVolume)->GetXUnitCell();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 XLogicalLattice* XVCrystalCharacteristic::GetLogicalLattice(G4VPhysicalVolume* vVolume)
 {
-    return GetPhysicalLattice(vVolume)->GetLogicalLattice();
+    return GetXPhysicalLattice(vVolume)->GetLogicalLattice();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

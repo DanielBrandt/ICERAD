@@ -93,9 +93,12 @@ public:
 public:
     //set methods
     void SetUnitCell(XUnitCell*);
-    
+    G4ThreeVector ProjectVectorFromWorldToLattice(G4ThreeVector);
+    G4ThreeVector ProjectVectorFromLatticeToWorld(G4ThreeVector);
+    G4ThreeVector GetLatticeDirection();
+
     //retrieval methods
-    XUnitCell* GetUnitCell();
+    XUnitCell* GetXUnitCell();
     XLogicalLattice* GetLogicalLattice();
     G4int GetMiller(G4int);
 

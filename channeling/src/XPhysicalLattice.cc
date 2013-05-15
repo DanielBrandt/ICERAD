@@ -42,7 +42,6 @@ XPhysicalLattice::XPhysicalLattice(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-
 XPhysicalLattice::XPhysicalLattice(G4VPhysicalVolume* Vol, XLogicalLattice* Lat){
   fLattice=Lat;
   fVolume=Vol;
@@ -64,8 +63,9 @@ XPhysicalLattice::XPhysicalLattice(G4VPhysicalVolume* Vol, XLogicalLattice* Lat)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-
 XPhysicalLattice::~XPhysicalLattice(){;}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void XPhysicalLattice::SetDynamicalConstants(double Beta, double Gamma, double Lambda, double Mu)
 {
@@ -233,10 +233,9 @@ void XPhysicalLattice::SetLatticeOrientation(G4double t_rot, G4double p_rot){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-
 void XPhysicalLattice::SetMillerOrientation(int l, int k, int n){
-  fTheta=pi/2-std::atan2(n+0.000001,l+0.000001)*rad;
-  fPhi=pi/2-std::atan2(l+0.000001,k+0.000001)*rad;
+  //fTheta=pi/2-std::atan2(n+0.000001,l+0.000001)*rad;
+  //fPhi=pi/2-std::atan2(l+0.000001,k+0.000001)*rad;
     
     // // // added for channeling // // //
     fMillerOrientation[0]=l;
@@ -252,11 +251,28 @@ void XPhysicalLattice::SetXLogicalLattice(XLogicalLattice* Lat){
   fLattice=Lat;
 }
 
-////....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-//// Begin Channeling specific code
-////....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+// Begin Channeling specific code
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+
+G4ThreeVector XPhysicalLattice::ProjectVectorFromWorldToLattice(G4ThreeVector vVector){
+    vVector.rotate(G4ThreeVector(0,1,0), fTheta).rotate(G4ThreeVector(0,0,1), fPhi);
+    return vVector;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4ThreeVector XPhysicalLattice::ProjectVectorFromLatticeToWorld(G4ThreeVector vVector){
+    vVector.rotate(G4ThreeVector(0,0,1), -fPhi).rotate(G4ThreeVector(0,1,0), -fTheta);
+    return vVector;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4ThreeVector XPhysicalLattice::GetLatticeDirection(){
+    return G4ThreeVector(1.,0.,0.).rotate(G4ThreeVector(0,1,0), fTheta).rotate(G4ThreeVector(0,0,1), fPhi);
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void XPhysicalLattice::SetUnitCell(XUnitCell* cell){
@@ -265,7 +281,7 @@ void XPhysicalLattice::SetUnitCell(XUnitCell* cell){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XUnitCell* XPhysicalLattice::GetUnitCell(){
+XUnitCell* XPhysicalLattice::GetXUnitCell(){
     return fUnitCell;
 }
 

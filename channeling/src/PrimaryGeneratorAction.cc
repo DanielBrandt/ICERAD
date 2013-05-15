@@ -27,7 +27,7 @@
 // $Id: PrimaryGeneratorAction.cc,v 1.1 2010-10-18 15:56:17 maire Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
-// 
+//
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -46,41 +46,42 @@
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
-  G4int n_particle = 1;
-  particleGun  = new G4ParticleGun(n_particle);
+    G4int vNumberOfParticles = 1;
+    fParticleGun  = new G4ParticleGun(vNumberOfParticles);
+    
+    G4ParticleDefinition* vParticle = G4ParticleTable::GetParticleTable()->FindParticle("proton");
+    
+    fParticleGun->SetParticleDefinition(vParticle);
+    
+    G4ThreeVector vParticlePosition = G4ThreeVector(-60.*cm,0.,0.);
 
-  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  G4String particleName;
-  G4ParticleDefinition* particle
-                    = particleTable->FindParticle(particleName="proton");
-  particleGun->SetParticleDefinition(particle);
-  particleGun->SetParticlePosition(G4ThreeVector(0*cm,0.*cm,0.*cm));
+    fParticleGun->SetParticleEnergy(400.*GeV);
 
-
+    fParticleGun->SetParticlePosition(vParticlePosition);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
-  delete particleGun;
+    delete fParticleGun;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-  //this function is called at the begining of event
-  // 
-  G4double x0 = -15.*cm;
-  G4double y0 = 0.*cm;
-  G4double z0 = 0.*cm;
- 
-  particleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
-  particleGun->SetParticleMomentumDirection(G4ThreeVector(1.,(G4UniformRand()-0.5)*4.E-1,0.).unit());
-  particleGun->SetParticleEnergy(400.*GeV);
-
-  particleGun->GeneratePrimaryVertex(anEvent);
+    //----------------------------------------
+    // Function called at the beginning of an event
+    //--------------------------------------
+    
+    G4double vBeamDivergence = 10.E-6 * radian;
+    G4double vRotation = (G4UniformRand() - 0.5 ) * vBeamDivergence;
+    G4ThreeVector vParticleMomentumDirection = G4ThreeVector(1.,0.,0.).rotate(G4ThreeVector(0,0,1),vRotation).unit();
+    
+    fParticleGun->SetParticleMomentumDirection(vParticleMomentumDirection);
+    
+    fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

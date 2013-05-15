@@ -23,67 +23,35 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file analysis/A01/include/A01DriftChamber.hh
+/// \brief Definition of the A01DriftChamber class
+//
+// $Id$
+// --------------------------------------------------------------
+//
+#ifndef A01DriftChamber_h
+#define A01DriftChamber_h 1
 
-#include "ExN04EventAction.hh"
+#include "G4VSensitiveDetector.hh"
+#include "A01DriftChamberHit.hh"
+class G4Step;
+class G4HCofThisEvent;
+class G4TouchableHistory;
 
-#include "ExN04TrackerHit.hh"
-
-#include "G4Event.hh"
-#include "G4EventManager.hh"
-#include "G4HCofThisEvent.hh"
-#include "G4VHitsCollection.hh"
-#include "G4TrajectoryContainer.hh"
-#include "G4Trajectory.hh"
-#include "G4VVisManager.hh"
-#include "G4SDManager.hh"
-#include "G4UImanager.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ios.hh"
-
-#include "G4THitsMap.hh"
-
-ExN04EventAction::ExN04EventAction()
+class A01DriftChamber : public G4VSensitiveDetector
 {
-    trackerCollID = -1;
-    fFileOut.open("data.txt",std::ios_base::app);
-}
+  public:
+      A01DriftChamber(G4String name);
+      virtual ~A01DriftChamber();
 
-ExN04EventAction::~ExN04EventAction()
-{
-    fFileOut.close();
-}
+      virtual void Initialize(G4HCofThisEvent*HCE);
+      virtual G4bool ProcessHits(G4Step*aStep,G4TouchableHistory*ROhist);
+      virtual void EndOfEvent(G4HCofThisEvent*HCE);
 
-void ExN04EventAction::BeginOfEventAction(const G4Event*)
-{
-    G4SDManager * SDman = G4SDManager::GetSDMpointer();
-    if(trackerCollID<0)
-    {
-        G4String colNam;
-        trackerCollID = SDman->GetCollectionID(colNam="trackerCollection");
-    }
-}
+  private:
+      A01DriftChamberHitsCollection * fHitsCollection;
+      G4int fHCID;
+};
 
-void ExN04EventAction::EndOfEventAction(const G4Event* evt)
-{
-    G4cout << ">>> Event " << evt->GetEventID() << G4endl;
-    
-    if(trackerCollID<0) return;
-    
-    G4HCofThisEvent * HCE = evt->GetHCofThisEvent();
-    ExN04TrackerHitsCollection* THC = 0;
-    
-    if(HCE){
-        THC = (ExN04TrackerHitsCollection*)(HCE->GetHC(trackerCollID));
-    }
-    
-    if(THC){
-        int n_hit = THC->entries();
-        G4cout << "     " << n_hit << " hits are stored in ExN04TrackerHitsCollection." << G4endl;
-        G4ThreeVector pos;
-        G4double vCorrection = 1.E6/(10.*cm);
-        for(int i=0 ; i<n_hit; i++ ){
-            pos = (THC->GetVector()->at(i))->GetPos();
-            fFileOut << pos.y()*vCorrection << " " << pos.z()*vCorrection << std::endl;
-        }
-    }
-}
+#endif
+

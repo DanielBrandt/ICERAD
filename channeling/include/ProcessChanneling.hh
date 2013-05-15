@@ -32,52 +32,47 @@
 #include "globals.hh"
 #include "G4VDiscreteProcess.hh"
 
-//#include "XPhysicalLattice.hh"
-//#include "XLatticeManager3.hh"
+#include "XPhysicalLattice.hh"
+#include "XLatticeManager3.hh"
 
 class G4Material;
 
-class ProcessChanneling : public G4VDiscreteProcess 
+class ProcessChanneling : public G4VDiscreteProcess
 {
-  public:
-
-     ProcessChanneling(const G4String& processName ="ProcessChanneling" );
-
-  virtual ~ProcessChanneling();
-  
-  virtual G4VParticleChange* PostStepDoIt(
-                const G4Track&, const G4Step& );
-  
-  virtual G4bool IsApplicable(const G4ParticleDefinition&);
-
-  virtual void BuildPhysicsTable(const G4ParticleDefinition&);
-                           
-  protected:
-
-  virtual G4double GetMeanFreePath(
-                const G4Track&, G4double, G4ForceCondition* );
-
+public:
+    
+    ProcessChanneling(const G4String& processName = "ProcessChanneling" );
+    
+    virtual ~ProcessChanneling();
+    
+    virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
+    
+    virtual G4bool IsApplicable(const G4ParticleDefinition&);
+    
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&);
+    
+protected:
+    
+    virtual G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition* );
+    
+private:
     G4double GetChannelingAcceptanceProbability(const G4Track& aTrack);
-    G4double GetChannelingCriticalAngle(const G4Track& aTrack);
-    G4double GetChannelingMaximumEfficiency(const G4Track& aTrack);
+    G4double GetChannelingCriticalEnergy(const G4Track& aTrack);
     G4double GetChannelingMeanFreePath(const G4Track& aTrack);
-
+    
     G4bool IsInChanneling(const G4Track& aTrack);
-    void ProjectMomentumInCrystalCoordinateSystem(const G4Track& aTrack);
 
-  private:
-  
-  // hide assignment operator as private 
-     ProcessChanneling(ProcessChanneling&);
-     ProcessChanneling& operator=(const ProcessChanneling& right);
+    void UpdateMomentum(const G4Track& aTrack);
 
-  private:
-    //XPhysicalLattice* fLattice;
-    G4double fTransverseMomentumX;
-    G4double fTransverseMomentumY;
-    G4double fLongitudinalMomentum;
-    std::ofstream fFileOut;
-
+private:
+    // hide assignment operator as private
+    ProcessChanneling(ProcessChanneling&);
+    ProcessChanneling& operator=(const ProcessChanneling& right);
+    
+private:
+    XLatticeManager3* fLatticeManager;
+    G4ThreeVector fMomentum;
+        
 };
 
 #endif

@@ -39,13 +39,13 @@ XCrystalPlanarAnalyticalElectricField::~XCrystalPlanarAnalyticalElectricField(){
 
 G4double XCrystalPlanarAnalyticalElectricField::ComputeValueForSinglePlane(G4double vXposition,G4VPhysicalVolume* vVolume){
     
-    G4double vValueForSinglePlane = GetScreeningFunction()->ComputeScreeningFunction(vXposition,GetUnitCell(vVolume)->GetBase(0)->GetElement());
+    G4double vValueForSinglePlane = GetScreeningFunction()->ComputeScreeningFunction(vXposition,GetXUnitCell(vVolume)->GetBase(0)->GetElement());
 
-    vValueForSinglePlane *= 2. * M_PI * GetUnitCell(vVolume)->ComputeDirectPeriod(GetPhysicalLattice(vVolume)->GetMiller(0),GetPhysicalLattice(vVolume)->GetMiller(1),GetPhysicalLattice(vVolume)->GetMiller(2));
+    vValueForSinglePlane *= 2. * M_PI * GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
     
     vValueForSinglePlane *= (elm_coupling);
     
-    vValueForSinglePlane *= (GetUnitCell(vVolume)->ComputeAtomVolumeDensity());
+    vValueForSinglePlane *= (GetXUnitCell(vVolume)->ComputeAtomVolumeDensity());
     
     G4int vSign = -1;
     if(vXposition < 0.) vSign = +1;

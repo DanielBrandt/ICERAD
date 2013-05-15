@@ -23,38 +23,44 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file electromagnetic/TestEm5/src/StepMaxMessenger.cc
+/// \brief Implementation of the StepMaxMessenger class
+//
+// $Id$
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef ExN04TrackerSD_h
-#define ExN04TrackerSD_h 1
+#include "StepMaxMessenger.hh"
 
-#include "G4VSensitiveDetector.hh"
-#include "ExN04TrackerHit.hh"
-class G4Step;
-class G4HCofThisEvent;
-class G4TouchableHistory;
+#include "StepMax.hh"
+#include "G4UIcmdWithADoubleAndUnit.hh"
 
-class ExN04TrackerSD : public G4VSensitiveDetector
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+StepMaxMessenger::StepMaxMessenger(StepMax* stepM)
+:fStepMax(stepM)
+{ 
+  fStepMaxCmd = new G4UIcmdWithADoubleAndUnit("/testem/stepMax",this);
+  fStepMaxCmd->SetGuidance("Set max allowed step length");
+  fStepMaxCmd->SetParameterName("mxStep",false);
+  fStepMaxCmd->SetRange("mxStep>0.");
+  fStepMaxCmd->SetUnitCategory("Length");
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+StepMaxMessenger::~StepMaxMessenger()
 {
+  delete fStepMaxCmd;
+}
 
-  public:
-      ExN04TrackerSD(G4String name);
-      ~ExN04TrackerSD();
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-      void Initialize(G4HCofThisEvent*HCE);
-      G4bool ProcessHits(G4Step*aStep,G4TouchableHistory*ROhist);
-      void EndOfEvent(G4HCofThisEvent*HCE);
-      void clear();
-      void DrawAll();
-      void PrintAll();
+void StepMaxMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
+{ 
+  if (command == fStepMaxCmd)
+    { fStepMax->SetMaxStep(fStepMaxCmd->GetNewDoubleValue(newValue));}
+}
 
-  private:
-      ExN04TrackerHitsCollection *trackerCollection;
-
-  public:
-};
-
-
-
-
-#endif
-
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
