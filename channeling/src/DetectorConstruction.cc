@@ -46,6 +46,11 @@
 #include "G4VisAttributes.hh"
 #include "G4Colour.hh"
 
+#include "G4SDManager.hh"
+#include "G4VSensitiveDetector.hh"
+#include "A01DriftChamber.hh"
+#include "A01DriftChamberHit.hh"
+
 #include "XLatticeManager3.hh"
 
 #include "XLogicalAtomicLattice.hh"
@@ -107,6 +112,12 @@ void DetectorConstruction::AddSiliconStripDetector(){
         G4double vDetDistX = double(j1 - 1) * 50. * cm + fSSDSizeX/2. - 2. * fXtalSizeX/2.;;
         fSSDPhysical = new G4PVPlacement(0,G4ThreeVector(vDetDistX,0.,0.),fSSDLogic,"SiSD",fWorldLogic,false,j1);
     }
+    
+    G4String SDname;
+    G4VSensitiveDetector* telescope = new A01DriftChamber(SDname="/telescope");
+    G4SDManager::GetSDMpointer()->AddNewDetector(telescope);
+    fSSDLogic->SetSensitiveDetector(telescope);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

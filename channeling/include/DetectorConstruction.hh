@@ -42,9 +42,6 @@
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
 
-#include "G4SDManager.hh"
-#include "G4MultiFunctionalDetector.hh"
-
 #include "globals.hh"
 
 
@@ -61,10 +58,8 @@ private:
     void AddWorld();
     void AddSiliconStripDetector();
     void AddCrystalTarget();    
-public:
-    
-    G4VPhysicalVolume* Construct();
-    
+
+private:        
     G4double fWorldSizeX;
     G4double fWorldSizeYZ;
     G4Box* fWorldSolid;
@@ -83,6 +78,8 @@ public:
     G4LogicalVolume* fXtalLogic;
     G4VPhysicalVolume* fXtalPhysical;
 
+public:
+    G4VPhysicalVolume* Construct();
 };
 
 

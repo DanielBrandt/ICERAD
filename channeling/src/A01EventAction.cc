@@ -49,10 +49,8 @@
 
 A01EventAction::A01EventAction()
 {
-    G4String colName;
-    G4SDManager* SDman = G4SDManager::GetSDMpointer();
-    fDHC_ID = SDman->GetCollectionID(colName="chamber/driftChamberColl");
-    
+    fDHC_ID = -1;
+
     fVerboseLevel = 1;
     fMessenger = new A01EventActionMessenger(this);
 }
@@ -68,13 +66,32 @@ void A01EventAction::BeginOfEventAction(const G4Event*)
 
 void A01EventAction::EndOfEventAction(const G4Event* evt)
 {
-    G4HCofThisEvent * HCE = evt->GetHCofThisEvent();
-    A01DriftChamberHitsCollection* fDHC = 0;
-    if(HCE)
-    {
-        fDHC = (A01DriftChamberHitsCollection*)(HCE->GetHC(fDHC_ID));
+    
+    if(fDHC_ID==-1) {
+        G4String colName;
+        G4SDManager* SDman = G4SDManager::GetSDMpointer();
+        fDHC_ID = SDman->GetCollectionID(colName="telescope/telescopeColl");
     }
     
+    G4HCofThisEvent * HCE = evt->GetHCofThisEvent();
+    A01DriftChamberHitsCollection* fDHC = 0;
+    
+    if(HCE)
+    {
+        G4VHitsCollection* aHC = HCE->GetHC(fDHC_ID);
+        fDHC = dynamic_cast<A01DriftChamberHitsCollection*>(aHC);
+    }
+    
+    if(fDHC){
+        G4cout << std::endl;
+        G4cout << "IS NON ZERO" << std::endl;
+        G4cout << std::endl;
+    }
+    else{
+        G4cout << std::endl;
+        G4cout << "IS ZERO" << std::endl;
+        G4cout << std::endl;
+    }
     // Diagnostics
     
     if (fVerboseLevel==0 || evt->GetEventID() % fVerboseLevel != 0) return;
@@ -85,16 +102,19 @@ void A01EventAction::EndOfEventAction(const G4Event* evt)
     << primary->GetG4code()->GetParticleName()
     << " " << primary->GetMomentum() << G4endl;
     
-    if(fDHC)
+    
     {
-        int n_hit = fDHC->entries();
-        G4cout << "Drift Chamber 1 has " << n_hit << " hits." << G4endl;
-        for(unsigned int i2=0;i2<5;i2++)
+        if(fDHC)
         {
-            for(unsigned int i1=0;i1<n_hit;i1++)
+            int n_hit = fDHC->entries();
+            G4cout << "Drift Chamber has " << n_hit << " hits." << G4endl;
+            for(int i2=0;i2<5;i2++)
             {
-                A01DriftChamberHit* aHit = (*fDHC)[i1];
-                if(aHit->GetLayerID()==i2) aHit->Print();
+                for(int i1=0;i1<n_hit;i1++)
+                {
+                    A01DriftChamberHit* aHit = (*fDHC)[i1];
+                    if(aHit->GetLayerID()==i2) aHit->Print();
+                }
             }
         }
     }

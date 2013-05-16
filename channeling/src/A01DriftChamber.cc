@@ -43,7 +43,7 @@ A01DriftChamber::A01DriftChamber(G4String name)
 :G4VSensitiveDetector(name)
 {
   G4String HCname;
-  collectionName.insert(HCname="driftChamberColl");
+  collectionName.insert(HCname="telescopeColl");
   fHCID = -1;
 }
 

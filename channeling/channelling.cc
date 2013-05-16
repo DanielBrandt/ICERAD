@@ -37,7 +37,7 @@
 #include "PhysicsList.hh"
 #include "QGSP_BERT.hh"
 
-
+#include "A01EventAction.hh"
 
 #ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
@@ -65,6 +65,8 @@ int main(int argc,char** argv)
     
     runManager->SetUserAction(new PrimaryGeneratorAction);
     
+    runManager->SetUserAction(new A01EventAction);
+
     runManager->Initialize();
     
     
