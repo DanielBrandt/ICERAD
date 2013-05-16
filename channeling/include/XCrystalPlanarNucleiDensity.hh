@@ -24,30 +24,23 @@
 // ********************************************************************
 //
 //
+// $Id$
+//
+#ifndef XCrystalPlanarNucleiDensity_h
+#define XCrystalPlanarNucleiDensity_h
 
-#include "XCrystalPlanarAnalyticalPotential.hh"
+#include "XVCrystalPlanarAnalytical.hh"
 
-XCrystalPlanarAnalyticalPotential::XCrystalPlanarAnalyticalPotential(){
-}
+class XCrystalPlanarNucleiDensity:public XVCrystalPlanarAnalytical {
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+private:
 
-XCrystalPlanarAnalyticalPotential::~XCrystalPlanarAnalyticalPotential(){
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4double XCrystalPlanarAnalyticalPotential::ComputeValueForSinglePlane(G4double vXposition,G4VPhysicalVolume* vVolume){
+public:
+    G4double ComputeValueForSinglePlane(G4double vPosition,const G4Track& aTrack);
     
-    G4double vValueForSinglePlane = GetScreeningFunction()->ComputeScreeningFunctionIntegral(vXposition,GetXUnitCell(vVolume)->GetBase(0)->GetElement());
+    //Contructors
+    XCrystalPlanarNucleiDensity();
+    ~XCrystalPlanarNucleiDensity();
+};
 
-    vValueForSinglePlane *= 2. * M_PI * GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
-    
-    vValueForSinglePlane *= (elm_coupling);
-
-    vValueForSinglePlane *= (GetXUnitCell(vVolume)->ComputeAtomVolumeDensity());
-
-    return vValueForSinglePlane;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+#endif

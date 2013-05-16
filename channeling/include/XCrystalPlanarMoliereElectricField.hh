@@ -26,36 +26,23 @@
 //
 // $Id$
 //
-#ifndef XAtomicScreeningFunction_h
-#define XAtomicScreeningFunction_h
+#ifndef XCrystalPlanarMoliereElectricField_h
+#define XCrystalPlanarMoliereElectricField_h
 
-#include "G4ThreeVector.hh"
-#include "G4Element.hh"
-#include "G4ParticleDefinition.hh"
+#include "XVCrystalPlanarAnalytical.hh"
 
-using namespace std;
-
-class XAtomicScreeningFunction {
+class XCrystalPlanarMoliereElectricField:public XVCrystalPlanarAnalytical {
 
 private:
-    G4double fDerivativePrecision;
-    
+    G4double fAlfa[3];
+    G4double fBeta[3];
+
 public:
-    inline void SetDerivativePrecision(G4double);
-    inline G4double GetDerivativePrecision();
+    G4double ComputeValueForSinglePlane(G4double vPosition,const G4Track& aTrack);
     
-    //Compute methods
-    virtual G4double ComputeScreeningFunctionIntegral(G4double,G4Element*,G4ParticleDefinition* = NULL);
- 
-    virtual G4double ComputeScreeningFunction(G4double,G4Element*,G4ParticleDefinition* = NULL);
-
-    virtual G4double ComputeScreeningFunctionFirstDerivative(G4double,G4Element*,G4ParticleDefinition* = NULL);
-
-    virtual G4double ComputeNormalization(G4double,G4Element*,G4ParticleDefinition* = NULL);
-
     //Contructors
-    XAtomicScreeningFunction();
-    ~XAtomicScreeningFunction();
+    XCrystalPlanarMoliereElectricField();
+    ~XCrystalPlanarMoliereElectricField();
 };
 
 #endif

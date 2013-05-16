@@ -30,8 +30,7 @@
 #define XVCrystalCharacteristic_h
 
 #include "XLatticeManager3.hh"
-
-using namespace std;
+#include "G4Track.hh"
 
 class XVCrystalCharacteristic {
 
@@ -45,7 +44,7 @@ public:
     XLogicalLattice* GetLogicalLattice(G4VPhysicalVolume*);
         
     //virtual function to compute value starting from the point in the xtal reference frame and the physical volume of the xtal
-    virtual G4ThreeVector ComputeValue(G4ThreeVector,G4VPhysicalVolume*) = 0;
+    virtual G4ThreeVector ComputeValue(G4ThreeVector,const G4Track& aTrack) = 0;
     virtual G4double ComputePositionInPeriodicUnit(G4double,G4double&);
 
     //Contructors

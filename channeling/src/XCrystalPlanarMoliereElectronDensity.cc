@@ -24,29 +24,40 @@
 // ********************************************************************
 //
 //
-// $Id$
-//
-#ifndef XCrystalPlanarAnalyticalNucleiDensity_h
-#define XCrystalPlanarAnalyticalNucleiDensity_h
 
-#include "XVCrystalPlanarAnalytical.hh"
-#include "XAtomicScreeningFunction.hh"
-#include "XThomasFermiScreeningRadius.hh"
+#include "XCrystalPlanarMoliereElectronDensity.hh"
 
-class XCrystalPlanarAnalyticalNucleiDensity:public XVCrystalPlanarAnalytical {
-
-private:
-    G4double fThermalVibrationAmplitude;
-public:
-    void SetThermalVibrationAmplitude(G4double);
-    G4double GetThermalVibrationAmplitude();
-
-    //class-only functions
-    G4double ComputeValueForSinglePlane(G4double,G4VPhysicalVolume*);
+XCrystalPlanarMoliereElectronDensity::XCrystalPlanarMoliereElectronDensity(){
+    fAlfa[0] = 0.1;
+    fAlfa[1] = 0.55;
+    fAlfa[2] = 0.35;
     
-    //Contructors
-    XCrystalPlanarAnalyticalNucleiDensity();
-    ~XCrystalPlanarAnalyticalNucleiDensity();
-};
+    fBeta[0] = 6.0;
+    fBeta[1] = 1.2;
+    fBeta[2] = 0.3;
+}
 
-#endif
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+XCrystalPlanarMoliereElectronDensity::~XCrystalPlanarMoliereElectronDensity(){
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalPlanarMoliereElectronDensity::ComputeValueForSinglePlane(G4double vXposition,const G4Track& aTrack){
+
+    G4double aTF = GetTFSR()->ComputeScreeningRadius(aTrack);
+
+    G4double vValueForSinglePlane = 0.;
+    for(G4int i=0;i<3;i++){
+        vValueForSinglePlane += ( fAlfa[i] * fBeta[i] * exp( - fabs(vXposition) * fBeta[i] / aTF ) * ( 1. + fBeta[i] * fabs(vXposition) / aTF) );
+    }
+    
+    vValueForSinglePlane /= aTF;
+    
+    vValueForSinglePlane *= 0.25;
+
+    return vValueForSinglePlane;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

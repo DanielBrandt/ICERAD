@@ -47,22 +47,16 @@
             location = "group:ProcessChanneling.hh">
          </FileRef>
          <FileRef
-            location = "group:XAtomicScreeningFunction.hh">
+            location = "group:XCrystalPlanarMoliereElectricField.hh">
          </FileRef>
          <FileRef
-            location = "group:XAtomicScreeningFunctionMoliere.hh">
+            location = "group:XCrystalPlanarMoliereElectronDensity.hh">
          </FileRef>
          <FileRef
-            location = "group:XCrystalPlanarAnalyticalElectricField.hh">
+            location = "group:XCrystalPlanarNucleiDensity.hh">
          </FileRef>
          <FileRef
-            location = "group:XCrystalPlanarAnalyticalElectronDensity.hh">
-         </FileRef>
-         <FileRef
-            location = "group:XCrystalPlanarAnalyticalNucleiDensity.hh">
-         </FileRef>
-         <FileRef
-            location = "group:XCrystalPlanarAnalyticalPotential.hh">
+            location = "group:XCrystalPlanarMolierePotential.hh">
          </FileRef>
          <FileRef
             location = "group:XLatticeManager3.hh">
@@ -138,22 +132,16 @@
             location = "group:ProcessChanneling.cc">
          </FileRef>
          <FileRef
-            location = "group:XAtomicScreeningFunction.cc">
+            location = "group:XCrystalPlanarMoliereElectricField.cc">
          </FileRef>
          <FileRef
-            location = "group:XAtomicScreeningFunctionMoliere.cc">
+            location = "group:XCrystalPlanarMoliereElectronDensity.cc">
          </FileRef>
          <FileRef
-            location = "group:XCrystalPlanarAnalyticalElectricField.cc">
+            location = "group:XCrystalPlanarNucleiDensity.cc">
          </FileRef>
          <FileRef
-            location = "group:XCrystalPlanarAnalyticalElectronDensity.cc">
-         </FileRef>
-         <FileRef
-            location = "group:XCrystalPlanarAnalyticalNucleiDensity.cc">
-         </FileRef>
-         <FileRef
-            location = "group:XCrystalPlanarAnalyticalPotential.cc">
+            location = "group:XCrystalPlanarMolierePotential.cc">
          </FileRef>
          <FileRef
             location = "group:XLatticeManager3.cc">

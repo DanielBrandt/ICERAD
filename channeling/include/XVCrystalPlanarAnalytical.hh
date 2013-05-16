@@ -30,31 +30,30 @@
 #define XVCrystalPlanarAnalytical_h
 
 #include "XVCrystalCharacteristic.hh"
-#include "XAtomicScreeningFunction.hh"
 #include "XThomasFermiScreeningRadius.hh"
 
 class XVCrystalPlanarAnalytical:public XVCrystalCharacteristic {
 
 private:
-    XAtomicScreeningFunction *fScreeningFunction;
-    XThomasFermiScreeningRadius *fThomasFermiScreeningRadius;
     G4int fNumberOfPlanes;
+    XThomasFermiScreeningRadius *fThomasFermiScreeningRadius;
+    G4double fThermalVibrationAmplitude;
 
 public:
     //set function
     void SetNumberOfPlanes(G4int);
-    void SetScreeningFunction(XAtomicScreeningFunction*);
     void SetTFSR(XThomasFermiScreeningRadius*);
+    void SetThermalVibrationAmplitude(G4double);
 
     //retrieval function
     G4int GetNumberOfPlanes();
-    XAtomicScreeningFunction* GetScreeningFunction();
     XThomasFermiScreeningRadius* GetTFSR();
-    
-    virtual G4double ComputeValueForSinglePlane(G4double,G4VPhysicalVolume*) = 0;
+    G4double GetThermalVibrationAmplitude();
+
+    virtual G4double ComputeValueForSinglePlane(G4double vPosition,const G4Track& aTrack) = 0;
     
     //virtual function of XVCrystalCharacteristic
-    G4ThreeVector ComputeValue(G4ThreeVector,G4VPhysicalVolume*);
+    G4ThreeVector ComputeValue(G4ThreeVector,const G4Track& aTrack);
     
     //Contructors
     XVCrystalPlanarAnalytical();

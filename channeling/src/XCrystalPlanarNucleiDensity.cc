@@ -25,25 +25,25 @@
 //
 //
 
-#include "XCrystalPlanarAnalyticalElectronDensity.hh"
+#include "XCrystalPlanarNucleiDensity.hh"
 
-XCrystalPlanarAnalyticalElectronDensity::XCrystalPlanarAnalyticalElectronDensity(){
+XCrystalPlanarNucleiDensity::XCrystalPlanarNucleiDensity(){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XCrystalPlanarAnalyticalElectronDensity::~XCrystalPlanarAnalyticalElectronDensity(){
+XCrystalPlanarNucleiDensity::~XCrystalPlanarNucleiDensity(){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XCrystalPlanarAnalyticalElectronDensity::ComputeValueForSinglePlane(G4double vXposition,G4VPhysicalVolume* vVolume){
-
-    G4double vValueForSinglePlane = (GetScreeningFunction()->ComputeScreeningFunction(fabs(vXposition),GetXUnitCell(vVolume)->GetBase(0)->GetElement()));
+G4double XCrystalPlanarNucleiDensity::ComputeValueForSinglePlane(G4double vXposition,const G4Track& aTrack){
     
-    vValueForSinglePlane *= GetScreeningFunction()->ComputeNormalization(fabs(vXposition),GetXUnitCell(vVolume)->GetBase(0)->GetElement());
-    
+    G4double vValueForSinglePlane = exp( - 0.5 * pow(vXposition/GetThermalVibrationAmplitude(),2.0 ) );
 
+    vValueForSinglePlane /= (GetThermalVibrationAmplitude());
+    vValueForSinglePlane /= ( sqrt( 2 * M_PI) );
+    
     return vValueForSinglePlane;
 }
 

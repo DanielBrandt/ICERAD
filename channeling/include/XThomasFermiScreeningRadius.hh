@@ -29,10 +29,7 @@
 #ifndef XThomasFermiScreeningRadius_h
 #define XThomasFermiScreeningRadius_h
 
-#include "G4Element.hh"
-#include "G4ParticleDefinition.hh"
-
-using namespace std;
+#include "G4Track.hh"
 
 class XThomasFermiScreeningRadius {
 
@@ -40,7 +37,7 @@ private:
     
 public:
     //Compute methods
-    G4double ComputeScreeningRadius(G4Element*,G4ParticleDefinition* = NULL);
+    G4double ComputeScreeningRadius(const G4Track& aTrack);
 
     //Contructors
     XThomasFermiScreeningRadius();

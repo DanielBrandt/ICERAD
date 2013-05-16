@@ -42,6 +42,20 @@
 
 #include "G4SystemOfUnits.hh"
 
+#include "XLatticeManager3.hh"
+
+#include "XLogicalAtomicLattice.hh"
+#include "XLogicalAtomicLatticeDiamond.hh"
+#include "XLogicalBase.hh"
+#include "XUnitCell.hh"
+
+#include "XCrystalPlanarMolierePotential.hh"
+#include "XCrystalPlanarMoliereElectricField.hh"
+#include "XCrystalPlanarNucleiDensity.hh"
+#include "XThomasFermiScreeningRadius.hh"
+#include "XCrystalPlanarMoliereElectronDensity.hh"
+
+
 ProcessChanneling::ProcessChanneling(const G4String& aName):G4VDiscreteProcess(aName){
     fLatticeManager = XLatticeManager3::GetXLatticeManager();
     
@@ -50,6 +64,8 @@ ProcessChanneling::ProcessChanneling(const G4String& aName):G4VDiscreteProcess(a
     if(verboseLevel>1) {
         G4cout << GetProcessName() << " is created "<< G4endl;
     }
+    fCompute = true;
+    
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -132,6 +148,12 @@ ProcessChanneling::GetMeanFreePath(const G4Track& aTrack, G4double /*previousSte
     
     *condition = Forced;
     
+    if(aTrack.GetVolume()->GetName()=="Target"){
+        if(fCompute){
+            ComputeCrystalCharacteristicForChanneling(aTrack);
+            fCompute = false;
+        }
+    }
     if(aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume()->GetName()=="Target")
     {
         if(IsInChanneling(aTrack)){
@@ -143,7 +165,7 @@ ProcessChanneling::GetMeanFreePath(const G4Track& aTrack, G4double /*previousSte
     }
     
     return DBL_MAX;
-
+    
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -182,4 +204,59 @@ void ProcessChanneling::BuildPhysicsTable(const G4ParticleDefinition&)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+
+void ProcessChanneling::ComputeCrystalCharacteristicForChanneling(const G4Track& aTrack){
+    
+    XPhysicalLattice* vXtalPhysLattice = XLatticeManager3::GetXLatticeManager()->GetXPhysicalLattice(aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume());
+    
+    XThomasFermiScreeningRadius* vTF = new XThomasFermiScreeningRadius();
+    
+    XCrystalPlanarMolierePotential *vPotential = new XCrystalPlanarMolierePotential();
+    
+    vPotential->SetTFSR(vTF);
+    
+    XCrystalPlanarMoliereElectricField *vElectricField = new XCrystalPlanarMoliereElectricField();
+    
+    vElectricField->SetTFSR(vTF);
+    
+    XCrystalPlanarNucleiDensity *vNucleiDensity = new XCrystalPlanarNucleiDensity();
+    
+    vNucleiDensity->SetTFSR(vTF);
+    
+    vNucleiDensity->SetThermalVibrationAmplitude(0.075*angstrom);
+    
+    XCrystalPlanarMoliereElectronDensity *vElectronDensity = new XCrystalPlanarMoliereElectronDensity();
+    
+    vElectronDensity->SetTFSR(vTF);
+    
+    std::ofstream vFileOutPot;
+    std::ofstream vFileOutEfx;
+    std::ofstream vFileOutNud;
+    std::ofstream vFileOutEld;
+    
+    vFileOutPot.open("pot.txt");
+    vFileOutEfx.open("efx.txt");
+    vFileOutNud.open("nud.txt");
+    vFileOutEld.open("eld.txt");
+    
+    G4int imax = 8192;
+    G4double vXposition = 0.;
+    G4double vXpositionConstant = 1. * vXtalPhysLattice->GetXUnitCell()->ComputeDirectPeriod(vXtalPhysLattice->GetMiller(0),vXtalPhysLattice->GetMiller(1),vXtalPhysLattice->GetMiller(2));
+    
+    for(G4int i = 0;i<imax;i++){
+        vXposition = double(i) / double(imax) * vXpositionConstant;
+        vFileOutPot << vXposition / angstrom << " " << (vPotential->ComputeValue(G4ThreeVector(0.,vXposition,0.),aTrack)).y() / eV << std::endl;
+        vFileOutEfx << vXposition / angstrom << " " << (vElectricField->ComputeValue(G4ThreeVector(0.,vXposition,0.),aTrack)).y() / eV * angstrom << std::endl;
+        vFileOutNud << vXposition / angstrom << " " << (vNucleiDensity->ComputeValue(G4ThreeVector(0.,vXposition,0.),aTrack)).y() * angstrom << std::endl;
+        //vFileOutEld << vXposition / angstrom << " " << (vElectronDensity->ComputeValueForSinglePlane(vXposition,aTrack)) * angstrom << std::endl;
+    vFileOutEld << vXposition / angstrom << " " << (vElectronDensity->ComputeValue(G4ThreeVector(0.,vXposition,0.),aTrack)).y() * angstrom << std::endl;
+    }
+    
+    vFileOutPot.close();
+    vFileOutEfx.close();
+    vFileOutNud.close();
+    vFileOutEld.close();
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

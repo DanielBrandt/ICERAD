@@ -25,40 +25,48 @@
 //
 //
 
-#include "XCrystalPlanarAnalyticalNucleiDensity.hh"
+#include "XCrystalPlanarMoliereElectricField.hh"
 
-XCrystalPlanarAnalyticalNucleiDensity::XCrystalPlanarAnalyticalNucleiDensity(){
-    fThermalVibrationAmplitude = 1. * angstrom;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XCrystalPlanarAnalyticalNucleiDensity::~XCrystalPlanarAnalyticalNucleiDensity(){
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void XCrystalPlanarAnalyticalNucleiDensity::SetThermalVibrationAmplitude(G4double vThermalVibrationAmplitude){
-    fThermalVibrationAmplitude = vThermalVibrationAmplitude;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4double XCrystalPlanarAnalyticalNucleiDensity::GetThermalVibrationAmplitude(){
-    return fThermalVibrationAmplitude;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4double XCrystalPlanarAnalyticalNucleiDensity::ComputeValueForSinglePlane(G4double vXposition,G4VPhysicalVolume* vVolume){
+XCrystalPlanarMoliereElectricField::XCrystalPlanarMoliereElectricField(){
+    fAlfa[0] = 0.1;
+    fAlfa[1] = 0.55;
+    fAlfa[2] = 0.35;
     
-    G4double vValueForSinglePlane = exp( - 0.5 * pow(vXposition/fThermalVibrationAmplitude,2.0 ) );
+    fBeta[0] = 6.0;
+    fBeta[1] = 1.2;
+    fBeta[2] = 0.3;
+}
 
-    vValueForSinglePlane /= (fThermalVibrationAmplitude);
-    vValueForSinglePlane /= ( sqrt( 2 * M_PI) );
- //   vValueForSinglePlane += GetXUnitCell(vVolume)->GetBase(0)->GetLattice()->GetLatticeNumberOfAtoms();
- //   vValueForSinglePlane /= GetXUnitCell(vVolume)->GetBase(0)->GetLattice()->GetLatticeNumberOfAtoms();
-   
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+XCrystalPlanarMoliereElectricField::~XCrystalPlanarMoliereElectricField(){
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalPlanarMoliereElectricField::ComputeValueForSinglePlane(G4double vXposition,const G4Track& aTrack){
+
+    G4VPhysicalVolume* vVolume = aTrack.GetVolume();
+
+    G4double aTF = GetTFSR()->ComputeScreeningRadius(aTrack);
+
+    G4double vValueForSinglePlane = 0.;
+    for(G4int i=0;i<3;i++){
+        vValueForSinglePlane += ( fAlfa[i] * exp( - fabs(vXposition) * fBeta[i] / aTF ) );
+    }
+
+    vValueForSinglePlane *= 2. * M_PI * GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
+    
+    vValueForSinglePlane *= (elm_coupling);
+    
+    vValueForSinglePlane *= (GetXUnitCell(vVolume)->ComputeAtomVolumeDensity());
+    
+    G4int vSign = +1;
+    
+    if(vXposition < 0.) vSign = -1;
+
+    vValueForSinglePlane *= vSign;
+    
     return vValueForSinglePlane;
 }
 

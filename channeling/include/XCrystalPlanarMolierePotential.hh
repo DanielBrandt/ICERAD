@@ -26,24 +26,23 @@
 //
 // $Id$
 //
-#ifndef XCrystalPlanarAnalyticalElectricField_h
-#define XCrystalPlanarAnalyticalElectricField_h
+#ifndef XCrystalPlanarMolierePotential_h
+#define XCrystalPlanarMolierePotential_h
 
 #include "XVCrystalPlanarAnalytical.hh"
-#include "XAtomicScreeningFunction.hh"
-#include "XThomasFermiScreeningRadius.hh"
 
-class XCrystalPlanarAnalyticalElectricField:public XVCrystalPlanarAnalytical {
+class XCrystalPlanarMolierePotential:public XVCrystalPlanarAnalytical {
 
 private:
+    G4double fAlfa[3];
+    G4double fBeta[3];
 
 public:
-    //class-only functions
-    G4double ComputeValueForSinglePlane(G4double,G4VPhysicalVolume*);
-    
+    G4double ComputeValueForSinglePlane(G4double vPosition,const G4Track& aTrack);
+
     //Contructors
-    XCrystalPlanarAnalyticalElectricField();
-    ~XCrystalPlanarAnalyticalElectricField();
+    XCrystalPlanarMolierePotential();
+    ~XCrystalPlanarMolierePotential();
 };
 
 #endif

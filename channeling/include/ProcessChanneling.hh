@@ -63,7 +63,10 @@ private:
     G4bool IsInChanneling(const G4Track& aTrack);
 
     void UpdateMomentum(const G4Track& aTrack);
+    
+    void ComputeCrystalCharacteristicForChanneling(const G4Track& aTrack);
 
+    G4bool fCompute;
 private:
     // hide assignment operator as private
     ProcessChanneling(ProcessChanneling&);

@@ -29,6 +29,7 @@
 
 XVCrystalPlanarAnalytical::XVCrystalPlanarAnalytical(){
     fNumberOfPlanes = 4;
+    fThermalVibrationAmplitude = 1. * angstrom;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -44,16 +45,15 @@ void XVCrystalPlanarAnalytical::SetNumberOfPlanes(G4int vNumberOfPlanes){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void XVCrystalPlanarAnalytical::SetScreeningFunction(XAtomicScreeningFunction *vScreeningFunction){
-    fScreeningFunction = vScreeningFunction;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
 void XVCrystalPlanarAnalytical::SetTFSR(XThomasFermiScreeningRadius *vThomasFermiScreeningRadius){
     fThomasFermiScreeningRadius = vThomasFermiScreeningRadius;
 }
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void XVCrystalPlanarAnalytical::SetThermalVibrationAmplitude(G4double vThermalVibrationAmplitude){
+    fThermalVibrationAmplitude = vThermalVibrationAmplitude;
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4int XVCrystalPlanarAnalytical::GetNumberOfPlanes(){
@@ -62,29 +62,32 @@ G4int XVCrystalPlanarAnalytical::GetNumberOfPlanes(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-XAtomicScreeningFunction* XVCrystalPlanarAnalytical::GetScreeningFunction(){
-    return fScreeningFunction;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
 XThomasFermiScreeningRadius* XVCrystalPlanarAnalytical::GetTFSR(){
     return fThomasFermiScreeningRadius;
 }
 
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ThreeVector XVCrystalPlanarAnalytical::ComputeValue(G4ThreeVector vPositionVector,G4VPhysicalVolume* vVolume){
+G4double XVCrystalPlanarAnalytical::GetThermalVibrationAmplitude(){
+    return fThermalVibrationAmplitude;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4ThreeVector XVCrystalPlanarAnalytical::ComputeValue(G4ThreeVector vPositionVector,const G4Track& aTrack){
+    G4VPhysicalVolume* vVolume = aTrack.GetVolume();
+    
     G4double vInterplanarDistance = GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
     
-    G4double vPotential = 0.;
-    G4double vX = ComputePositionInPeriodicUnit(vPositionVector.x(),vInterplanarDistance);
+    G4double vX = ComputePositionInPeriodicUnit(vPositionVector.y(),vInterplanarDistance);
     
+    G4double vValue = 0.;
     for(G4int i=-int(GetNumberOfPlanes()/2);i<=+int(GetNumberOfPlanes()/2);i++){
-        vPotential += ComputeValueForSinglePlane(vX + vInterplanarDistance * i,vVolume);
+        vValue += ComputeValueForSinglePlane(vX + vInterplanarDistance * i,aTrack);
     }
     
-    return G4ThreeVector(vPotential,0.,0.);
+    return G4ThreeVector(0.,vValue,0.);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

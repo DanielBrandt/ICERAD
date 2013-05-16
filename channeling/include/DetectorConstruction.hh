@@ -60,9 +60,7 @@ public:
 private:
     void AddWorld();
     void AddSiliconStripDetector();
-    void AddCrystalTarget();
-    void ComputeCrystalCharacteristicForChanneling();
-    
+    void AddCrystalTarget();    
 public:
     
     G4VPhysicalVolume* Construct();

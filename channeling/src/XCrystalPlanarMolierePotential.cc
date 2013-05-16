@@ -24,40 +24,47 @@
 // ********************************************************************
 //
 //
-// $Id$
-//
-#ifndef XAtomicScreeningFunctionMoliere_h
-#define XAtomicScreeningFunctionMoliere_h
 
-#include "XAtomicScreeningFunction.hh"
-#include "XThomasFermiScreeningRadius.hh"
+#include "XCrystalPlanarMolierePotential.hh"
 
-class XAtomicScreeningFunctionMoliere: public XAtomicScreeningFunction {
-
-private:
-    XThomasFermiScreeningRadius *fThomasFermiScreeningRadius;
-    G4double fAlfa[3];
-    G4double fBeta[3];
-
-public:
-    //set function
-    void SetTFSR(XThomasFermiScreeningRadius*);
+XCrystalPlanarMolierePotential::XCrystalPlanarMolierePotential(){
+    fAlfa[0] = 0.1;
+    fAlfa[1] = 0.55;
+    fAlfa[2] = 0.35;
     
-    //retrieval function
-    XThomasFermiScreeningRadius* GetTFSR();
+    fBeta[0] = 6.0;
+    fBeta[1] = 1.2;
+    fBeta[2] = 0.3;
+}
 
-    //virtual function in main class
-    G4double ComputeScreeningFunctionIntegral(G4double,G4Element*,G4ParticleDefinition*);
- 
-    G4double ComputeScreeningFunction(G4double,G4Element*,G4ParticleDefinition*);
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-    G4double ComputeScreeningFunctionFirstDerivative(G4double,G4Element*,G4ParticleDefinition*);
+XCrystalPlanarMolierePotential::~XCrystalPlanarMolierePotential(){
+}
 
-    G4double ComputeNormalization(G4double,G4Element*,G4ParticleDefinition*);
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-    //Contructors
-    XAtomicScreeningFunctionMoliere();
-    ~XAtomicScreeningFunctionMoliere();
-};
+G4double XCrystalPlanarMolierePotential::ComputeValueForSinglePlane(G4double vXposition,const G4Track& aTrack){
+    
+    G4VPhysicalVolume* vVolume = aTrack.GetVolume();
+    G4Element* vElement = GetXUnitCell(vVolume)->GetBase(0)->GetElement();
+    G4double aTF = GetTFSR()->ComputeScreeningRadius(aTrack);
 
-#endif
+    G4double vValueForSinglePlane = 0.;
+    
+    for(G4int i=0;i<3;i++){
+        vValueForSinglePlane += ( fAlfa[i]/fBeta[i] * exp( - fabs(vXposition) * fBeta[i] / aTF ) );
+    }
+    
+    vValueForSinglePlane *= 2. * M_PI * GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
+    
+    vValueForSinglePlane *= aTF;
+
+    vValueForSinglePlane *= (elm_coupling);
+
+    vValueForSinglePlane *= (GetXUnitCell(vVolume)->ComputeAtomVolumeDensity());
+
+    return vValueForSinglePlane;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

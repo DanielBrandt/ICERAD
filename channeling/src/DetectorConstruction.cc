@@ -53,12 +53,11 @@
 #include "XLogicalBase.hh"
 #include "XUnitCell.hh"
 
-#include "XAtomicScreeningFunctionMoliere.hh"
-#include "XCrystalPlanarAnalyticalPotential.hh"
-#include "XCrystalPlanarAnalyticalElectricField.hh"
-#include "XCrystalPlanarAnalyticalNucleiDensity.hh"
+#include "XCrystalPlanarMolierePotential.hh"
+#include "XCrystalPlanarMoliereElectricField.hh"
+#include "XCrystalPlanarNucleiDensity.hh"
 #include "XThomasFermiScreeningRadius.hh"
-#include "XCrystalPlanarAnalyticalElectronDensity.hh"
+#include "XCrystalPlanarMoliereElectronDensity.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -154,62 +153,6 @@ void DetectorConstruction::AddCrystalTarget(){
     // Register XPhysicalLattice
     //----------------------------------------
     XLatticeManager3::GetXLatticeManager()->RegisterLattice(physicalLattice);
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void DetectorConstruction::ComputeCrystalCharacteristicForChanneling(){
-    
-    XPhysicalLattice* vXtalPhysLattice = XLatticeManager3::GetXLatticeManager()->GetXPhysicalLattice(fXtalPhysical);
-    
-    XThomasFermiScreeningRadius* vTF = new XThomasFermiScreeningRadius();
-    XAtomicScreeningFunctionMoliere* vScreening = new XAtomicScreeningFunctionMoliere();
-    vScreening->SetTFSR(vTF);
-    
-    XCrystalPlanarAnalyticalPotential *vPotential = new XCrystalPlanarAnalyticalPotential();
-    vPotential->SetTFSR(vTF);
-    vPotential->SetScreeningFunction(vScreening);
-    
-    XCrystalPlanarAnalyticalElectricField *vElectricField = new XCrystalPlanarAnalyticalElectricField();
-    vElectricField->SetTFSR(vTF);
-    vElectricField->SetScreeningFunction(vScreening);
-    
-    XCrystalPlanarAnalyticalNucleiDensity *vNucleiDensity = new XCrystalPlanarAnalyticalNucleiDensity();
-    vNucleiDensity->SetTFSR(vTF);
-    vNucleiDensity->SetScreeningFunction(vScreening);
-    vNucleiDensity->SetThermalVibrationAmplitude(0.075*angstrom);
-    
-    XCrystalPlanarAnalyticalElectronDensity *vElectronDensity = new XCrystalPlanarAnalyticalElectronDensity();
-    vElectronDensity->SetTFSR(vTF);
-    vElectronDensity->SetScreeningFunction(vScreening);
-    
-    std::ofstream vFileOutPot;
-    std::ofstream vFileOutEfx;
-    std::ofstream vFileOutNud;
-    std::ofstream vFileOutEld;
-    
-    vFileOutPot.open("pot.txt");
-    vFileOutEfx.open("efx.txt");
-    vFileOutNud.open("nud.txt");
-    vFileOutEld.open("eld.txt");
-    
-    G4int imax = 8192;
-    G4double vXposition = 0.;
-    G4double vXpositionConstant = 2. * vXtalPhysLattice->GetXUnitCell()->ComputeDirectPeriod(vXtalPhysLattice->GetMiller(0),vXtalPhysLattice->GetMiller(1),vXtalPhysLattice->GetMiller(2));
-    
-    for(G4int i = -imax;i<imax;i++){
-        vXposition = double(i) / double(imax) * vXpositionConstant;
-        //vFileOutPot << vXposition / angstrom << " " << (vPotential->ComputeValue(G4ThreeVector(vXposition,0.,0.),fXtalPhysical)).x() / eV << std::endl;
-        vFileOutPot << vXposition / angstrom << " " << (vPotential->ComputeValueForSinglePlane(vXposition,fXtalPhysical)) / eV << std::endl;
-        //vFileOutEfx << vXposition / angstrom << " " << (vElectricField->ComputeValue(G4ThreeVector(vXposition,0.,0.),fXtalPhysical)).x() / eV * angstrom << std::endl;
-        vFileOutEfx << vXposition / angstrom << " " << (vElectricField->ComputeValueForSinglePlane(vXposition,fXtalPhysical)) / eV * angstrom << std::endl;
-        vFileOutNud << vXposition / angstrom << " " << (vNucleiDensity->ComputeValueForSinglePlane(vXposition,fXtalPhysical)) << std::endl;
-        vFileOutEld << vXposition / angstrom << " " << (vElectronDensity->ComputeValueForSinglePlane(vXposition,fXtalPhysical)) << std::endl;
-    }
-    vFileOutPot.close();
-    vFileOutEfx.close();
-    vFileOutNud.close();
-    vFileOutEld.close();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
