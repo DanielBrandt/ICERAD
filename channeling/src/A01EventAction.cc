@@ -51,7 +51,7 @@ A01EventAction::A01EventAction()
 {
     fDHC_ID = -1;
 
-    fVerboseLevel = 1;
+    fVerboseLevel = 0;
     fMessenger = new A01EventActionMessenger(this);
 }
 
@@ -79,19 +79,10 @@ void A01EventAction::EndOfEventAction(const G4Event* evt)
     if(HCE)
     {
         G4VHitsCollection* aHC = HCE->GetHC(fDHC_ID);
-        fDHC = dynamic_cast<A01DriftChamberHitsCollection*>(aHC);
+        //fDHC = dynamic_cast<A01DriftChamberHitsCollection*>(aHC);
+        fDHC = (A01DriftChamberHitsCollection*)(aHC);
     }
     
-    if(fDHC){
-        G4cout << std::endl;
-        G4cout << "IS NON ZERO" << std::endl;
-        G4cout << std::endl;
-    }
-    else{
-        G4cout << std::endl;
-        G4cout << "IS ZERO" << std::endl;
-        G4cout << std::endl;
-    }
     // Diagnostics
     
     if (fVerboseLevel==0 || evt->GetEventID() % fVerboseLevel != 0) return;

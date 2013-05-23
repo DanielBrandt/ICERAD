@@ -49,10 +49,9 @@
 #include "XLogicalBase.hh"
 #include "XUnitCell.hh"
 
-#include "XCrystalPlanarMolierePotential.hh"
+#include "XCrystalPlanarMoliereTempPotential.hh"
 #include "XCrystalPlanarMoliereElectricField.hh"
 #include "XCrystalPlanarNucleiDensity.hh"
-#include "XThomasFermiScreeningRadius.hh"
 #include "XCrystalPlanarMoliereElectronDensity.hh"
 
 
@@ -65,12 +64,23 @@ ProcessChanneling::ProcessChanneling(const G4String& aName):G4VDiscreteProcess(a
         G4cout << GetProcessName() << " is created "<< G4endl;
     }
     fCompute = true;
-    
+    fHasBeenInChanneling = false;
+    InitializeCrystalCharacteristics();
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void ProcessChanneling::InitializeCrystalCharacteristics(){
+    fPotentialEnergy = new XCrystalPlanarMoliereTempPotential();
+    fElectricField = new XCrystalPlanarMoliereElectricField();
+    fNucleiDensity = new XCrystalPlanarNucleiDensity();
+    fElectronDensity = new XCrystalPlanarMoliereElectronDensity();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 ProcessChanneling::~ProcessChanneling(){
+    ;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -81,22 +91,17 @@ ProcessChanneling::ProcessChanneling(ProcessChanneling& right):G4VDiscreteProces
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double ProcessChanneling::GetChannelingCriticalEnergy(const G4Track& aTrack){
-    G4double vMaximumPotentialWell = 21. * eV; //Maximum Potential Well Energy U_0 for Si(1,1,0)
-    return vMaximumPotentialWell;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
 void ProcessChanneling::UpdateMomentum(const G4Track& aTrack){
-    fMomentum = fLatticeManager->GetXPhysicalLattice(aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume())->ProjectVectorFromWorldToLattice(aTrack.GetMomentum());
+    G4VPhysicalVolume* vVolume = aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume();
+    fMomentum = fLatticeManager->GetXPhysicalLattice(vVolume)->ProjectVectorFromWorldToLattice(aTrack.GetMomentum());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double ProcessChanneling::GetChannelingAcceptanceProbability(const G4Track& aTrack){
-    G4double vChannelingAcceptanceProbability = pow( 1. - pow(fMomentum.y() / GetChannelingCriticalEnergy(aTrack),2.),0.5);
-    return vChannelingAcceptanceProbability;
+void ProcessChanneling::UpdatePosition(const G4Track& aTrack){
+    XPhysicalLattice* vXtalPhysLattice = fLatticeManager->GetXPhysicalLattice(aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume());
+    fPosition.setY(G4UniformRand() * vXtalPhysLattice->ComputeInterplanarPeriod());
+    fHasBeenInChanneling = true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -107,14 +112,41 @@ G4bool ProcessChanneling::IsInChanneling(const G4Track& aTrack){
     // transverse to the (h,k,l) plane
     // is small enough to permit channeling
     //----------------------------------------
-    UpdateMomentum(aTrack);
     
-    if( fabs(fMomentum.y()) < GetChannelingCriticalEnergy(aTrack) ){
-        if( G4UniformRand() < GetChannelingAcceptanceProbability(aTrack)){
-            return true;
-        }
+    UpdateMomentum(aTrack);
+    if(!fHasBeenInChanneling) UpdatePosition(aTrack);
+    
+    if( ComputeTransverseEnergy(aTrack).y() < ComputeChannelingCriticalEnergy(aTrack) ){
+        return true;
     }
     return false;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double ProcessChanneling::ComputeChannelingCriticalEnergy(const G4Track& aTrack){
+    
+    XPhysicalLattice* vXtalPhysLattice = fLatticeManager->GetXPhysicalLattice(aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume());
+    
+    G4double vCriticalEnergy = 0.;
+    vCriticalEnergy += fPotentialEnergy->GetMaximum(vXtalPhysLattice);
+    vCriticalEnergy -= fPotentialEnergy->GetMinimum(vXtalPhysLattice);
+    
+    return vCriticalEnergy;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4ThreeVector ProcessChanneling::ComputeTransverseEnergy(const G4Track& aTrack){
+    
+    XPhysicalLattice* vXtalPhysLattice = fLatticeManager->GetXPhysicalLattice(aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume());
+    
+    G4double vTransverseEnergyY = fPotentialEnergy->ComputeValue(fPosition,vXtalPhysLattice).y();
+    G4cout << "Point1  " << vTransverseEnergyY/eV << std::endl;
+    vTransverseEnergyY += aTrack.GetStep()->GetPostStepPoint()->GetTotalEnergy() * pow(fMomentum.y()/fMomentum.x(),2.);
+    
+    G4cout << "Point2  " << vTransverseEnergyY/eV << std::endl;
+    return G4ThreeVector(0.,vTransverseEnergyY,0.);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -126,9 +158,9 @@ ProcessChanneling::GetChannelingMeanFreePath(const G4Track& aTrack)
     G4double vChannelingMeanFreePathNearNuclei = 1.5 * mm; // dechanneling length for particles which enter the crystal near nuclei
     G4double vChannelingMeanFreePathFarFromNuclei = 20. * cm; // dechannelign length for particles which enter the crystal far from nuclei
     G4double vParticleFractionNearNuclei = 0.2; // fraction of particles which enter the crystal near the nuclei
-    G4double vParticleFractionFarFromNuclei = 1. - vParticleFractionNearNuclei; // fraction of particles which enter the crystal far from nuclei
+    XPhysicalLattice* vXtalPhysLattice = fLatticeManager->GetXPhysicalLattice(aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume());
     
-    if(G4UniformRand()<0.2){
+    if(fPosition.y() / vXtalPhysLattice->ComputeInterplanarPeriod() < vParticleFractionNearNuclei){
         return vChannelingMeanFreePathNearNuclei;
     }
     else{
@@ -148,14 +180,15 @@ ProcessChanneling::GetMeanFreePath(const G4Track& aTrack, G4double /*previousSte
     
     *condition = Forced;
     
-    if(aTrack.GetVolume()->GetName()=="Target"){
+    //return DBL_MAX;
+    G4VPhysicalVolume* vVolume = aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume();
+    
+    if(fLatticeManager->HasLattice(vVolume))
+    {
         if(fCompute){
             ComputeCrystalCharacteristicForChanneling(aTrack);
             fCompute = false;
         }
-    }
-    if(aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume()->GetName()=="Target")
-    {
         if(IsInChanneling(aTrack)){
             return GetChannelingMeanFreePath(aTrack);
         }
@@ -175,12 +208,18 @@ G4VParticleChange* ProcessChanneling::PostStepDoIt(const G4Track& aTrack, const 
     aParticleChange.Initialize(aTrack);
     G4VPhysicalVolume* vVolume = aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume();
     
-    if(vVolume->GetName()=="Target")
+    if(fLatticeManager->HasLattice(vVolume))
     {
         if(IsInChanneling(aTrack)){
             //aParticleChange.ProposeMomentumDirection(fLatticeManager->GetXPhysicalLattice(vVolume)->GetLatticeDirection().unit());
-            aParticleChange.ProposeMomentumDirection(G4ThreeVector(1.,1.,0.).unit());
+            //aParticleChange.ProposeMomentumDirection(G4ThreeVector(1.,1.,0.).unit());
         }
+        else{
+            fHasBeenInChanneling = false;
+        }
+    }
+    else{
+        fHasBeenInChanneling = false;
     }
     
     return &aParticleChange;
@@ -207,27 +246,7 @@ void ProcessChanneling::BuildPhysicsTable(const G4ParticleDefinition&)
 
 void ProcessChanneling::ComputeCrystalCharacteristicForChanneling(const G4Track& aTrack){
     
-    XPhysicalLattice* vXtalPhysLattice = XLatticeManager3::GetXLatticeManager()->GetXPhysicalLattice(aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume());
-    
-    XThomasFermiScreeningRadius* vTF = new XThomasFermiScreeningRadius();
-    
-    XCrystalPlanarMolierePotential *vPotential = new XCrystalPlanarMolierePotential();
-    
-    vPotential->SetTFSR(vTF);
-    
-    XCrystalPlanarMoliereElectricField *vElectricField = new XCrystalPlanarMoliereElectricField();
-    
-    vElectricField->SetTFSR(vTF);
-    
-    XCrystalPlanarNucleiDensity *vNucleiDensity = new XCrystalPlanarNucleiDensity();
-    
-    vNucleiDensity->SetTFSR(vTF);
-    
-    vNucleiDensity->SetThermalVibrationAmplitude(0.075*angstrom);
-    
-    XCrystalPlanarMoliereElectronDensity *vElectronDensity = new XCrystalPlanarMoliereElectronDensity();
-    
-    vElectronDensity->SetTFSR(vTF);
+    XPhysicalLattice* vXtalPhysLattice = fLatticeManager->GetXPhysicalLattice(aTrack.GetStep()->GetPostStepPoint()->GetPhysicalVolume());
     
     std::ofstream vFileOutPot;
     std::ofstream vFileOutEfx;
@@ -241,15 +260,15 @@ void ProcessChanneling::ComputeCrystalCharacteristicForChanneling(const G4Track&
     
     G4int imax = 8192;
     G4double vXposition = 0.;
-    G4double vXpositionConstant = 1. * vXtalPhysLattice->GetXUnitCell()->ComputeDirectPeriod(vXtalPhysLattice->GetMiller(0),vXtalPhysLattice->GetMiller(1),vXtalPhysLattice->GetMiller(2));
+    G4double vXpositionConstant = 1. * vXtalPhysLattice->ComputeInterplanarPeriod();
     
     for(G4int i = 0;i<imax;i++){
         vXposition = double(i) / double(imax) * vXpositionConstant;
-        vFileOutPot << vXposition / angstrom << " " << (vPotential->ComputeValue(G4ThreeVector(0.,vXposition,0.),aTrack)).y() / eV << std::endl;
-        vFileOutEfx << vXposition / angstrom << " " << (vElectricField->ComputeValue(G4ThreeVector(0.,vXposition,0.),aTrack)).y() / eV * angstrom << std::endl;
-        vFileOutNud << vXposition / angstrom << " " << (vNucleiDensity->ComputeValue(G4ThreeVector(0.,vXposition,0.),aTrack)).y() * angstrom << std::endl;
+        vFileOutPot << vXposition / angstrom << " " << (fPotentialEnergy->ComputeValue(G4ThreeVector(0.,vXposition,0.),vXtalPhysLattice)).y() / eV << std::endl;
+        vFileOutEfx << vXposition / angstrom << " " << (fElectricField->ComputeValue(G4ThreeVector(0.,vXposition,0.),vXtalPhysLattice)).y() / eV * angstrom << std::endl;
+        vFileOutNud << vXposition / angstrom << " " << (fNucleiDensity->ComputeValue(G4ThreeVector(0.,vXposition,0.),vXtalPhysLattice)).y() * angstrom << std::endl;
         //vFileOutEld << vXposition / angstrom << " " << (vElectronDensity->ComputeValueForSinglePlane(vXposition,aTrack)) * angstrom << std::endl;
-    vFileOutEld << vXposition / angstrom << " " << (vElectronDensity->ComputeValue(G4ThreeVector(0.,vXposition,0.),aTrack)).y() * angstrom << std::endl;
+        vFileOutEld << vXposition / angstrom << " " << (fElectronDensity->ComputeValue(G4ThreeVector(0.,vXposition,0.),vXtalPhysLattice)).y() * angstrom << std::endl;
     }
     
     vFileOutPot.close();

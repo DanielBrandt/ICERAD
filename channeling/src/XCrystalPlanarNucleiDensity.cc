@@ -28,6 +28,7 @@
 #include "XCrystalPlanarNucleiDensity.hh"
 
 XCrystalPlanarNucleiDensity::XCrystalPlanarNucleiDensity(){
+    SetThermalVibrationAmplitude(0.075*angstrom);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -37,7 +38,7 @@ XCrystalPlanarNucleiDensity::~XCrystalPlanarNucleiDensity(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XCrystalPlanarNucleiDensity::ComputeValueForSinglePlane(G4double vXposition,const G4Track& aTrack){
+G4double XCrystalPlanarNucleiDensity::ComputeValueForSinglePlane(G4double vXposition,XPhysicalLattice* vLattice){
     
     G4double vValueForSinglePlane = exp( - 0.5 * pow(vXposition/GetThermalVibrationAmplitude(),2.0 ) );
 

@@ -109,7 +109,7 @@ void DetectorConstruction::AddSiliconStripDetector(){
     
     for(int j1=0;j1<3;j1++)
     {
-        G4double vDetDistX = double(j1 - 1) * 50. * cm + fSSDSizeX/2. - 2. * fXtalSizeX/2.;;
+        G4double vDetDistX = double(j1 - 1) * 50. * cm + fSSDSizeX/2. - 10. * fXtalSizeX/2.;;
         fSSDPhysical = new G4PVPlacement(0,G4ThreeVector(vDetDistX,0.,0.),fSSDLogic,"SiSD",fWorldLogic,false,j1);
     }
     

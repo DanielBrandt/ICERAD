@@ -37,7 +37,7 @@ private:
     
 public:
     //Compute methods
-    G4double ComputeScreeningRadius(const G4Track& aTrack);
+    G4double ComputeTFScreeningRadius(const G4Track& aTrack);
 
     //Contructors
     XThomasFermiScreeningRadius();

@@ -300,3 +300,10 @@ G4int XPhysicalLattice::GetMiller(G4int vIndex){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XPhysicalLattice::ComputeInterplanarPeriod(){
+    G4double vInterplanarPeriod = GetXUnitCell()->ComputeDirectPeriod(GetMiller(0),GetMiller(1),GetMiller(2));
+    return vInterplanarPeriod;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

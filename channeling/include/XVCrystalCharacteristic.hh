@@ -36,17 +36,26 @@ class XVCrystalCharacteristic {
 
 private:
     XLatticeManager3* fLatticeManager;
-    
+    G4double fThermalVibrationAmplitude;
+
 public:
     //retrieval functions
     XPhysicalLattice* GetXPhysicalLattice(G4VPhysicalVolume*);
     XUnitCell* GetXUnitCell(G4VPhysicalVolume*);
     XLogicalLattice* GetLogicalLattice(G4VPhysicalVolume*);
-        
-    //virtual function to compute value starting from the point in the xtal reference frame and the physical volume of the xtal
-    virtual G4ThreeVector ComputeValue(G4ThreeVector,const G4Track& aTrack) = 0;
-    virtual G4double ComputePositionInPeriodicUnit(G4double,G4double&);
 
+    void SetThermalVibrationAmplitude(G4double);
+    G4double GetThermalVibrationAmplitude();
+    
+    //virtual function to compute value starting from the point in the xtal reference frame and the physical volume of the xtal
+    virtual G4ThreeVector ComputeValue(G4ThreeVector,XPhysicalLattice*) = 0;
+    virtual G4double ComputePositionInUnitCell(G4double,G4double&) = 0;
+    
+    virtual G4double ComputeTFScreeningRadius(XPhysicalLattice*);
+    
+    virtual G4double GetMaximum(XPhysicalLattice*) = 0;
+    virtual G4double GetMinimum(XPhysicalLattice*) = 0;
+    
     //Contructors
     XVCrystalCharacteristic();
     ~XVCrystalCharacteristic();

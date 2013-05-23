@@ -102,6 +102,9 @@ public:
     XLogicalLattice* GetLogicalLattice();
     G4int GetMiller(G4int);
 
+    //general functions
+    G4double ComputeInterplanarPeriod();
+    
 private:
     G4int fMillerOrientation[3];
     XUnitCell* fUnitCell;

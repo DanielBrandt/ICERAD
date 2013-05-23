@@ -29,6 +29,7 @@
 
 XVCrystalCharacteristic::XVCrystalCharacteristic(){
     fLatticeManager = XLatticeManager3::GetXLatticeManager();
+    fThermalVibrationAmplitude = 0.075 * angstrom;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -59,10 +60,32 @@ XLogicalLattice* XVCrystalCharacteristic::GetLogicalLattice(G4VPhysicalVolume* v
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XVCrystalCharacteristic::ComputePositionInPeriodicUnit(G4double vX, G4double &vPeriod){
-    if (vX < 0.0) vX += (fabs(int( vX / vPeriod ) ) + 1.0 ) * vPeriod;
-    else if ( vX > vPeriod ) vX -= fabs( int( vX / vPeriod ) * vPeriod );
-    return vX;
+void XVCrystalCharacteristic::SetThermalVibrationAmplitude(G4double vThermalVibrationAmplitude){
+    fThermalVibrationAmplitude = vThermalVibrationAmplitude;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XVCrystalCharacteristic::GetThermalVibrationAmplitude(){
+    return fThermalVibrationAmplitude;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XVCrystalCharacteristic::ComputeTFScreeningRadius(XPhysicalLattice* vLattice){
+    
+    G4double vTFSR = Bohr_radius * 0.88534;
+
+    vTFSR /= (std::pow(vLattice->GetXUnitCell()->GetBase(0)->GetElement()->GetZ(),0.333333333));
+
+    //if(vLattice->GetParticleDefinition()->GetParticleName() == "proton"){
+    //    vTFSR /= (std::pow(vLattice->GetMaterial()->GetZ(),0.333333333));
+    //}
+    //else{
+    //    vTFSR /= (std::pow(vLattice->GetMaterial()->GetZ(),0.23) + std::pow(vLattice->GetParticleDefinition()->GetPDGCharge(),0.23));
+    //}
+    
+    return vTFSR;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

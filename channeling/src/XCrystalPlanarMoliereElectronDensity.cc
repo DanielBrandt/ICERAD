@@ -44,12 +44,12 @@ XCrystalPlanarMoliereElectronDensity::~XCrystalPlanarMoliereElectronDensity(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XCrystalPlanarMoliereElectronDensity::ComputeValueForSinglePlane(G4double vXposition,const G4Track& aTrack){
+G4double XCrystalPlanarMoliereElectronDensity::ComputeValueForSinglePlane(G4double vXposition,XPhysicalLattice* vLattice){
 
-    G4double aTF = GetTFSR()->ComputeScreeningRadius(aTrack);
+    G4double aTF = ComputeTFScreeningRadius(vLattice);
 
     G4double vValueForSinglePlane = 0.;
-    for(G4int i=0;i<3;i++){
+    for(unsigned int i=0;i<3;i++){
         vValueForSinglePlane += ( fAlfa[i] * fBeta[i] * exp( - fabs(vXposition) * fBeta[i] / aTF ) * ( 1. + fBeta[i] * fabs(vXposition) / aTF) );
     }
     

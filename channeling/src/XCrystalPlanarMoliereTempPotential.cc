@@ -25,9 +25,9 @@
 //
 //
 
-#include "XCrystalPlanarMoliereElectricField.hh"
+#include "XCrystalPlanarMoliereTempPotential.hh"
 
-XCrystalPlanarMoliereElectricField::XCrystalPlanarMoliereElectricField(){
+XCrystalPlanarMoliereTempPotential::XCrystalPlanarMoliereTempPotential(){
     fAlfa[0] = 0.1;
     fAlfa[1] = 0.55;
     fAlfa[2] = 0.35;
@@ -35,39 +35,69 @@ XCrystalPlanarMoliereElectricField::XCrystalPlanarMoliereElectricField(){
     fBeta[0] = 6.0;
     fBeta[1] = 1.2;
     fBeta[2] = 0.3;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-XCrystalPlanarMoliereElectricField::~XCrystalPlanarMoliereElectricField(){
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4double XCrystalPlanarMoliereElectricField::ComputeValueForSinglePlane(G4double vXposition,XPhysicalLattice* vLattice){
-
-    G4VPhysicalVolume* vVolume = vLattice->GetVolume();
-
-    G4double aTF = ComputeTFScreeningRadius(vLattice);
-
-    G4double vValueForSinglePlane = 0.;
-    for(unsigned int i=0;i<3;i++){
-        vValueForSinglePlane += ( fAlfa[i] * exp( - fabs(vXposition) * fBeta[i] / aTF ) );
+    
+    for(unsigned int i=0;i<3;i++) {
+        fGamma[i] = fAlfa[i]/fBeta[i];
     }
+}
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+XCrystalPlanarMoliereTempPotential::~XCrystalPlanarMoliereTempPotential(){
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalPlanarMoliereTempPotential::ComputeValueForSinglePlane(G4double vX,XPhysicalLattice* vLattice){
+    
+    G4VPhysicalVolume* vVolume = vLattice->GetVolume();
+    G4Element* vElement = GetXUnitCell(vVolume)->GetBase(0)->GetElement();
+    G4double aTF = ComputeTFScreeningRadius(vLattice);
+    G4double vTVA = GetThermalVibrationAmplitude();
+    
+    G4double vTau[3];
+    for(unsigned int i=0;i<3;i++) vTau[i] = (pow( vTVA / aTF * fBeta[i] , 2. ) / 2.0);
+
+    
+    G4double vValueForSinglePlane = 0.;
+    
+    for(unsigned int i=0;i<3;i++){
+        G4double vTemp = 0.;
+        vTemp += ( exp(-vX/ aTF * fBeta[i] ) * erfc((vTVA / aTF * fBeta[i] - vX/ vTVA) / pow(2.,0.5)) );
+        vTemp += ( exp( vX/ aTF * fBeta[i] ) * erfc((vTVA / aTF * fBeta[i] + vX/ vTVA) / pow(2.,0.5)) );
+        vValueForSinglePlane += ( vTemp * fGamma[i] * exp( vTau[i] ) /2.0);
+    }
+    
     vValueForSinglePlane *= 2. * M_PI * GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
     
-    vValueForSinglePlane *= (elm_coupling);
-    
-    vValueForSinglePlane *= (GetXUnitCell(vVolume)->ComputeAtomVolumeDensity());
-    
-    G4int vSign = +1;
-    
-    if(vXposition < 0.) vSign = -1;
+    vValueForSinglePlane *= aTF;
 
-    vValueForSinglePlane *= vSign;
-    
+    vValueForSinglePlane *= (elm_coupling);
+
+    vValueForSinglePlane *= (GetXUnitCell(vVolume)->ComputeAtomVolumeDensity());
+
     return vValueForSinglePlane;
 }
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalPlanarMoliereTempPotential::GetMaximum(XPhysicalLattice* vLattice){
+    G4VPhysicalVolume* vVolume = vLattice->GetVolume();
+    G4double vInterplanarDistance = GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
+
+    G4double vMaximum = ComputeValue(G4ThreeVector(0.,0.,0.),vLattice).y();
+    
+    return vMaximum;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalPlanarMoliereTempPotential::GetMinimum(XPhysicalLattice* vLattice){
+    G4VPhysicalVolume* vVolume = vLattice->GetVolume();
+    G4double vInterplanarDistance = GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
+    
+    G4double vMinimum = ComputeValue(G4ThreeVector(0.,vInterplanarDistance/2.,0.),vLattice).y();
+    
+    return vMinimum;
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

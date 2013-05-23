@@ -36,25 +36,23 @@ class XVCrystalPlanarAnalytical:public XVCrystalCharacteristic {
 
 private:
     G4int fNumberOfPlanes;
-    XThomasFermiScreeningRadius *fThomasFermiScreeningRadius;
-    G4double fThermalVibrationAmplitude;
 
 public:
     //set function
     void SetNumberOfPlanes(G4int);
-    void SetTFSR(XThomasFermiScreeningRadius*);
-    void SetThermalVibrationAmplitude(G4double);
 
     //retrieval function
     G4int GetNumberOfPlanes();
-    XThomasFermiScreeningRadius* GetTFSR();
-    G4double GetThermalVibrationAmplitude();
 
-    virtual G4double ComputeValueForSinglePlane(G4double vPosition,const G4Track& aTrack) = 0;
+    virtual G4double ComputeValueForSinglePlane(G4double,XPhysicalLattice*) = 0; // G4double = position in the channel
     
     //virtual function of XVCrystalCharacteristic
-    G4ThreeVector ComputeValue(G4ThreeVector,const G4Track& aTrack);
+    G4ThreeVector ComputeValue(G4ThreeVector,XPhysicalLattice*);
+    G4double ComputePositionInUnitCell(G4double,G4double&);//G4double = position in the channel; G4double& = interplanar distance
     
+    virtual G4double GetMaximum(XPhysicalLattice*);
+    virtual G4double GetMinimum(XPhysicalLattice*);
+
     //Contructors
     XVCrystalPlanarAnalytical();
     ~XVCrystalPlanarAnalytical();

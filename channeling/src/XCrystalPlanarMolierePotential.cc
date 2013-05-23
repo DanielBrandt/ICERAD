@@ -44,15 +44,15 @@ XCrystalPlanarMolierePotential::~XCrystalPlanarMolierePotential(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XCrystalPlanarMolierePotential::ComputeValueForSinglePlane(G4double vXposition,const G4Track& aTrack){
+G4double XCrystalPlanarMolierePotential::ComputeValueForSinglePlane(G4double vXposition,XPhysicalLattice* vLattice){
     
-    G4VPhysicalVolume* vVolume = aTrack.GetVolume();
+    G4VPhysicalVolume* vVolume = vLattice->GetVolume();
     G4Element* vElement = GetXUnitCell(vVolume)->GetBase(0)->GetElement();
-    G4double aTF = GetTFSR()->ComputeScreeningRadius(aTrack);
+    G4double aTF = ComputeTFScreeningRadius(vLattice);
 
     G4double vValueForSinglePlane = 0.;
     
-    for(G4int i=0;i<3;i++){
+    for(unsigned int i=0;i<3;i++){
         vValueForSinglePlane += ( fAlfa[i]/fBeta[i] * exp( - fabs(vXposition) * fBeta[i] / aTF ) );
     }
     
@@ -67,4 +67,25 @@ G4double XCrystalPlanarMolierePotential::ComputeValueForSinglePlane(G4double vXp
     return vValueForSinglePlane;
 }
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalPlanarMolierePotential::GetMaximum(XPhysicalLattice* vLattice){
+    G4VPhysicalVolume* vVolume = vLattice->GetVolume();
+    G4double vInterplanarDistance = GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
+
+    G4double vMaximum = ComputeValue(G4ThreeVector(0.,0.,0.),vLattice).y();
+    
+    return vMaximum;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+G4double XCrystalPlanarMolierePotential::GetMinimum(XPhysicalLattice* vLattice){
+    G4VPhysicalVolume* vVolume = vLattice->GetVolume();
+    G4double vInterplanarDistance = GetXUnitCell(vVolume)->ComputeDirectPeriod(GetXPhysicalLattice(vVolume)->GetMiller(0),GetXPhysicalLattice(vVolume)->GetMiller(1),GetXPhysicalLattice(vVolume)->GetMiller(2));
+    
+    G4double vMinimum = ComputeValue(G4ThreeVector(0.,vInterplanarDistance/2.,0.),vLattice).y();
+    
+    return vMinimum;
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

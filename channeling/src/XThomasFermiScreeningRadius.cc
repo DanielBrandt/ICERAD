@@ -37,7 +37,7 @@ XThomasFermiScreeningRadius::~XThomasFermiScreeningRadius(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double XThomasFermiScreeningRadius::ComputeScreeningRadius(const G4Track& aTrack){
+G4double XThomasFermiScreeningRadius::ComputeTFScreeningRadius(const G4Track& aTrack){
         
     G4double vTFSR = Bohr_radius * 0.88534;
     

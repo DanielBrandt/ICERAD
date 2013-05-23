@@ -14,6 +14,9 @@
          location = "group:include"
          name = "include">
          <FileRef
+            location = "group:XCrystalPlanarMoliereTempPotential.hh">
+         </FileRef>
+         <FileRef
             location = "group:StepMaxMessenger.hh">
          </FileRef>
          <FileRef
@@ -98,6 +101,9 @@
       <Group
          location = "group:src"
          name = "src">
+         <FileRef
+            location = "group:XCrystalPlanarMoliereTempPotential.cc">
+         </FileRef>
          <FileRef
             location = "group:StepMaxMessenger.cc">
          </FileRef>

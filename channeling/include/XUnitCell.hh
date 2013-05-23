@@ -58,6 +58,7 @@ public:
     inline G4ThreeVector& GetAngle();
     XLogicalBase* GetBase(G4int);
     
+    
     //Set methods
     void SetSize(G4ThreeVector);
     void SetAngle(G4ThreeVector);

@@ -38,7 +38,10 @@ private:
     G4double fBeta[3];
 
 public:
-    G4double ComputeValueForSinglePlane(G4double vPosition,const G4Track& aTrack);
+    G4double ComputeValueForSinglePlane(G4double,XPhysicalLattice*);
+    
+    G4double GetMaximum(XPhysicalLattice*);
+    G4double GetMinimum(XPhysicalLattice*);
 
     //Contructors
     XCrystalPlanarMolierePotential();

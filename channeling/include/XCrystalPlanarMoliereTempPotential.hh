@@ -26,21 +26,27 @@
 //
 // $Id$
 //
-#ifndef XCrystalPlanarNucleiDensity_h
-#define XCrystalPlanarNucleiDensity_h
+#ifndef XCrystalPlanarMoliereTempPotential_h
+#define XCrystalPlanarMoliereTempPotential_h
 
 #include "XVCrystalPlanarAnalytical.hh"
 
-class XCrystalPlanarNucleiDensity:public XVCrystalPlanarAnalytical {
+class XCrystalPlanarMoliereTempPotential:public XVCrystalPlanarAnalytical {
 
 private:
+    G4double fAlfa[3];
+    G4double fBeta[3];
+    G4double fGamma[3];
 
 public:
     G4double ComputeValueForSinglePlane(G4double,XPhysicalLattice*);
     
+    G4double GetMaximum(XPhysicalLattice*);
+    G4double GetMinimum(XPhysicalLattice*);
+
     //Contructors
-    XCrystalPlanarNucleiDensity();
-    ~XCrystalPlanarNucleiDensity();
+    XCrystalPlanarMoliereTempPotential();
+    ~XCrystalPlanarMoliereTempPotential();
 };
 
 #endif

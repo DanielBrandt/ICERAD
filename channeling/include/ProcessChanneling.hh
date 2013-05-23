@@ -32,10 +32,8 @@
 #include "globals.hh"
 #include "G4VDiscreteProcess.hh"
 
-#include "XPhysicalLattice.hh"
 #include "XLatticeManager3.hh"
-
-class G4Material;
+#include "XVCrystalCharacteristic.hh"
 
 class ProcessChanneling : public G4VDiscreteProcess
 {
@@ -52,21 +50,33 @@ public:
     virtual void BuildPhysicsTable(const G4ParticleDefinition&);
     
 protected:
-    
     virtual G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition* );
     
+public:
+    void SetPotential(XVCrystalCharacteristic*);
+    void SetNucleiDensity(XVCrystalCharacteristic*);
+    void SetElectronDensity(XVCrystalCharacteristic*);
+    void SetElectricField(XVCrystalCharacteristic*);
+
+    XVCrystalCharacteristic* GetPotential();
+    XVCrystalCharacteristic* GetNucleiDensity();
+    XVCrystalCharacteristic* GetElectronDensity();
+    XVCrystalCharacteristic* GetElectricField();
+
 private:
-    G4double GetChannelingAcceptanceProbability(const G4Track& aTrack);
-    G4double GetChannelingCriticalEnergy(const G4Track& aTrack);
     G4double GetChannelingMeanFreePath(const G4Track& aTrack);
     
     G4bool IsInChanneling(const G4Track& aTrack);
 
     void UpdateMomentum(const G4Track& aTrack);
+    void UpdatePosition(const G4Track& aTrack);
+
+    void InitializeCrystalCharacteristics();
     
     void ComputeCrystalCharacteristicForChanneling(const G4Track& aTrack);
-
-    G4bool fCompute;
+    G4double ComputeChannelingCriticalEnergy(const G4Track& aTrack);
+    G4ThreeVector ComputeTransverseEnergy(const G4Track& aTrack);
+    
 private:
     // hide assignment operator as private
     ProcessChanneling(ProcessChanneling&);
@@ -75,7 +85,15 @@ private:
 private:
     XLatticeManager3* fLatticeManager;
     G4ThreeVector fMomentum;
-        
+    G4ThreeVector fPosition;
+    
+    G4bool fHasBeenInChanneling;
+    G4bool fCompute;
+  
+    XVCrystalCharacteristic* fPotentialEnergy;
+    XVCrystalCharacteristic* fNucleiDensity;
+    XVCrystalCharacteristic* fElectronDensity;
+    XVCrystalCharacteristic* fElectricField;
 };
 
 #endif
