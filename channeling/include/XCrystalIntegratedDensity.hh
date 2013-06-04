@@ -26,46 +26,60 @@
 //
 // $Id$
 //
-#ifndef XLogicalAtomicLattice_h
-#define XLogicalAtomicLattice_h
+#ifndef XCrystalIntegratedDensity_h
+#define XCrystalIntegratedDensity_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "G4ThreeVector.hh"
+#include "XVCrystalCharacteristic.hh"
 
-#ifndef MAXLATTICEATOMS
-#define MAXLATTICEATOMS 64
-#endif
+class XCrystalIntegratedDensity {
 
-using namespace std;
+public:
+    void SetIntegrationPoints(unsigned int,unsigned int);
+    unsigned int GetIntegrationPoints(unsigned int);
+    unsigned int GetIntegrationPoints();
 
-class XLogicalAtomicLattice{
+    void SetNumberOfPoints(unsigned int,unsigned int);
+    unsigned int GetNumberOfPoints(unsigned int);
+    unsigned int GetNumberOfPoints();
+
+    void SetNucleiDensity(XVCrystalCharacteristic*);
+    XVCrystalCharacteristic* GetNucleiDensity();
+    
+    void SetElectronDensity(XVCrystalCharacteristic*);
+    XVCrystalCharacteristic* GetElectronDensity();
+
+    void SetPotential(XVCrystalCharacteristic*);
+    XVCrystalCharacteristic* GetPotential();
+
+    void SetXPhysicalLattice(XPhysicalLattice*);
+    XPhysicalLattice* GetXPhysicalLattice();
+    
+    G4double GetValue(G4double);
+    
+    void InitializeTable();
+    G4bool HasBeenInitialized();
+    //now it checks only of the table is initialized, it does not check if the particular crystal is initialized. To be changed in the future!
+    
+protected:
+    G4double ComputeValue(G4double);
 
 private:
-    // position of the atoms are saved in unit cell system, i.e MIN 0. & MAX 1.
-    G4ThreeVector fLatticeAtomPosition[MAXLATTICEATOMS];
-    G4int fLatticeAtomNumber;
-    
-public:    
-    void InitializeXLogicalAtomicLattice();
+    XPhysicalLattice* fLattice;
+    XVCrystalCharacteristic* fElectronDensity;
+    XVCrystalCharacteristic* fNucleiDensity;
+    XVCrystalCharacteristic* fPotential;
 
-    // Get methods
-    G4ThreeVector GetAtomPosition(G4int i);
-    G4int GetLatticeNumberOfAtoms();
+    G4double fPotentialMinimum;
+    G4double fPotentialRange;
     
-    // Set methods
-    void AddAtom(G4ThreeVector);
-    void DeleteAtom(G4ThreeVector);
+    std::vector<G4double> fTable;
+    unsigned int fNumberOfPoints[3];
+    unsigned int fIntegrationPoints[3];
     
 
-    // Calculation methods
-    // ints == Miller indexes
-    G4complex ComputeGeometricalStructureFactorSingleKind(G4int,G4int,G4int);
-
-    // Definition methods
-    XLogicalAtomicLattice();
-    ~XLogicalAtomicLattice();
+public:   //Contructors
+    XCrystalIntegratedDensity(XVCrystalCharacteristic*,XVCrystalCharacteristic*,XVCrystalCharacteristic*);
+    ~XCrystalIntegratedDensity();
 };
 
 #endif

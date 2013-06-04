@@ -51,11 +51,10 @@ private:
     G4ThreeVector fSize;
     G4ThreeVector fAngle;
     
-    void InitializeXUnitCell();
 public:
     //Retrieval methods
-    inline G4ThreeVector& GetSize();
-    inline G4ThreeVector& GetAngle();
+    G4ThreeVector GetSize();
+    G4ThreeVector GetAngle();
     XLogicalBase* GetBase(G4int);
     
     
@@ -67,7 +66,6 @@ public:
 
     //Calculation methods
     G4double ComputeVolume();
-    G4double ComputeAtomVolumeDensity();
 
     G4double ComputeMillerOverSizeSquared(G4int,G4int,G4int);
     G4double ComputeMillerPerSizeSquared(G4int,G4int,G4int);
@@ -81,6 +79,8 @@ public:
     G4double ComputeDirectPeriodSquared(G4int,G4int,G4int);
     G4double ComputeDirectPeriod(G4int,G4int,G4int);
 
+    
+    G4double ComputeAtomVolumeDensity();
     G4complex ComputeStructureFactor(G4int,G4int,G4int); //Kittel - chapter 2 Eq. (46)
 
     //Check method

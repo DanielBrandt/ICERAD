@@ -34,6 +34,7 @@
 
 #include "XLatticeManager3.hh"
 #include "XVCrystalCharacteristic.hh"
+#include "XCrystalIntegratedDensity.hh"
 
 class ProcessChanneling : public G4VDiscreteProcess
 {
@@ -53,30 +54,34 @@ protected:
     virtual G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition* );
     
 public:
-    void SetPotential(XVCrystalCharacteristic*);
-    void SetNucleiDensity(XVCrystalCharacteristic*);
-    void SetElectronDensity(XVCrystalCharacteristic*);
-    void SetElectricField(XVCrystalCharacteristic*);
-
     XVCrystalCharacteristic* GetPotential();
-    XVCrystalCharacteristic* GetNucleiDensity();
-    XVCrystalCharacteristic* GetElectronDensity();
-    XVCrystalCharacteristic* GetElectricField();
+    void SetPotential(XVCrystalCharacteristic*);
 
+    XVCrystalCharacteristic* GetNucleiDensity();
+    void SetNucleiDensity(XVCrystalCharacteristic*);
+    
+    XVCrystalCharacteristic* GetElectronDensity();
+    void SetElectronDensity(XVCrystalCharacteristic*);
+
+    XVCrystalCharacteristic* GetElectricField();
+    void SetElectricField(XVCrystalCharacteristic*);
+    
+    XCrystalIntegratedDensity* GetIntegratedDensity();
+    void SetIntegratedDensity(XCrystalIntegratedDensity*);
+    
 private:
     G4double GetChannelingMeanFreePath(const G4Track& aTrack);
     
     G4bool IsInChanneling(const G4Track& aTrack);
 
-    void UpdateMomentum(const G4Track& aTrack);
-    void UpdatePosition(const G4Track& aTrack);
-
-    void InitializeCrystalCharacteristics();
+    void UpdatePositionMomentumDensity(const G4Track& aTrack);
     
-    void ComputeCrystalCharacteristicForChanneling(const G4Track& aTrack);
     G4double ComputeChannelingCriticalEnergy(const G4Track& aTrack);
     G4ThreeVector ComputeTransverseEnergy(const G4Track& aTrack);
     
+    void InitializeCrystalCharacteristics();
+    void ComputeCrystalCharacteristicForChanneling(const G4Track& aTrack);
+
 private:
     // hide assignment operator as private
     ProcessChanneling(ProcessChanneling&);
@@ -84,16 +89,22 @@ private:
     
 private:
     XLatticeManager3* fLatticeManager;
+    
     G4ThreeVector fMomentum;
     G4ThreeVector fPosition;
-    
+    G4double fDensity;
     G4bool fHasBeenInChanneling;
+    
     G4bool fCompute;
   
     XVCrystalCharacteristic* fPotentialEnergy;
     XVCrystalCharacteristic* fNucleiDensity;
     XVCrystalCharacteristic* fElectronDensity;
     XVCrystalCharacteristic* fElectricField;
+    
+    XCrystalIntegratedDensity* fIntegratedDensity;
+    
+    std::ofstream fFileOut;
 };
 
 #endif

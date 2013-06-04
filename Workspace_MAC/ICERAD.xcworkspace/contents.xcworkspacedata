@@ -14,16 +14,7 @@
          location = "group:include"
          name = "include">
          <FileRef
-            location = "group:XCrystalPlanarMoliereTempPotential.hh">
-         </FileRef>
-         <FileRef
-            location = "group:StepMaxMessenger.hh">
-         </FileRef>
-         <FileRef
-            location = "group:StepMax.hh">
-         </FileRef>
-         <FileRef
-            location = "group:A01EventActionMessenger.hh">
+            location = "group:XCrystalIntegratedDensity.hh">
          </FileRef>
          <FileRef
             location = "group:A01DriftChamber.hh">
@@ -33,6 +24,9 @@
          </FileRef>
          <FileRef
             location = "group:A01EventAction.hh">
+         </FileRef>
+         <FileRef
+            location = "group:A01EventActionMessenger.hh">
          </FileRef>
          <FileRef
             location = "group:DetectorConstruction.hh">
@@ -50,16 +44,25 @@
             location = "group:ProcessChanneling.hh">
          </FileRef>
          <FileRef
+            location = "group:StepMax.hh">
+         </FileRef>
+         <FileRef
+            location = "group:StepMaxMessenger.hh">
+         </FileRef>
+         <FileRef
             location = "group:XCrystalPlanarMoliereElectricField.hh">
          </FileRef>
          <FileRef
             location = "group:XCrystalPlanarMoliereElectronDensity.hh">
          </FileRef>
          <FileRef
-            location = "group:XCrystalPlanarNucleiDensity.hh">
+            location = "group:XCrystalPlanarMolierePotential.hh">
          </FileRef>
          <FileRef
-            location = "group:XCrystalPlanarMolierePotential.hh">
+            location = "group:XCrystalPlanarMoliereTempPotential.hh">
+         </FileRef>
+         <FileRef
+            location = "group:XCrystalPlanarNucleiDensity.hh">
          </FileRef>
          <FileRef
             location = "group:XLatticeManager3.hh">
@@ -102,16 +105,7 @@
          location = "group:src"
          name = "src">
          <FileRef
-            location = "group:XCrystalPlanarMoliereTempPotential.cc">
-         </FileRef>
-         <FileRef
-            location = "group:StepMaxMessenger.cc">
-         </FileRef>
-         <FileRef
-            location = "group:StepMax.cc">
-         </FileRef>
-         <FileRef
-            location = "group:A01EventActionMessenger.cc">
+            location = "group:XCrystalIntegratedDensity.cc">
          </FileRef>
          <FileRef
             location = "group:A01DriftChamber.cc">
@@ -121,6 +115,9 @@
          </FileRef>
          <FileRef
             location = "group:A01EventAction.cc">
+         </FileRef>
+         <FileRef
+            location = "group:A01EventActionMessenger.cc">
          </FileRef>
          <FileRef
             location = "group:DetectorConstruction.cc">
@@ -138,16 +135,25 @@
             location = "group:ProcessChanneling.cc">
          </FileRef>
          <FileRef
+            location = "group:StepMax.cc">
+         </FileRef>
+         <FileRef
+            location = "group:StepMaxMessenger.cc">
+         </FileRef>
+         <FileRef
             location = "group:XCrystalPlanarMoliereElectricField.cc">
          </FileRef>
          <FileRef
             location = "group:XCrystalPlanarMoliereElectronDensity.cc">
          </FileRef>
          <FileRef
-            location = "group:XCrystalPlanarNucleiDensity.cc">
+            location = "group:XCrystalPlanarMolierePotential.cc">
          </FileRef>
          <FileRef
-            location = "group:XCrystalPlanarMolierePotential.cc">
+            location = "group:XCrystalPlanarMoliereTempPotential.cc">
+         </FileRef>
+         <FileRef
+            location = "group:XCrystalPlanarNucleiDensity.cc">
          </FileRef>
          <FileRef
             location = "group:XLatticeManager3.cc">
